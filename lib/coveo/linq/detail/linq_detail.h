@@ -58,6 +58,24 @@ public:
     }
 };
 
+// Comparator that receives points to elements and
+// dereferences them, then calls another predicate.
+template<typename Pred>
+class deref_cmp
+{
+private:
+    Pred pred_;
+
+public:
+    explicit deref_cmp(Pred&& pred)
+        : pred_(std::forward<Pred>(pred)) { }
+
+    template<typename T, typename U>
+    auto operator()(T* const pleft, U* const pright) const -> decltype(pred_(*pleft, *pright)) {
+        return pred_(*pleft, *pright);
+    }
+};
+
 // Selector implementation that can be used with some operators
 // that return an element and its index, when the index is not needed.
 template<typename Selector>
@@ -119,7 +137,6 @@ std::unique_ptr<T> make_unique(Args&&... args) {
 
 // Helper that reserves space in a container based on the number of elements in a sequence
 // if it's possible to do so quickly (e.g. with random-access iterators or size())
-void try_reserve(...);
 template<typename C, typename Seq>
 auto try_reserve(C& cnt, const Seq& seq) -> typename std::enable_if<coveo::detail::is_enumerable<Seq>::value, void>::type
 {
@@ -152,7 +169,6 @@ auto try_reserve(C&, const Seq&) -> typename std::enable_if<!coveo::detail::has_
 
 // Helper that returns a size_delegate for a sequence if it's possible to quickly calculate
 // its size (e.g. with random-access iterators or size())
-void try_get_size_delegate(...);
 template<typename T, typename Seq>
 auto try_get_size_delegate(const Seq& seq) -> typename std::enable_if<coveo::detail::is_enumerable<Seq>::value,
                                                                       typename coveo::enumerable<T>::size_delegate>::type
@@ -351,7 +367,6 @@ public:
                                           std::is_const<typename seq_traits<Seq2>::value_type>::value,
                                           typename seq_traits<Seq1>::const_value_type,
                                           typename seq_traits<Seq1>::value_type>::type  enum_type;
-        typedef typename coveo::detail::seq_element_traits<enum_type>::raw_value_type   raw_enum_type;
 
     private:
         // Type of iterators for both sequences
@@ -386,19 +401,18 @@ public:
             }
 
             // Returns next element from one of the sequences or nullptr when done
-            auto get_next(first_iterator_type& icur1, second_iterator_type& icur2,
-                          std::unique_ptr<raw_enum_type>& upopt)
+            auto get_next(first_iterator_type& icur1, second_iterator_type& icur2)
                 -> typename coveo::detail::seq_element_traits<enum_type>::pointer
             {
                 // First return all elements from first sequence, then from second sequence.
                 typename coveo::detail::seq_element_traits<enum_type>::pointer pobj = nullptr;
                 if (icur1 != iend1_) {
-                    pobj = coveo::detail::get_ref_from_iterator<typename seq_traits<Seq1>::reference,
-                                                                typename seq_traits<Seq1>::pointer>(icur1, upopt);
+                    typename coveo::detail::seq_element_traits<enum_type>::reference robj = *icur1;
+                    pobj = std::addressof(robj);
                     ++icur1;
                 } else if (icur2 != iend2_) {
-                    pobj = coveo::detail::get_ref_from_iterator<typename seq_traits<Seq2>::reference,
-                                                                typename seq_traits<Seq2>::pointer>(icur2, upopt);
+                    typename coveo::detail::seq_element_traits<enum_type>::reference robj = *icur2;
+                    pobj = std::addressof(robj);
                     ++icur2;
                 }
                 return pobj;
@@ -415,10 +429,8 @@ public:
             : spinfo_(std::make_shared<concat_info>(std::forward<Seq1>(seq1), std::forward<Seq2>(seq2))),
               icur1_(spinfo_->first_begin()), icur2_(spinfo_->second_begin()) { }
 
-        auto operator()(std::unique_ptr<raw_enum_type>& upopt)
-            -> decltype(spinfo_->get_next(icur1_, icur2_, upopt))
-        {
-            return spinfo_->get_next(icur1_, icur2_, upopt);
+        auto operator()() -> decltype(spinfo_->get_next(icur1_, icur2_)) {
+            return spinfo_->get_next(icur1_, icur2_);
         }
     };
 
@@ -614,8 +626,8 @@ public:
         // Type of iterator for the sequence
         typedef typename seq_traits<Seq>::iterator_type iterator_type;
 
-        // Set storing seen elements
-        typedef std::set<typename seq_traits<Seq>::raw_value_type, proxy_cmp<Pred>>
+        // Set storing pointers to seen elements
+        typedef std::set<typename seq_traits<Seq>::const_pointer, deref_cmp<proxy_cmp<Pred>>>
                                                         seen_elements_set;
 
         // Info used to produce distinct elements. Shared among delegates.
@@ -640,19 +652,18 @@ public:
                 return std::begin(seq_);
             }
             seen_elements_set init_seen_elements() {
-                return seen_elements_set(proxy_cmp<Pred>(pred_));
+                return seen_elements_set(deref_cmp<proxy_cmp<Pred>>(proxy_cmp<Pred>(pred_)));
             }
 
             // Returns next distinct element or nullptr when done
-            auto get_next(iterator_type& icur, seen_elements_set& seen,
-                          std::unique_ptr<typename seq_traits<Seq>::raw_value_type>& upopt)
+            auto get_next(iterator_type& icur, seen_elements_set& seen)
                 -> typename seq_traits<Seq>::pointer
             {
                 typename seq_traits<Seq>::pointer pobj = nullptr;
                 for (; pobj == nullptr && icur != iend_; ++icur) {
-                    auto pobjtmp = coveo::detail::get_ref_from_iterator<typename seq_traits<Seq>::reference,
-                                                                        typename seq_traits<Seq>::pointer>(icur, upopt);
-                    if (seen.emplace(*pobjtmp).second) {
+                    typename seq_traits<Seq>::reference robjtmp = *icur;
+                    auto pobjtmp = std::addressof(robjtmp);
+                    if (seen.emplace(pobjtmp).second) {
                         // Not seen yet, return this element.
                         pobj = pobjtmp;
                     }
@@ -671,10 +682,8 @@ public:
             : spinfo_(std::make_shared<distinct_info>(std::forward<Seq>(seq), std::forward<Pred>(pred))),
               icur_(spinfo_->seq_begin()), seen_(spinfo_->init_seen_elements()) { }
 
-        auto operator()(std::unique_ptr<typename seq_traits<Seq>::raw_value_type>& upopt)
-            -> decltype(spinfo_->get_next(icur_, seen_, upopt))
-        {
-            return spinfo_->get_next(icur_, seen_, upopt);
+        auto operator()() -> decltype(spinfo_->get_next(icur_, seen_)) {
+            return spinfo_->get_next(icur_, seen_);
         }
     };
 
@@ -722,7 +731,7 @@ private:
 private:
     // If we have random-access iterators, we can perform fast computations
     template<typename Seq>
-    auto impl(Seq&& seq, std::random_access_iterator_tag) -> typename seq_traits<Seq>::raw_value_type {
+    auto impl(Seq&& seq, std::random_access_iterator_tag) -> typename seq_traits<Seq>::reference {
         auto icur = std::begin(seq);
         auto iend = std::end(seq);
         if (static_cast<std::size_t>(iend - icur) <= n_) {
@@ -734,7 +743,7 @@ private:
 
     // Otherwise, we can only move by hand
     template<typename Seq>
-    auto impl(Seq&& seq, std::input_iterator_tag) -> typename seq_traits<Seq>::raw_value_type {
+    auto impl(Seq&& seq, std::input_iterator_tag) -> typename seq_traits<Seq>::reference {
         auto icur = std::begin(seq);
         auto iend = std::end(seq);
         for (std::size_t i = 0; i < n_ && icur != iend; ++i, ++icur) {
@@ -750,7 +759,7 @@ public:
         : n_(n) { }
 
     template<typename Seq>
-    auto operator()(Seq&& seq) -> typename seq_traits<Seq>::raw_value_type {
+    auto operator()(Seq&& seq) -> typename seq_traits<Seq>::reference {
         return impl(std::forward<Seq>(seq),
                     typename std::iterator_traits<typename seq_traits<Seq>::iterator_type>::iterator_category());
     }
@@ -806,8 +815,8 @@ public:
     class next_impl
     {
     private:
-        // Vector of elements in the second sequence. Used to filter them out.
-        typedef std::vector<typename seq_traits<Seq2>::raw_value_type> elements_to_filter_v;
+        // Vector of pointers to elements in the second sequence. Used to filter them out.
+        typedef std::vector<typename seq_traits<Seq2>::const_pointer> elements_to_filter_v;
 
         // Type of iterator for the first sequence.
         typedef typename seq_traits<Seq1>::iterator_type first_iterator_type;
@@ -819,7 +828,7 @@ public:
             Seq1 seq1_;                         // Sequence of elements to scan and return.
             first_iterator_type iend1_;         // End of seq1_
             Seq2 seq2_;                         // Sequence of elements to filter out
-            Pred pred_;                         // Predicate used to compare
+            deref_cmp<Pred> pred_;              // Predicate used to compare
             elements_to_filter_v v_to_filter_;  // Elements to filter out. Late-initialized.
             bool init_;                         // Init flag for v_to_filter_.
 
@@ -837,26 +846,29 @@ public:
                 return std::begin(seq1_);
             }
 
-            bool filtered(typename seq_traits<Seq1>::const_reference obj) {
+            bool filtered(typename seq_traits<Seq1>::pointer pobj) {
                 if (!init_) {
                     // Init elements to filter on first call
                     try_reserve(v_to_filter_, seq2_);
-                    v_to_filter_.insert(v_to_filter_.end(), std::begin(seq2_), std::end(seq2_));
+                    auto icur2 = std::begin(seq2_);
+                    auto iend2 = std::end(seq2_);
+                    for (; icur2 != iend2; ++icur2) {
+                        typename seq_traits<Seq2>::const_reference robjtmp = *icur2;
+                        v_to_filter_.emplace_back(std::addressof(robjtmp));
+                    }
                     std::sort(v_to_filter_.begin(), v_to_filter_.end(), pred_);
                     init_ = true;
                 }
-                return std::binary_search(v_to_filter_.cbegin(), v_to_filter_.cend(), obj, pred_);
+                return std::binary_search(v_to_filter_.cbegin(), v_to_filter_.cend(), pobj, pred_);
             }
 
             // Returns next non-filtered element or nullptr when done
-            auto get_next(first_iterator_type& icur1, std::unique_ptr<typename seq_traits<Seq1>::raw_value_type>& upopt)
-                -> typename seq_traits<Seq1>::pointer
-            {
+            auto get_next(first_iterator_type& icur1) -> typename seq_traits<Seq1>::pointer {
                 typename seq_traits<Seq1>::pointer pobj = nullptr;
                 for (; pobj == nullptr && icur1 != iend1_; ++icur1) {
-                    auto pobjtmp = coveo::detail::get_ref_from_iterator<typename seq_traits<Seq1>::reference,
-                                                                        typename seq_traits<Seq1>::pointer>(icur1, upopt);
-                    if (!filtered(*pobjtmp)) {
+                    typename seq_traits<Seq1>::reference robjtmp = *icur1;
+                    auto pobjtmp = std::addressof(robjtmp);
+                    if (!filtered(pobjtmp)) {
                         pobj = pobjtmp;
                     }
                 }
@@ -875,10 +887,8 @@ public:
                                                       std::forward<Pred>(pred))),
               icur_(spfilter_->first_begin()) { }
 
-        auto operator()(std::unique_ptr<typename seq_traits<Seq1>::raw_value_type>& upopt)
-            -> decltype(spfilter_->get_next(icur_, upopt))
-        {
-            return spfilter_->get_next(icur_, upopt);
+        auto operator()() -> decltype(spfilter_->get_next(icur_)) {
+            return spfilter_->get_next(icur_);
         }
     };
 
@@ -925,7 +935,7 @@ class first_impl_0
 {
 public:
     template<typename Seq>
-    auto operator()(Seq&& seq) -> typename seq_traits<Seq>::raw_value_type {
+    auto operator()(Seq&& seq) -> typename seq_traits<Seq>::reference {
         auto icur = std::begin(seq);
         if (icur == std::end(seq)) {
             throw_linq_empty_sequence();
@@ -946,7 +956,7 @@ public:
         : pred_(pred) { }
 
     template<typename Seq>
-    auto operator()(Seq&& seq) -> typename seq_traits<Seq>::raw_value_type {
+    auto operator()(Seq&& seq) -> typename seq_traits<Seq>::reference {
         auto icur = std::begin(seq);
         auto iend = std::end(seq);
         if (icur == iend) {
@@ -1090,8 +1100,7 @@ public:
                                                       std::forward<Pred>(pred))),
               icurr_(), iendr_(), init_flag_(false) { }
 
-        template<typename Op>
-        auto operator()(Op&) -> typename seq_traits<result_v>::const_pointer {
+        auto operator()() -> typename seq_traits<result_v>::const_pointer {
             // Init iterators on first call
             if (!init_flag_) {
                 const auto& results = spgroups_->get_results();
@@ -1171,7 +1180,7 @@ public:
         typedef decltype(std::declval<OuterKeySelector>()(std::declval<typename seq_traits<OuterSeq>::reference>())) key;
 
         // Group of elements from the inner sequence that share a common key.
-        typedef std::vector<typename seq_traits<InnerSeq>::raw_value_type>                      inner_element_v;
+        typedef std::vector<typename seq_traits<InnerSeq>::raw_value_type>                      inner_element_v;    // TODO-optimize: use vector of pointers to elements in inner seq
         typedef decltype(coveo::enumerate_container(std::declval<const inner_element_v&>()))    inner_elements;
     
         // Result returned by result selector.
@@ -1258,8 +1267,7 @@ public:
                                                       std::forward<Pred>(pred))),
               icurr_(), iendr_(), init_flag_(false) { }
 
-        template<typename Op>
-        auto operator()(Op&) -> typename seq_traits<result_v>::const_pointer {
+        auto operator()() -> typename seq_traits<result_v>::const_pointer {
             // Init iterators on first call
             if (!init_flag_) {
                 const auto& results = spgroups_->get_results();
@@ -1337,8 +1345,8 @@ public:
     class next_impl
     {
     public:
-        // Vector storing the elements.
-        typedef std::vector<typename seq_traits<Seq2>::raw_value_type> seq2_element_v;
+        // Vector storing pointers to the elements.
+        typedef std::vector<typename seq_traits<Seq2>::pointer> seq2_element_v;
 
         // Type of iterators for the sequences.
         typedef typename seq_traits<Seq1>::iterator_type    first_iterator_type;
@@ -1352,7 +1360,7 @@ public:
             Seq1 seq1_;                     // First sequence to intersect.
             first_iterator_type iend1_;     // Iterator pointing at end of first sequence.
             Seq2 seq2_;                     // Second sequence to intersect.
-            Pred pred_;                     // Predicate used to compare elements.
+            deref_cmp<Pred> pred_;          // Predicate used to compare elements.
             seq2_element_v v_in_seq2_;      // Vector of elements from second sequence.
             bool init_flag_;                // Whether v_in_seq2_ has been initialized.
 
@@ -1373,27 +1381,30 @@ public:
                 return std::begin(seq1_);
             }
 
-            bool is_in_seq2(typename seq_traits<Seq1>::const_reference obj) {
+            bool is_in_seq2(typename seq_traits<Seq1>::pointer pobj) {
                 // Build vector of second sequence on the first call.
                 if (!init_flag_) {
                     // Add all elements from second sequence to a vector and sort it.
                     try_reserve(v_in_seq2_, seq2_);
-                    v_in_seq2_.insert(v_in_seq2_.end(), std::begin(seq2_), std::end(seq2_));
+                    auto icur2 = std::begin(seq2_);
+                    auto iend2 = std::end(seq2_);
+                    for (; icur2 != iend2; ++icur2) {
+                        typename seq_traits<Seq2>::reference robjtmp = *icur2;
+                        v_in_seq2_.emplace_back(std::addressof(robjtmp));
+                    }
                     std::sort(v_in_seq2_.begin(), v_in_seq2_.end(), pred_);
                     init_flag_ = true;
                 }
-                return std::binary_search(v_in_seq2_.cbegin(), v_in_seq2_.cend(), obj, pred_);
+                return std::binary_search(v_in_seq2_.cbegin(), v_in_seq2_.cend(), pobj, pred_);
             }
 
             // Returns next element that is both in first and second sequence or nullptr when done
-            auto get_next(first_iterator_type& icur1, std::unique_ptr<typename seq_traits<Seq1>::raw_value_type>& upopt)
-                -> typename seq_traits<Seq1>::pointer
-            {
+            auto get_next(first_iterator_type& icur1) -> typename seq_traits<Seq1>::pointer {
                 typename seq_traits<Seq1>::pointer pobj = nullptr;
                 for (; pobj == nullptr && icur1 != iend1_; ++icur1) {
-                    auto pobjtmp = coveo::detail::get_ref_from_iterator<typename seq_traits<Seq1>::reference,
-                                                                        typename seq_traits<Seq1>::pointer>(icur1, upopt);
-                    if (is_in_seq2(*pobjtmp)) {
+                    typename seq_traits<Seq1>::reference robjtmp = *icur1;
+                    auto pobjtmp = std::addressof(robjtmp);
+                    if (is_in_seq2(pobjtmp)) {
                         pobj = pobjtmp;
                     }
                 }
@@ -1412,9 +1423,7 @@ public:
                                                            std::forward<Pred>(pred))),
               icur_(spint_info_->first_begin()) { }
 
-        auto operator()(std::unique_ptr<typename seq_traits<Seq1>::raw_value_type>& upopt)
-            -> decltype(spint_info_->get_next(icur_, upopt))
-        {
+        auto operator()() -> decltype(spint_info_->get_next(icur_)) {
             return spint_info_->get_next(icur_, upopt);
         }
     };
@@ -1475,7 +1484,7 @@ public:
         typedef decltype(std::declval<OuterKeySelector>()(std::declval<typename seq_traits<OuterSeq>::reference>()))    key;
 
         // Group of elements from the inner sequence that share a common key.
-        typedef std::vector<typename seq_traits<InnerSeq>::raw_value_type> inner_element_v;
+        typedef std::vector<typename seq_traits<InnerSeq>::raw_value_type> inner_element_v;     // TODO-optimize: use vector of pointers to elements in inner seq
     
         // Result returned by result selector.
         typedef decltype(std::declval<ResultSelector>()(std::declval<typename seq_traits<OuterSeq>::reference>(),
@@ -1562,8 +1571,7 @@ public:
                                                        std::forward<Pred>(pred))),
               icurr_(), iendr_(), init_flag_(false) { }
 
-        template<typename Op>
-        auto operator()(Op&) -> typename seq_traits<result_v>::const_pointer {
+        auto operator()() -> typename seq_traits<result_v>::const_pointer {
             // Init iterators on first call
             if (!init_flag_) {
                 const auto& results = spjoin_info_->get_results();
@@ -1638,7 +1646,7 @@ class last_impl_0
 private:
     // If we have bidi iterators, we can simply use rbegin
     template<typename Seq>
-    auto impl(Seq&& seq, std::bidirectional_iterator_tag) -> typename seq_traits<Seq>::raw_value_type {
+    auto impl(Seq&& seq, std::bidirectional_iterator_tag) -> typename seq_traits<Seq>::reference {
         auto ricur = seq.rbegin();
         if (ricur == seq.rend()) {
             throw_linq_empty_sequence();
@@ -1648,7 +1656,7 @@ private:
 
     // Otherwise we'll have to be creative
     template<typename Seq>
-    auto impl(Seq&& seq, std::input_iterator_tag) -> typename seq_traits<Seq>::raw_value_type {
+    auto impl(Seq&& seq, std::input_iterator_tag) -> typename seq_traits<Seq>::reference {
         auto icur = std::begin(seq);
         auto iend = std::end(seq);
         if (icur == iend) {
@@ -1664,7 +1672,7 @@ private:
 
 public:
     template<typename Seq>
-    auto operator()(Seq&& seq) -> typename seq_traits<Seq>::raw_value_type {
+    auto operator()(Seq&& seq) -> typename seq_traits<Seq>::reference {
         return impl(std::forward<Seq>(seq),
                     typename std::iterator_traits<typename seq_traits<Seq>::iterator_type>::iterator_category());
     }
@@ -1680,7 +1688,7 @@ private:
 private:
     // If we have bidi iterators, we can simply use rbegin
     template<typename Seq>
-    auto impl(Seq&& seq, std::bidirectional_iterator_tag) -> typename seq_traits<Seq>::raw_value_type {
+    auto impl(Seq&& seq, std::bidirectional_iterator_tag) -> typename seq_traits<Seq>::reference {
         auto ricur = seq.rbegin();
         auto riend = seq.rend();
         if (ricur == riend) {
@@ -1695,7 +1703,7 @@ private:
 
     // Otherwise we'll have to be creative
     template<typename Seq>
-    auto impl(Seq&& seq, std::input_iterator_tag) -> typename seq_traits<Seq>::raw_value_type {
+    auto impl(Seq&& seq, std::input_iterator_tag) -> typename seq_traits<Seq>::reference {
         auto icur = std::begin(seq);
         auto iend = std::end(seq);
         if (icur == iend) {
@@ -1719,7 +1727,7 @@ public:
         : pred_(pred) { }
 
     template<typename Seq>
-    auto operator()(Seq&& seq) -> typename seq_traits<Seq>::raw_value_type {
+    auto operator()(Seq&& seq) -> typename seq_traits<Seq>::reference {
         return impl(std::forward<Seq>(seq),
                     typename std::iterator_traits<typename seq_traits<Seq>::iterator_type>::iterator_category());
     }
@@ -1810,7 +1818,7 @@ class max_impl_0
 {
 public:
     template<typename Seq>
-    auto operator()(Seq&& seq) -> typename seq_traits<Seq>::raw_value_type {
+    auto operator()(Seq&& seq) -> typename seq_traits<Seq>::reference {
         auto iend = std::end(seq);
         auto imax = std::max_element(std::begin(seq), iend);
         if (imax == iend) {
@@ -1852,7 +1860,7 @@ class min_impl_0
 {
 public:
     template<typename Seq>
-    auto operator()(Seq&& seq) -> typename seq_traits<Seq>::raw_value_type {
+    auto operator()(Seq&& seq) -> typename seq_traits<Seq>::reference {
         auto iend = std::end(seq);
         auto imin = std::min_element(std::begin(seq), iend);
         if (imin == iend) {
@@ -1974,7 +1982,7 @@ private:
 
     // Called to initialize enum_ and size_ before using them.
     void init() const {
-        std::vector<typename seq_traits<Seq>::raw_value_type> ordered;
+        std::vector<typename seq_traits<Seq>::raw_value_type> ordered;  // TODO-optimize: use vector of pointers to seq elements
         try_reserve(ordered, seq_);
         ordered.insert(ordered.end(), std::begin(seq_), std::end(seq_));
         std::stable_sort(ordered.begin(),
@@ -2079,6 +2087,7 @@ private:
     auto impl(Seq&& seq, std::bidirectional_iterator_tag)
         -> coveo::enumerable<typename seq_traits<Seq>::const_value_type>
     {
+        // TODO should we try to store seq in the enumerable here?
         return coveo::enumerable<typename seq_traits<Seq>::const_value_type>::for_range(
             seq.rbegin(), seq.rend());
     }
@@ -2088,6 +2097,7 @@ private:
     auto impl(Seq&& seq, std::input_iterator_tag)
         -> coveo::enumerable<typename seq_traits<Seq>::const_value_type>
     {
+        // TODO optimize: could we store seq and create vector of pointers to elements?
         std::vector<typename seq_traits<Seq>::raw_value_type> elems;
         try_reserve(elems, std::forward<Seq>(seq));
         elems.insert(elems.end(), std::begin(seq), std::end(seq));

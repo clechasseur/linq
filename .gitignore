@@ -33,6 +33,7 @@
 *.suo
 *.VC.db
 *.opendb
+*.user
 bin/
 out/
 obj/

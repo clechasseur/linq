@@ -9,7 +9,6 @@
 #include <cstdint>
 #include <functional>
 #include <iterator>
-#include <memory>
 #include <type_traits>
 #include <utility>
 
@@ -91,68 +90,7 @@ public:
     static const bool value = sizeof(test<T>(nullptr)) == sizeof(std::int_least8_t);
 };
 
-// Copies content of upopt_ if possible. Used by enumerable's iterators.
-void get_copied_upopt(...);
-template<typename T>
-auto get_copied_upopt(const std::unique_ptr<T>& copied_upopt)
-    -> typename std::enable_if<std::is_copy_constructible<T>::value, std::unique_ptr<T>>::type
-{
-    std::unique_ptr<T> upopt;
-    if (copied_upopt != nullptr) {
-        upopt.reset(new T(*copied_upopt));
-    }
-    return upopt;
-}
-template<typename T>
-auto get_copied_upopt(const std::unique_ptr<T>&)
-    -> typename std::enable_if<!std::is_copy_constructible<T>::value, std::unique_ptr<T>>::type
-{
-    // No way to copy, simply return an empty upopt.
-    // Such objects won't be able to use temp storage.
-    return std::unique_ptr<T>();
-}
-
-// Assigns a value in a unique_ptr, by copying to an existing value if possible,
-// otherwise by creating a new instance if not assignable.
-void assign_in_upopt(...);
-template<typename T, typename U>
-auto assign_in_upopt(std::unique_ptr<T>& upopt, U&& obj) -> typename std::enable_if<(std::is_lvalue_reference<U>::value && std::is_copy_assignable<typename std::decay<U>::type>::value) ||
-                                                                                    (!std::is_reference<U>::value && std::is_move_assignable<typename std::decay<U>::type>::value), void>::type
-{
-    if (upopt != nullptr) {
-        *upopt = std::forward<U>(obj);
-    } else {
-        upopt.reset(new T(std::forward<U>(obj)));
-    }
-}
-template<typename T, typename U>
-auto assign_in_upopt(std::unique_ptr<T>& upopt, U&& obj) -> typename std::enable_if<(!std::is_copy_assignable<typename std::decay<U>::type>::value || !std::is_lvalue_reference<U>::value) &&
-                                                                                    (!std::is_move_assignable<typename std::decay<U>::type>::value || std::is_reference<U>::value), void>::type
-{
-    // Can't assign, create new instance
-    upopt.reset(new T(std::forward<U>(obj)));
-}
-
-// Fetches reference from given iterator and returns a pointer to it.
-// If iterator doesn't return references, fetches a copy and stores it in given unique_ptr.
-void get_ref_from_iterator(...);
-template<typename Ref, typename Ptr, typename T, typename It>
-auto get_ref_from_iterator(It&& it, std::unique_ptr<T>&) -> typename std::enable_if<std::is_reference<decltype(*it)>::value ||
-                                                                                    is_reference_wrapper<decltype(*it)>::value, Ptr>::type
-{
-    Ref robj = *it;
-    return std::addressof(robj);
-}
-template<typename Ref, typename Ptr, typename T, typename It>
-auto get_ref_from_iterator(It&& it, std::unique_ptr<T>& upopt) -> typename std::enable_if<!std::is_reference<decltype(*std::forward<It>(it))>::value &&
-                                                                                          !is_reference_wrapper<decltype(*std::forward<It>(it))>::value, Ptr>::type
-{
-    assign_in_upopt(upopt, *std::forward<It>(it));
-    return upopt.get();
-}
-
 // Returns a size delegate for a sequence if iterators can provide that information quickly.
-void get_size_delegate_for_iterators(...);
 template<typename It>
 auto get_size_delegate_for_iterators(const It& beg, const It& end) -> typename std::enable_if<std::is_base_of<std::random_access_iterator_tag,
                                                                                                               typename std::iterator_traits<It>::iterator_category>::value,
