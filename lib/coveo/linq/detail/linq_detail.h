@@ -2128,39 +2128,53 @@ public:
         // Iterator used by the sequence.
         typedef typename seq_traits<Seq>::iterator_type iterator_type;
 
+        // Vector storing transformed elements.
+        typedef std::vector<RU> transformed_v;
+
         // Bean storing info about elements. Shared among delegates.
         struct select_info {
-            Seq seq_;               // Sequence being transformed.
-            iterator_type iend_;    // Iterator pointing at end of seq_.
-            Selector sel_;          // Selector transforming the elements.
+            Seq seq_;                       // Sequence being transformed.
+            iterator_type icur_;            // Iterator pointing at current element in seq_.
+            iterator_type iend_;            // Iterator pointing at end of seq_.
+            Selector sel_;                  // Selector transforming the elements.
+            transformed_v vtransformed_;    // Vector of transformed elements.
 
             select_info(Seq&& seq, Selector&& sel)
                 : seq_(std::forward<Seq>(seq)),
+                  icur_(std::begin(seq_)),
                   iend_(std::end(seq_)),
-                  sel_(std::forward<Selector>(sel)) { }
+                  sel_(std::forward<Selector>(sel)),
+                  vtransformed_()
+            {
+                try_reserve(vtransformed_, seq_);
+            }
 
             // Cannot copy/move, stored in a shared_ptr
             select_info(const select_info&) = delete;
             select_info& operator=(const select_info&) = delete;
+
+            auto get(std::size_t n) -> CU* {
+                while (icur_ != iend_ && vtransformed_.size() <= n) {
+                    vtransformed_.emplace_back(sel_(*icur_++, vtransformed_.size()));
+                }
+                return vtransformed_.size() > n ? std::addressof(vtransformed_[n])
+                                                : nullptr;
+            }
         };
         typedef std::shared_ptr<select_info> select_info_sp;
 
         select_info_sp spinfo_;     // Shared information about elements.
-        iterator_type icur_;        // Iterator pointing at current element.
         std::size_t idx_;           // Index of current element.
 
     public:
         next_impl(Seq&& seq, Selector&& sel)
             : spinfo_(std::make_shared<select_info>(std::forward<Seq>(seq),
                                                     std::forward<Selector>(sel))),
-              icur_(std::begin(spinfo_->seq_)), idx_(0) { }
+              idx_(0) { }
 
-        auto operator()(std::unique_ptr<RU>& upopt) -> CU* {
-            CU* pobj = nullptr;
-            if (icur_ != spinfo_->iend_) {
-                coveo::detail::assign_in_upopt(upopt, spinfo_->sel_(*icur_, idx_));
-                pobj = upopt.get();
-                ++icur_;
+        auto operator()() -> CU* {
+            CU* pobj = spinfo_->get(idx_);
+            if (pobj != nullptr) {
                 ++idx_;
             }
             return pobj;
@@ -2211,46 +2225,54 @@ public:
         // Iterator used by the sequence.
         typedef typename seq_traits<Seq>::iterator_type iterator_type;
 
+        // Vector storing transformed elements.
+        typedef std::vector<RU> transformed_v;
+
         // Bean storing info about elements. Shared among delegates.
         struct select_info {
-            Seq seq_;               // Sequence being transformed.
-            iterator_type iend_;    // Iterator pointing at end of seq_.
-            Selector sel_;          // Selector transforming the elements.
+            Seq seq_;                       // Sequence being transformed.
+            iterator_type icur_;            // Iterator pointing at current element in seq_.
+            std::size_t idx_;               // Index of current element in seq_.
+            iterator_type iend_;            // Iterator pointing at end of seq_.
+            Selector sel_;                  // Selector transforming the elements.
+            transformed_v vtransformed_;    // Vector of transformed elements.
 
             select_info(Seq&& seq, Selector&& sel)
                 : seq_(std::forward<Seq>(seq)),
+                  icur_(std::begin(seq_)),
+                  idx_(0),
                   iend_(std::end(seq_)),
-                  sel_(std::forward<Selector>(sel)) { }
+                  sel_(std::forward<Selector>(sel)),
+                  vtransformed_() { }
 
             // Cannot copy/move, stored in a shared_ptr
             select_info(const select_info&) = delete;
             select_info& operator=(const select_info&) = delete;
+
+            auto get(std::size_t n) -> CU* {
+                while (icur_ != iend_ && vtransformed_.size() <= n) {
+                    auto new_elements = sel_(*icur++, idx_++);
+                    vtransformed_.insert(vtransformed_.end(), std::begin(new_elements), std::end(new_elements));
+                }
+                return vtransformed_.size() > n ? std::addressof(vtransformed_[n])
+                                                : nullptr;
+            }
         };
         typedef std::shared_ptr<select_info> select_info_sp;
 
         select_info_sp spinfo_;     // Shared information about elements.
-        iterator_type icur_;        // Iterator pointing at current element in sequence.
         std::size_t idx_;           // Index of current element in sequence.
-        std::deque<RU> cache_;      // Cache of results returned by selector.
 
     public:
         next_impl(Seq&& seq, Selector&& sel)
             : spinfo_(std::make_shared<select_info>(std::forward<Seq>(seq),
                                                     std::forward<Selector>(sel))),
-              icur_(std::begin(spinfo_->seq_)), idx_(0), cache_() { }
+              idx_(0) { }
 
-        auto operator()(std::unique_ptr<RU>& upopt) -> CU* {
-            CU* pobj = nullptr;
-            while (cache_.empty() && icur_ != spinfo_->iend_) {
-                auto new_results = spinfo_->sel_(*icur_, idx_);
-                cache_.insert(cache_.end(), std::begin(new_results), std::end(new_results));
-                ++icur_;
+        auto operator()() -> CU* {
+            CU* pobj = spinfo_->get(idx_);
+            if (pobj != nullptr) {
                 ++idx_;
-            }
-            if (!cache_.empty()) {
-                coveo::detail::assign_in_upopt(upopt, cache_.front());
-                pobj = upopt.get();
-                cache_.pop_front();
             }
             return pobj;
         }
@@ -2298,7 +2320,6 @@ public:
 
     template<typename Seq1>
     auto operator()(Seq1&& seq1) -> bool {
-        // #clp-TODO replace with std::equal when available
         auto icur1 = std::begin(seq1);
         auto iend1 = std::end(seq1);
         auto icur2 = std::begin(seq2_);
@@ -2325,7 +2346,6 @@ public:
 
     template<typename Seq1>
     auto operator()(Seq1&& seq1) -> bool {
-        // #clp-TODO replace with std::equal when available
         auto icur1 = std::begin(seq1);
         auto iend1 = std::end(seq1);
         auto icur2 = std::begin(seq2_);
