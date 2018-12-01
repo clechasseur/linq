@@ -731,7 +731,7 @@ private:
 private:
     // If we have random-access iterators, we can perform fast computations
     template<typename Seq>
-    auto impl(Seq&& seq, std::random_access_iterator_tag) -> typename seq_traits<Seq>::reference {
+    auto impl(Seq&& seq, std::random_access_iterator_tag) -> decltype(*std::begin(seq)) {
         auto icur = std::begin(seq);
         auto iend = std::end(seq);
         if (static_cast<std::size_t>(iend - icur) <= n_) {
@@ -743,7 +743,7 @@ private:
 
     // Otherwise, we can only move by hand
     template<typename Seq>
-    auto impl(Seq&& seq, std::input_iterator_tag) -> typename seq_traits<Seq>::reference {
+    auto impl(Seq&& seq, std::input_iterator_tag) -> decltype(*std::begin(seq)) {
         auto icur = std::begin(seq);
         auto iend = std::end(seq);
         for (std::size_t i = 0; i < n_ && icur != iend; ++i, ++icur) {
@@ -759,7 +759,7 @@ public:
         : n_(n) { }
 
     template<typename Seq>
-    auto operator()(Seq&& seq) -> typename seq_traits<Seq>::reference {
+    auto operator()(Seq&& seq) -> decltype(*std::begin(seq)) {
         return impl(std::forward<Seq>(seq),
                     typename std::iterator_traits<typename seq_traits<Seq>::iterator_type>::iterator_category());
     }
@@ -935,7 +935,7 @@ class first_impl_0
 {
 public:
     template<typename Seq>
-    auto operator()(Seq&& seq) -> typename seq_traits<Seq>::reference {
+    auto operator()(Seq&& seq) -> decltype(*std::begin(seq)) {
         auto icur = std::begin(seq);
         if (icur == std::end(seq)) {
             throw_linq_empty_sequence();
@@ -956,7 +956,7 @@ public:
         : pred_(pred) { }
 
     template<typename Seq>
-    auto operator()(Seq&& seq) -> typename seq_traits<Seq>::reference {
+    auto operator()(Seq&& seq) -> decltype(*std::begin(seq)) {
         auto icur = std::begin(seq);
         auto iend = std::end(seq);
         if (icur == iend) {
@@ -1646,7 +1646,7 @@ class last_impl_0
 private:
     // If we have bidi iterators, we can simply use rbegin
     template<typename Seq>
-    auto impl(Seq&& seq, std::bidirectional_iterator_tag) -> typename seq_traits<Seq>::reference {
+    auto impl(Seq&& seq, std::bidirectional_iterator_tag) -> decltype(*std::begin(seq)) {
         auto ricur = seq.rbegin();
         if (ricur == seq.rend()) {
             throw_linq_empty_sequence();
@@ -1656,7 +1656,7 @@ private:
 
     // Otherwise we'll have to be creative
     template<typename Seq>
-    auto impl(Seq&& seq, std::input_iterator_tag) -> typename seq_traits<Seq>::reference {
+    auto impl(Seq&& seq, std::input_iterator_tag) -> decltype(*std::begin(seq)) {
         auto icur = std::begin(seq);
         auto iend = std::end(seq);
         if (icur == iend) {
@@ -1672,7 +1672,7 @@ private:
 
 public:
     template<typename Seq>
-    auto operator()(Seq&& seq) -> typename seq_traits<Seq>::reference {
+    auto operator()(Seq&& seq) -> decltype(*std::begin(seq)) {
         return impl(std::forward<Seq>(seq),
                     typename std::iterator_traits<typename seq_traits<Seq>::iterator_type>::iterator_category());
     }
@@ -1688,7 +1688,7 @@ private:
 private:
     // If we have bidi iterators, we can simply use rbegin
     template<typename Seq>
-    auto impl(Seq&& seq, std::bidirectional_iterator_tag) -> typename seq_traits<Seq>::reference {
+    auto impl(Seq&& seq, std::bidirectional_iterator_tag) -> decltype(*std::begin(seq)) {
         auto ricur = seq.rbegin();
         auto riend = seq.rend();
         if (ricur == riend) {
@@ -1703,7 +1703,7 @@ private:
 
     // Otherwise we'll have to be creative
     template<typename Seq>
-    auto impl(Seq&& seq, std::input_iterator_tag) -> typename seq_traits<Seq>::reference {
+    auto impl(Seq&& seq, std::input_iterator_tag) -> decltype(*std::begin(seq)) {
         auto icur = std::begin(seq);
         auto iend = std::end(seq);
         if (icur == iend) {
@@ -1727,7 +1727,7 @@ public:
         : pred_(pred) { }
 
     template<typename Seq>
-    auto operator()(Seq&& seq) -> typename seq_traits<Seq>::reference {
+    auto operator()(Seq&& seq) -> decltype(*std::begin(seq)) {
         return impl(std::forward<Seq>(seq),
                     typename std::iterator_traits<typename seq_traits<Seq>::iterator_type>::iterator_category());
     }
@@ -1818,7 +1818,7 @@ class max_impl_0
 {
 public:
     template<typename Seq>
-    auto operator()(Seq&& seq) -> typename seq_traits<Seq>::reference {
+    auto operator()(Seq&& seq) -> decltype(*std::begin(seq)) {
         auto iend = std::end(seq);
         auto imax = std::max_element(std::begin(seq), iend);
         if (imax == iend) {
@@ -1860,7 +1860,7 @@ class min_impl_0
 {
 public:
     template<typename Seq>
-    auto operator()(Seq&& seq) -> typename seq_traits<Seq>::reference {
+    auto operator()(Seq&& seq) -> decltype(*std::begin(seq)) {
         auto iend = std::end(seq);
         auto imin = std::min_element(std::begin(seq), iend);
         if (imin == iend) {
@@ -2364,7 +2364,7 @@ class single_impl_0
 {
 public:
     template<typename Seq>
-    auto operator()(Seq&& seq) -> typename seq_traits<Seq>::raw_value_type {
+    auto operator()(Seq&& seq) -> decltype(*std::begin(seq)) {
         auto ifirst = std::begin(seq);
         auto iend = std::end(seq);
         if (ifirst == iend) {
@@ -2391,7 +2391,7 @@ public:
         : pred_(pred) { }
 
     template<typename Seq>
-    auto operator()(Seq&& seq) -> typename seq_traits<Seq>::raw_value_type {
+    auto operator()(Seq&& seq) -> decltype(*std::begin(seq)) {
         auto ibeg = std::begin(seq);
         auto iend = std::end(seq);
         if (ibeg == iend) {
