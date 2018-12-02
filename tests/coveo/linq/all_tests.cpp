@@ -19,7 +19,6 @@ void all_tests()
     // linq
     linq_tests();
     chaining_tests();
-    dangling_ref_tests();
     bugs_tests();
 }
 

@@ -1424,7 +1424,7 @@ public:
               icur_(spint_info_->first_begin()) { }
 
         auto operator()() -> decltype(spint_info_->get_next(icur_)) {
-            return spint_info_->get_next(icur_, upopt);
+            return spint_info_->get_next(icur_);
         }
     };
 
@@ -2251,7 +2251,7 @@ public:
 
             auto get(std::size_t n) -> CU* {
                 while (icur_ != iend_ && vtransformed_.size() <= n) {
-                    auto new_elements = sel_(*icur++, idx_++);
+                    auto new_elements = sel_(*icur_++, idx_++);
                     vtransformed_.insert(vtransformed_.end(), std::begin(new_elements), std::end(new_elements));
                 }
                 return vtransformed_.size() > n ? std::addressof(vtransformed_[n])
@@ -3088,47 +3088,67 @@ public:
         typedef typename seq_traits<Seq1>::iterator_type    first_iterator_type;
         typedef typename seq_traits<Seq2>::iterator_type    second_iterator_type;
 
+        // Vector storing zipped elements.
+        typedef std::vector<RU> zipped_v;
+
     private:
         // Bean storing info shared among delegates.
         struct zip_info {
             Seq1 seq1_;                     // First sequence to zip.
+            first_iterator_type icur1_;     // Iterator pointing at current element of seq1_.
             first_iterator_type iend1_;     // Iterator pointing at end of seq1_.
             Seq2 seq2_;                     // Second sequence to zip.
+            second_iterator_type icur2_;    // Iterator pointing at current element of seq2_.
             second_iterator_type iend2_;    // Iterator pointing at end of seq2_.
             ResultSelector result_sel_;     // Selector producing the results.
+            zipped_v vzipped_;              // Vector of zipped elements.
 
-            zip_info(Seq1&& seq1, Seq2&& seq2, ResultSelector&& result_sel)
+            zip_info(Seq1&& seq1, Seq2&& seq2, ResultSelector&& result_sel,
+                     const typename coveo::enumerable<CU>::size_delegate& siz)
                 : seq1_(std::forward<Seq1>(seq1)),
+                  icur1_(std::begin(seq1_)),
                   iend1_(std::end(seq1_)),
                   seq2_(std::forward<Seq2>(seq2)),
+                  icur2_(std::begin(seq2_)),
                   iend2_(std::end(seq2_)),
-                  result_sel_(std::forward<ResultSelector>(result_sel)) { }
+                  result_sel_(std::forward<ResultSelector>(result_sel)),
+                  vzipped_()
+            {
+                if (siz != nullptr) {
+                    vzipped_.reserve(siz());
+                }
+            }
 
             // Cannot copy/move, stored in a shared_ptr
             zip_info(const zip_info&) = delete;
             zip_info& operator=(const zip_info&) = delete;
+
+            auto get(std::size_t n) -> CU* {
+                while (icur1_ != iend1_ && icur2_ != iend2_ && vzipped_.size() <= n) {
+                    vzipped_.emplace_back(result_sel_(*icur1_++, *icur2_++));
+                }
+                return vzipped_.size() > n ? std::addressof(vzipped_[n])
+                                           : nullptr;
+            }
         };
         typedef std::shared_ptr<zip_info>   zip_info_sp;
 
         zip_info_sp spinfo_;            // Bean containing shared info.
-        first_iterator_type icur1_;     // Iterator pointing at current item in first sequence.
-        second_iterator_type icur2_;    // Iterator pointing at current item in second sequence.
+        std::size_t idx_;               // Index of current element.
 
     public:
-        next_impl(Seq1&& seq1, Seq2&& seq2, ResultSelector&& result_sel)
+        next_impl(Seq1&& seq1, Seq2&& seq2, ResultSelector&& result_sel,
+                  const typename coveo::enumerable<CU>::size_delegate& siz)
             : spinfo_(std::make_shared<zip_info>(std::forward<Seq1>(seq1),
                                                  std::forward<Seq2>(seq2),
-                                                 std::forward<ResultSelector>(result_sel))),
-              icur1_(std::begin(spinfo_->seq1_)),
-              icur2_(std::begin(spinfo_->seq2_)) { }
+                                                 std::forward<ResultSelector>(result_sel),
+                                                 siz)),
+              idx_(0) { }
 
-        auto operator()(std::unique_ptr<RU>& upopt) -> CU* {
-            CU* pobj = nullptr;
-            if (icur1_ != spinfo_->iend1_ && icur2_ != spinfo_->iend2_) {
-                coveo::detail::assign_in_upopt(upopt, spinfo_->result_sel_(*icur1_, *icur2_));
-                pobj = upopt.get();
-                ++icur1_;
-                ++icur2_;
+        auto operator()() -> CU* {
+            CU* pobj = spinfo_->get(idx_);
+            if (pobj != nullptr) {
+                ++idx_;
             }
             return pobj;
         }
@@ -3177,7 +3197,8 @@ public:
         }
         return coveo::enumerable<_CU>(next_impl<Seq1, _CU, _RU>(std::forward<Seq1>(seq1),
                                                                 std::forward<Seq2>(seq2_),
-                                                                std::forward<ResultSelector>(result_sel_)),
+                                                                std::forward<ResultSelector>(result_sel_),
+                                                                siz),
                                       siz);
     }
 };

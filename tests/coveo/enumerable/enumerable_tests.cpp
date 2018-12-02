@@ -45,66 +45,6 @@ struct no_copy {
     }
 };
 
-// Vector whose iterators don't return references
-template<typename T>
-class noref_vector {
-    std::vector<T> v_;
-public:
-    class const_iterator
-    {
-        typename std::vector<T>::const_iterator it_;
-    public:
-        using iterator_category = std::input_iterator_tag;
-        using value_type = T;
-        using pointer = const T*;
-        using reference = T;
-        using difference_type = std::ptrdiff_t;
-
-        const_iterator()
-            : it_() { }
-        explicit const_iterator(const typename std::vector<T>::const_iterator& it)
-            : it_(it) { }
-
-        reference operator*() const {
-            return *it_;
-        }
-
-        const_iterator& operator++() {
-            ++it_;
-            return *this;
-        }
-        const_iterator operator++(int) {
-            const_iterator before(*this);
-            ++*this;
-            return before;
-        }
-
-        friend bool operator==(const const_iterator& left, const const_iterator& right) {
-            return left.it_ == right.it_;
-        }
-        friend bool operator!=(const const_iterator& left, const const_iterator& right) {
-            return left.it_ != right.it_;
-        }
-    };
-
-public:
-    noref_vector()
-        : v_() { }
-    noref_vector(std::initializer_list<T> ilist)
-        : v_(ilist) { }
-
-    void push_back(const T& obj) { v_.push_back(obj); }
-    void push_back(T&& obj) { v_.push_back(std::move(obj)); }
-
-    const_iterator begin() const { return const_iterator(v_.cbegin()); }
-    const_iterator end() const { return const_iterator(v_.cend()); }
-    const_iterator cbegin() const { return begin(); }
-    const_iterator cend() const { return end(); }
-
-    std::size_t size() const { return v_.size(); }
-    bool empty() const { return v_.empty(); }
-};
-
 } // detail
 
 // Runs all tests for coveo::enumerable
@@ -127,10 +67,11 @@ void enumerable_tests()
     // sequence defined by next delegate
     {
         std::vector<int> vi = { 42 };
-        auto seq_i = coveo::enumerable<int>([](std::unique_ptr<int>& upi) -> int* {
-            if (upi == nullptr) {
-                upi.reset(new int(42));
-                return upi.get();
+        int i = 0;
+        auto seq_i = coveo::enumerable<int>([i]() mutable -> int* {
+            if (i == 0) {
+                i = 42;
+                return &i;
             } else {
                 return nullptr;
             }
@@ -141,10 +82,11 @@ void enumerable_tests()
     }
     {
         const std::vector<int> vi = { 42 };
-        auto seq_i = coveo::enumerable<const int>([](std::unique_ptr<int>& upi) -> const int* {
-            if (upi == nullptr) {
-                upi.reset(new int(42));
-                return upi.get();
+        int i = 0;
+        auto seq_i = coveo::enumerable<const int>([i]() mutable -> const int* {
+            if (i == 0) {
+                i = 42;
+                return &i;
             } else {
                 return nullptr;
             }
@@ -334,7 +276,7 @@ void enumerable_tests()
     {
         detail::no_copy an_obj(42);
         bool avail = true;
-        auto seq = coveo::enumerable<detail::no_copy>([&an_obj, avail](std::unique_ptr<detail::no_copy>&) mutable {
+        auto seq = coveo::enumerable<detail::no_copy>([&an_obj, avail]() mutable {
             detail::no_copy* pobj = nullptr;
             if (avail) {
                 pobj = &an_obj;
@@ -351,7 +293,7 @@ void enumerable_tests()
     {
         const detail::no_copy an_obj(42);
         bool avail = true;
-        auto seq = coveo::enumerable<const detail::no_copy>([&an_obj, avail](std::unique_ptr<detail::no_copy>&) mutable {
+        auto seq = coveo::enumerable<const detail::no_copy>([&an_obj, avail]() mutable {
             const detail::no_copy* pobj = nullptr;
             if (avail) {
                 pobj = &an_obj;
@@ -365,16 +307,6 @@ void enumerable_tests()
             return l;
         }();
         detail::validate_sequence(seq, lexpected, false);
-    }
-
-    // sequence with iterator returning non-reference
-    {
-        detail::noref_vector<int> vcnt = { 42, 23, 66 };
-        std::vector<int> vexpected = { 42, 23, 66 };
-        auto seq_cnt = coveo::enumerate_container(vcnt);
-        detail::validate_sequence(seq_cnt, vexpected, true);
-        auto seq_ccnt = seq_cnt.as_const();
-        detail::validate_sequence(seq_ccnt, vexpected, true);
     }
 
     // non-const to const
