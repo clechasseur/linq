@@ -514,8 +514,8 @@ void linq_tests()
                                      [](oddity, const coveo::enumerable<const int>& nums) {
                                          return std::distance(std::begin(nums), std::end(nums));
                                      });
-        COVEO_ASSERT(std::equal(std::begin(res), std::end(res),
-                                std::begin(size_by_oddity_v), std::end(size_by_oddity_v)));
+        COVEO_ASSERT(detail::equal(std::begin(res), std::end(res),
+                                   std::begin(size_by_oddity_v), std::end(size_by_oddity_v)));
         COVEO_ASSERT(!res.has_fast_size());
         COVEO_ASSERT(res.size() == size_by_oddity_v.size());
     }
@@ -529,9 +529,9 @@ void linq_tests()
                                      [](oddity, const coveo::enumerable<const int>& nums) {
                                          return std::distance(std::begin(nums), std::end(nums));
                                      },
-                                     std::greater<>());
-        COVEO_ASSERT(std::equal(std::begin(res), std::end(res),
-                                std::begin(size_by_oddity_v), std::end(size_by_oddity_v)));
+                                     coveo::linq::detail::greater<>());
+        COVEO_ASSERT(detail::equal(std::begin(res), std::end(res),
+                                   std::begin(size_by_oddity_v), std::end(size_by_oddity_v)));
         COVEO_ASSERT(!res.has_fast_size());
         COVEO_ASSERT(res.size() == size_by_oddity_v.size());
     }
@@ -546,8 +546,8 @@ void linq_tests()
                                             [](oddity, const coveo::enumerable<const int>& nums) {
                                                 return std::distance(std::begin(nums), std::end(nums)) + *std::begin(nums);
                                             });
-        COVEO_ASSERT(std::equal(std::begin(res), std::end(res),
-                                std::begin(somewhat_size_by_oddity_v), std::end(somewhat_size_by_oddity_v)));
+        COVEO_ASSERT(detail::equal(std::begin(res), std::end(res),
+                                   std::begin(somewhat_size_by_oddity_v), std::end(somewhat_size_by_oddity_v)));
         COVEO_ASSERT(!res.has_fast_size());
         COVEO_ASSERT(res.size() == somewhat_size_by_oddity_v.size());
     }
@@ -562,9 +562,9 @@ void linq_tests()
                                             [](oddity, const coveo::enumerable<const int>& nums) {
                                                 return std::distance(std::begin(nums), std::end(nums)) + *std::begin(nums);
                                             },
-                                            std::greater<>());
-        COVEO_ASSERT(std::equal(std::begin(res), std::end(res),
-                                std::begin(somewhat_size_by_oddity_v), std::end(somewhat_size_by_oddity_v)));
+                                            coveo::linq::detail::greater<>());
+        COVEO_ASSERT(detail::equal(std::begin(res), std::end(res),
+                                   std::begin(somewhat_size_by_oddity_v), std::end(somewhat_size_by_oddity_v)));
         COVEO_ASSERT(!res.has_fast_size());
         COVEO_ASSERT(res.size() == somewhat_size_by_oddity_v.size());
     }
@@ -595,8 +595,8 @@ void linq_tests()
             COVEO_ASSERT(std::get<0>(r) == std::get<0>(*icurex));
             auto&& exp_seq = std::get<1>(*icurex);
             auto&& act_seq = std::get<1>(r);
-            COVEO_ASSERT(std::equal(std::begin(act_seq), std::end(act_seq),
-                                    std::begin(exp_seq), std::end(exp_seq)));
+            COVEO_ASSERT(detail::equal(std::begin(act_seq), std::end(act_seq),
+                                       std::begin(exp_seq), std::end(exp_seq)));
             ++icurex;
         }
         COVEO_ASSERT(!res.has_fast_size());
@@ -621,15 +621,15 @@ void linq_tests()
                               [](int o, const coveo::enumerable<const int>& i_s) {
                                   return std::make_tuple(o, std::vector<int>(std::begin(i_s), std::end(i_s)));
                               },
-                              std::greater<>());
+                              coveo::linq::detail::greater<>());
         auto icurex = expected.cbegin();
         for (auto&& r : res) {
             COVEO_ASSERT(icurex != expected.cend());
             COVEO_ASSERT(std::get<0>(r) == std::get<0>(*icurex));
             auto&& exp_seq = std::get<1>(*icurex);
             auto&& act_seq = std::get<1>(r);
-            COVEO_ASSERT(std::equal(std::begin(act_seq), std::end(act_seq),
-                                    std::begin(exp_seq), std::end(exp_seq)));
+            COVEO_ASSERT(detail::equal(std::begin(act_seq), std::end(act_seq),
+                                       std::begin(exp_seq), std::end(exp_seq)));
             ++icurex;
         }
         COVEO_ASSERT(!res.has_fast_size());
