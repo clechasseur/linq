@@ -11,6 +11,7 @@
 #include <cstddef>
 #include <iterator>
 #include <functional>
+#include <memory>
 #include <type_traits>
 
 namespace coveo {
