@@ -1592,21 +1592,13 @@ void chaining_tests()
     {
         struct regcourse { course c; uint32_t stu_id; };
         struct coursenumst { course c; std::size_t num_st; };
-        auto seq = from(v_registrations)
-                 | join(v_courses,
-                        [](const registration& reg) { return reg.course_id; },
-                        [](const course& c) { return c.id; },
-                        [](const registration& reg, const course& c) {
-                            return regcourse { c, reg.student_id };
-                        })
-                 | group_values_by([](const regcourse& c_stid) { return c_stid.c; },
-                                   [](const regcourse& c_stid) { return c_stid.stu_id; },
-                                   [](const course& course1, const course& course2) { return course1.id < course2.id; })
-                 | select([](std::tuple<course, coveo::enumerable<const uint32_t>> c_stids) {
-                              auto num = from(std::get<1>(c_stids))
-                                       | count();
-                              return coursenumst { std::get<0>(c_stids), num };
-                          })
+        auto seq = from(v_courses)
+                 | group_join(v_registrations,
+                              [](const course& c) { return c.id; },
+                              [](const registration& reg) { return reg.course_id; },
+                              [](const course& c, const coveo::enumerable<const registration>& regs) {
+                                  return coursenumst { c, regs.size() };
+                              })
                  | order_by([](const coursenumst& c_numst) { return c_numst.c.name; });
 
         std::cout << std::endl;
