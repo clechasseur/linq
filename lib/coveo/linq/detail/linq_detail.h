@@ -2155,8 +2155,7 @@ public:
 
             auto get(std::size_t n) -> CU* {
                 while (icur_ != iend_ && vtransformed_.size() <= n) {
-                    vtransformed_.emplace_back(sel_(*icur_, vtransformed_.size()));
-                    ++icur_;
+                    vtransformed_.emplace_back(sel_(*icur_++, vtransformed_.size()));
                 }
                 return vtransformed_.size() > n ? std::addressof(vtransformed_[n])
                                                 : nullptr;
@@ -2252,9 +2251,7 @@ public:
 
             auto get(std::size_t n) -> CU* {
                 while (icur_ != iend_ && vtransformed_.size() <= n) {
-                    auto new_elements = sel_(*icur_, idx_);
-                    ++icur_;
-                    ++idx_;
+                    auto new_elements = sel_(*icur_++, idx_++);
                     vtransformed_.insert(vtransformed_.end(), std::begin(new_elements), std::end(new_elements));
                 }
                 return vtransformed_.size() > n ? std::addressof(vtransformed_[n])
