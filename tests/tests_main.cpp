@@ -20,12 +20,6 @@ int main()
     ret = coveo_tests::run_tests(&coveo_tests::linq::all_benchmarks);
 #endif
     std::cout << "Done." << std::endl;
-
-    if (ret != 0) {
-        std::cout << std::endl << "Press enter to continue ";
-        std::string unused;
-        std::getline(std::cin, unused);
-    }
     
     return ret;
 }
