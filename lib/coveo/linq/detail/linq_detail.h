@@ -2146,7 +2146,9 @@ public:
                   sel_(std::forward<Selector>(sel)),
                   vtransformed_()
             {
-                try_reserve(vtransformed_, seq_);
+                // TODO remove this hack
+                vtransformed_.reserve(100);
+                //try_reserve(vtransformed_, seq_);
             }
 
             // Cannot copy/move, stored in a shared_ptr
