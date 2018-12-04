@@ -34,6 +34,18 @@ void assertion_failed(const char* condition, const char* source_file, int line) 
             coveo_tests::assertion_failed(#COND, __FILE__, __LINE__); \
         } \
     }
+#define COVEO_ASSERT_EQUAL(EXPECTED, ACTUAL) \
+    { \
+        auto _a_expected = EXPECTED; \
+        auto _a_actual = ACTUAL; \
+        if (!(_a_actual == _a_expected)) { \
+            std::ostringstream _a_oss; \
+            _a_oss << #ACTUAL << " == " << #EXPECTED \
+                   << ": expected " << _a_expected \
+                   << ", got " << _a_actual; \
+            coveo_tests::assertion_failed(_a_oss.str().c_str(), __FILE__, __LINE__); \
+        } \
+    }
 #define COVEO_ASSERT_FALSE() \
     { \
         coveo_tests::assertion_failed("Default assertion failed", __FILE__, __LINE__); \
