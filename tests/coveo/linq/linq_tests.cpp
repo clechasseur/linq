@@ -1521,14 +1521,28 @@ void chaining_tests()
         bool male;
         std::string first_name;
         std::string last_name;
+        bool operator==(const student& b) const {
+            return id == b.id &&
+                   male == b.male &&
+                   first_name == b.first_name &&
+                   last_name == b.last_name;
+        }
     };
     struct course {
         uint32_t id;
         std::string name;
+        bool operator==(const course& b) const {
+            return id == b.id &&
+                   name == b.name;
+        }
     };
     struct registration {
         uint32_t student_id;
         uint32_t course_id;
+        bool operator==(const registration& b) const {
+            return student_id == b.student_id &&
+                   course_id == b.course_id;
+        }
     };
     const std::vector<student> v_students = {
         { 1000, true, "John", "Peterson" },
@@ -1606,6 +1620,54 @@ void chaining_tests()
             std::cout << c_numst.c.name << "\t" << c_numst.num_st << std::endl;
         }
         std::cout << std::endl;
+    }
+
+    // Let's try that again, this time taking a more convoluted route that
+    // apparently triggers some form of corruption on Linux (?)
+    {
+        struct regcourse {
+            course c;
+            uint32_t stu_id;
+            bool operator==(const regcourse& b) const {
+                return c == b.c &&
+                       stu_id == b.stu_id;
+            }
+        };
+        struct coursenumst {
+            course c;
+            std::size_t num_st;
+            bool operator==(const coursenumst& b) const {
+                return c == b.c &&
+                       num_st == b.num_st;
+            }
+        };
+
+        auto seq = from(v_registrations)
+                 | join(v_courses,
+                        [](const registration& reg) { return reg.course_id; },
+                        [](const course& c) { return c.id; },
+                        [](const registration& reg, const course& c) {
+                            return regcourse { c, reg.student_id };
+                        })
+                 | group_values_by([](const regcourse& c_stid) { return c_stid.c; },
+                                   [](const regcourse& c_stid) { return c_stid.stu_id; },
+                                   [](const course& course1, const course& course2) { return course1.id < course2.id; })
+                 | select([](std::tuple<course, coveo::enumerable<const uint32_t>> c_stids) {
+                              auto num = from(std::get<1>(c_stids))
+                                       | count();
+                              return coursenumst { std::get<0>(c_stids), num };
+                          })
+                 | order_by([](const coursenumst& c_numst) { return c_numst.c.name; });
+
+        const std::vector<coursenumst> expected {
+            { v_courses[0], 1 },
+            { v_courses[2], 1 },
+            { v_courses[3], 3 },
+            { v_courses[1], 3 },
+            { v_courses[4], 2 },
+        };
+        COVEO_ASSERT(detail::equal(std::begin(seq), std::end(seq),
+                                   std::begin(expected), std::end(expected)));
     }
 }
 
