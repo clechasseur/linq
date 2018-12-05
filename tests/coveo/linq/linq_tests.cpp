@@ -1609,7 +1609,7 @@ void chaining_tests()
     }
 
     // Let's try that again, this time taking a more convoluted route that
-    // apparently triggers some form of corruption on Linux (?)
+    // used to trigger some form of corruption on Linux because of a bug in select()
     {
         struct regcourse { course c; uint32_t stu_id; };
         struct coursenumst { course c; std::size_t num_st; };

@@ -1978,9 +1978,9 @@ private:
     Seq seq_;                                                                       // Sequence we're ordering.
     std::unique_ptr<Cmp> upcmp_;                                                    // Comparator used to order a sequence.
     mutable coveo::enumerable<typename seq_traits<Seq>::const_value_type> enum_;    // Enumerator of ordered elements.
-    mutable bool init_flag_;                                                        // Whether enum_ and size_ have been initialized.
+    mutable bool init_flag_;                                                        // Whether enum_ has been initialized.
 
-    // Called to initialize enum_ and size_ before using them.
+    // Called to initialize enum_ before using them.
     void init() const {
         std::vector<typename seq_traits<Seq>::raw_value_type> ordered;  // TODO-optimize: use vector of pointers to seq elements
         try_reserve(ordered, seq_);
@@ -2146,9 +2146,7 @@ public:
                   sel_(std::forward<Selector>(sel)),
                   vtransformed_()
             {
-                // TODO remove this hack
-                vtransformed_.reserve(100);
-                //try_reserve(vtransformed_, seq_);
+                try_reserve(vtransformed_, seq_);
             }
 
             // Cannot copy/move, stored in a shared_ptr
@@ -2157,7 +2155,7 @@ public:
 
             auto get(std::size_t n) -> CU* {
                 while (icur_ != iend_ && vtransformed_.size() <= n) {
-                    vtransformed_.emplace_back(sel_(*icur_++, vtransformed_.size()));
+                    vtransformed_.emplace_back(sel_(*icur_++, vtransformed_.size()));   // TODO fix: this invalidate iterators/references
                 }
                 return vtransformed_.size() > n ? std::addressof(vtransformed_[n])
                                                 : nullptr;
@@ -2254,7 +2252,7 @@ public:
             auto get(std::size_t n) -> CU* {
                 while (icur_ != iend_ && vtransformed_.size() <= n) {
                     auto new_elements = sel_(*icur_++, idx_++);
-                    vtransformed_.insert(vtransformed_.end(), std::begin(new_elements), std::end(new_elements));
+                    vtransformed_.insert(vtransformed_.end(), std::begin(new_elements), std::end(new_elements));    // TODO fix: this invalidate iterators/references
                 }
                 return vtransformed_.size() > n ? std::addressof(vtransformed_[n])
                                                 : nullptr;
@@ -2744,7 +2742,6 @@ public:
     auto operator()(Seq&& seq) -> Container {
         Container c;
         for (auto&& elem : seq) {
-            // #clp TODO replace this with insert_or_assign once available
             auto key = key_sel_(elem);
             auto emplace_res = c.emplace(key, elem);
             if (!emplace_res.second) {
@@ -2771,7 +2768,6 @@ public:
     auto operator()(Seq&& seq) -> Container {
         Container c;
         for (auto&& elem : seq) {
-            // #clp TODO replace this with insert_or_assign once available
             auto key = key_sel_(elem);
             auto mapped = elem_sel_(elem);
             auto emplace_res = c.emplace(key, mapped);
@@ -2802,7 +2798,6 @@ public:
         std::map<typename std::decay<decltype(key_sel_(*std::begin(seq)))>::type,
                  typename seq_traits<Seq>::raw_value_type> m;
         for (auto&& elem : seq) {
-            // #clp TODO replace this with insert_or_assign once available
             auto key = key_sel_(elem);
             auto emplace_res = m.emplace(key, elem);
             if (!emplace_res.second) {
@@ -2833,7 +2828,6 @@ public:
         std::map<typename std::decay<decltype(key_sel_(*std::begin(seq)))>::type,
                  typename std::decay<decltype(elem_sel_(*std::begin(seq)))>::type> m;
         for (auto&& elem : seq) {
-            // #clp TODO replace this with insert_or_assign once available
             auto key = key_sel_(elem);
             auto mapped = elem_sel_(elem);
             auto emplace_res = m.emplace(key, mapped);
@@ -3127,7 +3121,7 @@ public:
 
             auto get(std::size_t n) -> CU* {
                 while (icur1_ != iend1_ && icur2_ != iend2_ && vzipped_.size() <= n) {
-                    vzipped_.emplace_back(result_sel_(*icur1_++, *icur2_++));
+                    vzipped_.emplace_back(result_sel_(*icur1_++, *icur2_++));   // TODO fix: this invalidate iterators/references
                 }
                 return vzipped_.size() > n ? std::addressof(vzipped_[n])
                                            : nullptr;
