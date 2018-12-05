@@ -13,6 +13,7 @@
 #include <cassert>
 #include <cstddef>
 #include <deque>
+#include <forward_list>
 #include <functional>
 #include <iterator>
 #include <list>
@@ -138,33 +139,38 @@ std::unique_ptr<T> make_unique(Args&&... args) {
 // Helper that reserves space in a container based on the number of elements in a sequence
 // if it's possible to do so quickly (e.g. with random-access iterators or size())
 template<typename C, typename Seq>
-auto try_reserve(C& cnt, const Seq& seq) -> typename std::enable_if<coveo::detail::is_enumerable<Seq>::value, void>::type
+auto try_reserve(C& cnt, const Seq& seq) -> typename std::enable_if<coveo::detail::is_enumerable<Seq>::value, bool>::type
 {
-    if (seq.has_fast_size()) {
+    const bool can_reserve = seq.has_fast_size();
+    if (can_reserve) {
         cnt.reserve(seq.size());
     }
+    return can_reserve;
 }
 template<typename C, typename Seq>
 auto try_reserve(C& cnt, const Seq& seq) -> typename std::enable_if<!coveo::detail::is_enumerable<Seq>::value &&
-                                                                    coveo::detail::has_size_const_method<Seq>::value, void>::type
+                                                                    coveo::detail::has_size_const_method<Seq>::value, bool>::type
 {
     cnt.reserve(seq.size());
+    return true;
 }
 template<typename C, typename Seq>
 auto try_reserve(C& cnt, const Seq& seq) -> typename std::enable_if<!coveo::detail::has_size_const_method<Seq>::value &&
                                                                     std::is_base_of<std::random_access_iterator_tag,
                                                                                     typename std::iterator_traits<typename std::decay<decltype(std::begin(std::declval<Seq>()))>::type>::iterator_category>::value,
-                                                                    void>::type
+                                                                    bool>::type
 {
     cnt.reserve(std::distance(std::begin(seq), std::end(seq)));
+    return true;
 }
 template<typename C, typename Seq>
 auto try_reserve(C&, const Seq&) -> typename std::enable_if<!coveo::detail::has_size_const_method<typename std::decay<Seq>::type>::value &&
                                                             !std::is_base_of<std::random_access_iterator_tag,
                                                                              typename std::iterator_traits<typename std::decay<decltype(std::begin(std::declval<Seq>()))>::type>::iterator_category>::value,
-                                                            void>::type
+                                                            bool>::type
 {
     // Can't reserve, no fast way of doing so
+    return false;
 }
 
 // Helper that returns a size_delegate for a sequence if it's possible to quickly calculate
@@ -1110,8 +1116,9 @@ public:
             }
             typename seq_traits<result_v>::const_pointer pobj = nullptr;
             if (icurr_ != iendr_) {
-                typename seq_traits<result_v>::const_reference robj = *icurr_++;
+                typename seq_traits<result_v>::const_reference robj = *icurr_;
                 pobj = std::addressof(robj);
+                ++icurr_;
             }
             return pobj;
         }
@@ -1277,8 +1284,9 @@ public:
             }
             typename seq_traits<result_v>::const_pointer pobj = nullptr;
             if (icurr_ != iendr_) {
-                typename seq_traits<result_v>::const_reference robj = *icurr_++;
+                typename seq_traits<result_v>::const_reference robj = *icurr_;
                 pobj = std::addressof(robj);
+                ++icurr_;
             }
             return pobj;
         }
@@ -1581,8 +1589,9 @@ public:
             }
             typename seq_traits<result_v>::const_pointer pobj = nullptr;
             if (icurr_ != iendr_) {
-                typename seq_traits<result_v>::const_reference robj = *icurr_++;
+                typename seq_traits<result_v>::const_reference robj = *icurr_;
                 pobj = std::addressof(robj);
+                ++icurr_;
             }
             return pobj;
         }
@@ -2128,8 +2137,10 @@ public:
         // Iterator used by the sequence.
         typedef typename seq_traits<Seq>::iterator_type iterator_type;
 
-        // Vector storing transformed elements.
-        typedef std::vector<RU> transformed_v;
+        // Containers storing transformed elements.
+        typedef std::vector<RU>                     transformed_v;
+        typedef std::forward_list<RU>               transformed_l;
+        typedef typename transformed_l::iterator    transformed_l_iterator;
 
         // Bean storing info about elements. Shared among delegates.
         struct select_info {
@@ -2138,46 +2149,63 @@ public:
             iterator_type iend_;            // Iterator pointing at end of seq_.
             Selector sel_;                  // Selector transforming the elements.
             transformed_v vtransformed_;    // Vector of transformed elements.
+            transformed_l ltransformed_;    // List of transformed elements.
+            transformed_l_iterator llast_;  // Iterator pointing to last element in ltransformed_ (before end()).
+            std::size_t lsize_;             // Number of elements in ltransformed_.
+            bool use_vector_;               // Whether we use ltransformed_ (false) or vtransformed_ (true).
 
             select_info(Seq&& seq, Selector&& sel)
                 : seq_(std::forward<Seq>(seq)),
                   icur_(std::begin(seq_)),
                   iend_(std::end(seq_)),
                   sel_(std::forward<Selector>(sel)),
-                  vtransformed_()
-            {
-                try_reserve(vtransformed_, seq_);
-            }
+                  vtransformed_(),
+                  ltransformed_(),
+                  llast_(ltransformed_.before_begin()),
+                  lsize_(0),
+                  use_vector_(try_reserve(vtransformed_, seq_)) { }
 
             // Cannot copy/move, stored in a shared_ptr
             select_info(const select_info&) = delete;
             select_info& operator=(const select_info&) = delete;
 
-            auto get(std::size_t n) -> CU* {
-                while (icur_ != iend_ && vtransformed_.size() <= n) {
-                    vtransformed_.emplace_back(sel_(*icur_++, vtransformed_.size()));   // TODO fix: this invalidate iterators/references
+            auto get_next(std::size_t& vncur, transformed_l_iterator& licur) -> CU* {
+                CU* pnext = nullptr;
+                if (use_vector_) {
+                    while (icur_ != iend_ && vtransformed_.size() <= vncur) {
+                        vtransformed_.emplace_back(sel_(*icur_, vtransformed_.size()));
+                        ++icur_;
+                    }
+                    if (vtransformed_.size() > vncur) {
+                        pnext = std::addressof(vtransformed_[vncur++]);
+                    }
+                } else {
+                    if (licur == llast_ && icur_ != iend_) {
+                        llast_ = ltransformed_.emplace_after(llast_, sel_(*icur_, lsize_++));
+                        ++icur_;
+                    }
+                    if (licur != llast_) {
+                        pnext = std::addressof(*++licur);
+                    }
                 }
-                return vtransformed_.size() > n ? std::addressof(vtransformed_[n])
-                                                : nullptr;
+                return pnext;
             }
         };
         typedef std::shared_ptr<select_info> select_info_sp;
 
-        select_info_sp spinfo_;     // Shared information about elements.
-        std::size_t idx_;           // Index of current element.
+        select_info_sp spinfo_;         // Shared information about elements.
+        std::size_t vncur_;             // Index of current element (if in vector).
+        transformed_l_iterator licur_;  // Iterator pointing at current element (if in list).
 
     public:
         next_impl(Seq&& seq, Selector&& sel)
             : spinfo_(std::make_shared<select_info>(std::forward<Seq>(seq),
                                                     std::forward<Selector>(sel))),
-              idx_(0) { }
+              vncur_(0),
+              licur_(spinfo_->ltransformed_.before_begin()) { }
 
         auto operator()() -> CU* {
-            CU* pobj = spinfo_->get(idx_);
-            if (pobj != nullptr) {
-                ++idx_;
-            }
-            return pobj;
+            return spinfo_->get_next(vncur_, licur_);
         }
     };
 
