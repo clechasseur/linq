@@ -1672,7 +1672,7 @@ void bugs_tests()
     // Some operators used to invalidate their references when iterating,
     // breaking chaining and other stuff.
     {
-        const std::vector<std::string> v = { "42", "23", "66" };
+        const std::forward_list<std::string> v = { "42", "23", "66" };
         auto to_int = [](const std::string& s) {
             std::istringstream iss(s);
             int i = 0;
@@ -1689,7 +1689,7 @@ void bugs_tests()
                                    std::begin(expected), std::end(expected)));
     }
     {
-        const std::vector<std::string> v = { "42 23", "66 67", "11 7" };
+        const std::forward_list<std::string> v = { "42 23", "66 67", "11 7" };
         auto to_ints = [](const std::string& s) {
             std::istringstream iss(s);
             int i = 0, j = 0;
@@ -1706,8 +1706,8 @@ void bugs_tests()
                                    std::begin(expected), std::end(expected)));
     }
     {
-        const std::vector<int> v1 = { 42, 23, 66 };
-        const std::vector<int> v2 = { 67, 11, 7 };
+        const std::forward_list<int> v1 = { 42, 23, 66 };
+        const std::forward_list<int> v2 = { 67, 11, 7 };
 
         auto seq = from(v1)
                  | zip(v2, [](int i, int j) { return std::make_pair(i, j); })
