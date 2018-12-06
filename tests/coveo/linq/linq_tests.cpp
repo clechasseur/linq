@@ -1668,6 +1668,55 @@ void bugs_tests()
         COVEO_ASSERT(from(e1)
                    | sequence_equal(e2));
     }
+
+    // Some operators used to invalidate their references when iterating,
+    // breaking chaining and other stuff.
+    {
+        const std::vector<std::string> v = { "42", "23", "66" };
+        auto to_int = [](const std::string& s) {
+            std::istringstream iss(s);
+            int i = 0;
+            iss >> i;
+            return i;
+        };
+
+        auto seq = from(v)
+                 | select(to_int)
+                 | order_by([](int i) { return i; });
+
+        const std::vector<int> expected = { 23, 42, 66 };
+        COVEO_ASSERT(detail::equal(std::begin(seq), std::end(seq),
+                                   std::begin(expected), std::end(expected)));
+    }
+    {
+        const std::vector<std::string> v = { "42 23", "66 67", "11 7" };
+        auto to_ints = [](const std::string& s) {
+            std::istringstream iss(s);
+            int i = 0, j = 0;
+            iss >> i >> j;
+            return std::vector<int> { i, j };
+        };
+
+        auto seq = from(v)
+                 | select_many(to_ints)
+                 | order_by([](int i) { return i; });
+
+        const std::vector<int> expected = { 7, 11, 23, 42, 66 , 67 };
+        COVEO_ASSERT(detail::equal(std::begin(seq), std::end(seq),
+                                   std::begin(expected), std::end(expected)));
+    }
+    {
+        const std::vector<int> v1 = { 42, 23, 66 };
+        const std::vector<int> v2 = { 67, 11, 7 };
+
+        auto seq = from(v1)
+                 | zip(v2, [](int i, int j) { return std::make_pair(i, j); })
+                 | order_by([](const std::pair<int, int>& p) { return p.first; });
+
+        const std::vector<std::pair<int, int>> expected = { { 23, 11 }, { 42, 67 }, { 66, 7 } };
+        COVEO_ASSERT(detail::equal(std::begin(seq), std::end(seq),
+                                   std::begin(expected), std::end(expected)));
+    }
 }
 
 // Runs all benchmarks for coveo::linq operators
