@@ -2172,7 +2172,7 @@ public:
             auto get_next(std::size_t& vncur, transformed_l_iterator& licur) -> CU* {
                 CU* pnext = nullptr;
                 if (use_vector_) {
-                    while (icur_ != iend_ && vtransformed_.size() <= vncur) {
+                    while (vtransformed_.size() <= vncur && icur_ != iend_) {
                         vtransformed_.emplace_back(sel_(*icur_, vtransformed_.size()));
                         ++icur_;
                     }
@@ -2180,7 +2180,7 @@ public:
                         pnext = std::addressof(vtransformed_[vncur++]);
                     }
                 } else {
-                    if (licur == llast_ && icur_ != iend_) {
+                    while (licur == llast_ && icur_ != iend_) {
                         llast_ = ltransformed_.emplace_after(llast_, sel_(*icur_, lsize_++));
                         ++icur_;
                     }
@@ -2253,8 +2253,9 @@ public:
         // Iterator used by the sequence.
         typedef typename seq_traits<Seq>::iterator_type iterator_type;
 
-        // Vector storing transformed elements.
-        typedef std::vector<RU> transformed_v;
+        // List storing transformed elements.
+        typedef std::forward_list<RU>               transformed_l;
+        typedef typename transformed_l::iterator    transformed_l_iterator;
 
         // Bean storing info about elements. Shared among delegates.
         struct select_info {
@@ -2263,7 +2264,8 @@ public:
             std::size_t idx_;               // Index of current element in seq_.
             iterator_type iend_;            // Iterator pointing at end of seq_.
             Selector sel_;                  // Selector transforming the elements.
-            transformed_v vtransformed_;    // Vector of transformed elements.
+            transformed_l ltransformed_;    // List of transformed elements.
+            transformed_l_iterator llast_;  // Iterator pointing to last element in ltransformed_ (before end()).
 
             select_info(Seq&& seq, Selector&& sel)
                 : seq_(std::forward<Seq>(seq)),
@@ -2271,38 +2273,39 @@ public:
                   idx_(0),
                   iend_(std::end(seq_)),
                   sel_(std::forward<Selector>(sel)),
-                  vtransformed_() { }
+                  ltransformed_(),
+                  llast_(ltransformed_.before_begin()) { }
 
             // Cannot copy/move, stored in a shared_ptr
             select_info(const select_info&) = delete;
             select_info& operator=(const select_info&) = delete;
 
-            auto get(std::size_t n) -> CU* {
-                while (icur_ != iend_ && vtransformed_.size() <= n) {
-                    auto new_elements = sel_(*icur_++, idx_++);
-                    vtransformed_.insert(vtransformed_.end(), std::begin(new_elements), std::end(new_elements));    // TODO fix: this invalidate iterators/references
+            auto get_next(transformed_l_iterator& licur) -> CU* {
+                CU* pnext = nullptr;
+                while (licur == llast_ && icur_ != iend_) {
+                    auto new_elements = sel_(*icur_, idx_++);
+                    llast_ = ltransformed_.insert_after(llast_, std::begin(new_elements), std::end(new_elements));
+                    ++icur_;
                 }
-                return vtransformed_.size() > n ? std::addressof(vtransformed_[n])
-                                                : nullptr;
+                if (licur != llast_) {
+                    pnext = std::addressof(*++licur);
+                }
+                return pnext;
             }
         };
         typedef std::shared_ptr<select_info> select_info_sp;
 
-        select_info_sp spinfo_;     // Shared information about elements.
-        std::size_t idx_;           // Index of current element in sequence.
+        select_info_sp spinfo_;         // Shared information about elements.
+        transformed_l_iterator licur_;  // Iterator pointing at current element.
 
     public:
         next_impl(Seq&& seq, Selector&& sel)
             : spinfo_(std::make_shared<select_info>(std::forward<Seq>(seq),
                                                     std::forward<Selector>(sel))),
-              idx_(0) { }
+              licur_(spinfo_->ltransformed_.before_begin()) { }
 
         auto operator()() -> CU* {
-            CU* pobj = spinfo_->get(idx_);
-            if (pobj != nullptr) {
-                ++idx_;
-            }
-            return pobj;
+            return spinfo_->get_next(licur_);
         }
     };
 
@@ -3112,8 +3115,10 @@ public:
         typedef typename seq_traits<Seq1>::iterator_type    first_iterator_type;
         typedef typename seq_traits<Seq2>::iterator_type    second_iterator_type;
 
-        // Vector storing zipped elements.
-        typedef std::vector<RU> zipped_v;
+        // Containers storing zipped elements.
+        typedef std::vector<RU>             zipped_v;
+        typedef std::forward_list<RU>       zipped_l;
+        typedef typename zipped_l::iterator zipped_l_iterator;
 
     private:
         // Bean storing info shared among delegates.
@@ -3126,6 +3131,9 @@ public:
             second_iterator_type iend2_;    // Iterator pointing at end of seq2_.
             ResultSelector result_sel_;     // Selector producing the results.
             zipped_v vzipped_;              // Vector of zipped elements.
+            zipped_l lzipped_;              // List of zipped elements.
+            zipped_l_iterator llast_;       // Iterator pointing to last element in lzipped_ (before end()).
+            bool use_vector_;               // Whether we use lzipped_ (false) or vzipped_ (true).
 
             zip_info(Seq1&& seq1, Seq2&& seq2, ResultSelector&& result_sel,
                      const typename coveo::enumerable<CU>::size_delegate& siz)
@@ -3136,7 +3144,10 @@ public:
                   icur2_(std::begin(seq2_)),
                   iend2_(std::end(seq2_)),
                   result_sel_(std::forward<ResultSelector>(result_sel)),
-                  vzipped_()
+                  vzipped_(),
+                  lzipped_(),
+                  llast_(lzipped_.before_begin()),
+                  use_vector_(siz != nullptr)
             {
                 if (siz != nullptr) {
                     vzipped_.reserve(siz());
@@ -3147,18 +3158,35 @@ public:
             zip_info(const zip_info&) = delete;
             zip_info& operator=(const zip_info&) = delete;
 
-            auto get(std::size_t n) -> CU* {
-                while (icur1_ != iend1_ && icur2_ != iend2_ && vzipped_.size() <= n) {
-                    vzipped_.emplace_back(result_sel_(*icur1_++, *icur2_++));   // TODO fix: this invalidate iterators/references
+            auto get_next(std::size_t& vncur, zipped_l_iterator& licur) -> CU* {
+                CU* pnext = nullptr;
+                if (use_vector_) {
+                    while (vzipped_.size() <= vncur && icur1_ != iend1_ && icur2_ != iend2_) {
+                        vzipped_.emplace_back(result_sel_(*icur1_, *icur2_));
+                        ++icur1_;
+                        ++icur2_;
+                    }
+                    if (vzipped_.size() > vncur) {
+                        pnext = std::addressof(vzipped_[vncur++]);
+                    }
+                } else {
+                    while (licur == llast_ && icur1_ != iend1_ && icur2_ != iend2_) {
+                        llast_ = lzipped_.emplace_after(llast_, result_sel_(*icur1_, *icur2_));
+                        ++icur1_;
+                        ++icur2_;
+                    }
+                    if (licur != llast_) {
+                        pnext = std::addressof(*++licur);
+                    }
                 }
-                return vzipped_.size() > n ? std::addressof(vzipped_[n])
-                                           : nullptr;
+                return pnext;
             }
         };
         typedef std::shared_ptr<zip_info>   zip_info_sp;
 
         zip_info_sp spinfo_;            // Bean containing shared info.
-        std::size_t idx_;               // Index of current element.
+        std::size_t vncur_;             // Index of current element (if in vector).
+        zipped_l_iterator licur_;       // Iterator pointing at current element (if in list).
 
     public:
         next_impl(Seq1&& seq1, Seq2&& seq2, ResultSelector&& result_sel,
@@ -3167,14 +3195,11 @@ public:
                                                  std::forward<Seq2>(seq2),
                                                  std::forward<ResultSelector>(result_sel),
                                                  siz)),
-              idx_(0) { }
+              vncur_(0),
+              licur_(spinfo_->lzipped_.before_begin()) { }
 
         auto operator()() -> CU* {
-            CU* pobj = spinfo_->get(idx_);
-            if (pobj != nullptr) {
-                ++idx_;
-            }
-            return pobj;
+            return spinfo_->get_next(vncur_, licur_);
         }
     };
 
