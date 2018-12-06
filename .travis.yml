@@ -46,7 +46,14 @@ matrix:
   - compiler: clang39
     dist: trusty
     sudo: false
-    env: COMPILER=clang++
+    addons:
+      apt:
+        sources:
+        - ubuntu-toolchain-r-test
+        - llvm-toolchain-trusty-3.9
+        packages:
+        - clang-3.9
+    env: COMPILER=clang++-3.9
   - compiler: clang40
     dist: trusty
     sudo: false
