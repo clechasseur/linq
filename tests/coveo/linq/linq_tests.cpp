@@ -824,7 +824,7 @@ void linq_tests()
         const std::vector<int> expected = { 66, 42, 24, 23, 11 };
 
         using namespace coveo::linq;
-        auto seq = from(v)
+        auto seq = from(std::vector<int>(v))
                  | order_by([](int i) { return i; }, std::greater<int>());
         COVEO_ASSERT(detail::equal(std::begin(seq), std::end(seq),
                                    std::begin(expected), std::end(expected)));
@@ -848,7 +848,7 @@ void linq_tests()
         const std::vector<int> expected = { 11, 23, 24, 42, 66 };
 
         using namespace coveo::linq;
-        auto seq = from(v)
+        auto seq = from(std::vector<int>(v))
                  | order_by_descending([](int i) { return i; }, std::greater<int>());
         COVEO_ASSERT(detail::equal(std::begin(seq), std::end(seq),
                                    std::begin(expected), std::end(expected)));
@@ -885,6 +885,20 @@ void linq_tests()
         COVEO_ASSERT(seq.has_fast_size());
         COVEO_ASSERT(seq.size() == expected.size());
     }
+    {
+        std::vector<int> v = { 42, 23, 66 };
+        const std::vector<int> expected = { 84, 46, 132 };
+
+        using namespace coveo::linq;
+        auto seq = from(v)
+                 | order_by([](int i) { return i; })
+                 | then_by_descending([](int i) { return i; });
+        for (auto&& i : seq) {
+            i *= 2;
+        }
+        COVEO_ASSERT(detail::equal(std::begin(v), std::end(v),
+                                   std::begin(expected), std::end(expected)));
+    }
 
     // reverse
     {
@@ -910,6 +924,32 @@ void linq_tests()
                                    std::begin(expected), std::end(expected)));
         COVEO_ASSERT(seq.has_fast_size());
         COVEO_ASSERT(seq.size() == 5);
+    }
+    {
+        std::vector<int> v = { 42, 23, 66 };
+        const std::vector<int> expected = { 84, 46, 132 };
+
+        using namespace coveo::linq;
+        auto seq = from(v)
+                 | reverse();
+        for (auto&& i : seq) {
+            i *= 2;
+        }
+        COVEO_ASSERT(detail::equal(std::begin(v), std::end(v),
+                                   std::begin(expected), std::end(expected)));
+    }
+    {
+        std::forward_list<int> v = { 42, 23, 66 };
+        const std::vector<int> expected = { 84, 46, 132 };
+
+        using namespace coveo::linq;
+        auto seq = from(v)
+                 | reverse();
+        for (auto&& i : seq) {
+            i *= 2;
+        }
+        COVEO_ASSERT(detail::equal(std::begin(v), std::end(v),
+                                   std::begin(expected), std::end(expected)));
     }
 
     // select/select_with_index/select_many/select_many_with_index
@@ -1714,6 +1754,17 @@ void bugs_tests()
                  | order_by([](const std::pair<int, int>& p) { return p.first; });
 
         const std::vector<std::pair<int, int>> expected = { { 23, 11 }, { 42, 67 }, { 66, 7 } };
+        COVEO_ASSERT(detail::equal(std::begin(seq), std::end(seq),
+                                   std::begin(expected), std::end(expected)));
+    }
+
+    // reverse used to not keep a copy of the sequence if moved,
+    // resulting in an invalid sequence afterwards.
+    {
+        auto seq = from(std::vector<int>{ 42, 23, 66 })
+                 | reverse();
+
+        const std::vector<int> expected = { 66, 23, 42 };
         COVEO_ASSERT(detail::equal(std::begin(seq), std::end(seq),
                                    std::begin(expected), std::end(expected)));
     }
