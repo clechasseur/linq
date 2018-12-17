@@ -152,9 +152,18 @@ auto all(const Pred& pred)
 // Operator that checks if a sequence has elements.
 template<typename = void>
 auto any()
-    -> detail::any_impl<>
+    -> detail::any_impl_0<>
 {
-    return detail::any_impl<>();
+    return detail::any_impl_0<>();
+}
+
+// Operator that checks if at least one element in a sequence satisfy a given predicate.
+// Works on empty sequences (returns false in such a case).
+template<typename Pred>
+auto any(const Pred& pred)
+    -> detail::any_impl_1<Pred>
+{
+    return detail::any_impl_1<Pred>(pred);
 }
 
 // C++ LINQ operator: average
@@ -760,6 +769,18 @@ auto min(const Selector& sel)
     -> detail::min_impl_1<Selector>
 {
     return detail::min_impl_1<Selector>(sel);
+}
+
+// C++ LINQ operator: none
+// No .NET equivalent.
+
+// Operator that checks if no element in a sequence satisfy a given predicate.
+// Works on empty sequences (returns true in such a case).
+template<typename Pred>
+auto none(const Pred& pred)
+    -> detail::none_impl<Pred>
+{
+    return detail::none_impl<Pred>(pred);
 }
 
 // C++ LINQ operators: order_by/order_by_descending/then_by/then_by_descending

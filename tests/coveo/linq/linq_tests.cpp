@@ -150,10 +150,12 @@ void linq_tests()
     // all
     {
         const std::vector<int> v = { 42, 23, 66 };
+        const std::vector<int> empty;
 
         using namespace coveo::linq;
         COVEO_ASSERT(from(v) | all([](int i) { return i > 11; }));
         COVEO_ASSERT(!(from(v) | all([](int i) { return i % 2 == 0; })));
+        COVEO_ASSERT(from(empty) | all([](int i) { return i == 7; }));
     }
 
     // any
@@ -165,6 +167,15 @@ void linq_tests()
 
         v.clear();
         COVEO_ASSERT(!(from(v) | any()));
+    }
+    {
+        const std::vector<int> v = { 42, 23, 66 };
+        const std::vector<int> empty;
+
+        using namespace coveo::linq;
+        COVEO_ASSERT(from(v) | any([](int i) { return i > 11; }));
+        COVEO_ASSERT(from(v) | any([](int i) { return i % 2 == 0; }));
+        COVEO_ASSERT(!(from(empty) | any([](int i) { return i == 7; })));
     }
 
     // average
@@ -980,6 +991,17 @@ void linq_tests()
         using namespace coveo::linq;
         COVEO_ASSERT((from(v) | min()) == 11);
         COVEO_ASSERT((from(v) | min([](int i) { return -i; })) == -66);
+    }
+
+    // none
+    {
+        const std::vector<int> v = { 42, 23, 66 };
+        const std::vector<int> empty;
+
+        using namespace coveo::linq;
+        COVEO_ASSERT(!(from(v) | none([](int i) { return i > 11; })));
+        COVEO_ASSERT(from(v) | none([](int i) { return i % 4 == 0; }));
+        COVEO_ASSERT(from(empty) | none([](int i) { return i == 42; }));
     }
 
     // order_by/order_by_descending/then_by/then_by_descending

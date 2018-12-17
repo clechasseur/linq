@@ -353,14 +353,31 @@ public:
     }
 };
 
-// Implementation of any operator.
+// Implementation of any operator (version without parameter).
 template<typename = void>
-class any_impl
+class any_impl_0
 {
 public:
     template<typename Seq>
     auto operator()(Seq&& seq) -> bool {
         return std::begin(seq) != std::end(seq);
+    }
+};
+
+// Implementation of any operator (version with predicate).
+template<typename Pred>
+class any_impl_1
+{
+private:
+    const Pred& pred_;  // Predicate to satisfy.
+
+public:
+    explicit any_impl_1(const Pred& pred)
+        : pred_(pred) { }
+
+    template<typename Seq>
+    auto operator()(Seq&& seq) -> bool {
+        return std::any_of(std::begin(seq), std::end(seq), pred_);
     }
 };
 
@@ -633,7 +650,7 @@ public:
         -> coveo::enumerable<typename seq_traits<Seq>::const_value_type>
     {
         coveo::enumerable<typename seq_traits<Seq>::const_value_type> e;
-        if (any_impl<>()(seq)) {
+        if (any_impl_0<>()(seq)) {
             e = coveo::enumerate_container(std::forward<Seq>(seq));
         } else {
             e = coveo::enumerate_one(typename seq_traits<Seq>::raw_value_type());
@@ -658,7 +675,7 @@ public:
         -> coveo::enumerable<typename seq_traits<Seq>::const_value_type>
     {
         coveo::enumerable<typename seq_traits<Seq>::const_value_type> e;
-        if (any_impl<>()(seq)) {
+        if (any_impl_0<>()(seq)) {
             e = coveo::enumerate_container(std::forward<Seq>(seq));
         } else {
             e = coveo::enumerate_one(typename seq_traits<Seq>::raw_value_type(obj_));
@@ -1955,6 +1972,23 @@ public:
             min_val = std::min(min_val, sel_(*icur));
         }
         return min_val;
+    }
+};
+
+// Implementation of none operator.
+template<typename Pred>
+class none_impl
+{
+private:
+    const Pred& pred_;  // Predicate to satisfy.
+
+public:
+    explicit none_impl(const Pred& pred)
+        : pred_(pred) { }
+
+    template<typename Seq>
+    auto operator()(Seq&& seq) -> bool {
+        return std::none_of(std::begin(seq), std::end(seq), pred_);
     }
 };
 
