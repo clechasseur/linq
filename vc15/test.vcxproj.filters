@@ -16,19 +16,19 @@
     <Filter Include="tests\coveo\linq">
       <UniqueIdentifier>{680E3832-1DF6-4A06-AC71-9A0CD470D2CF}</UniqueIdentifier>
     </Filter>
-    <Filter Include="lib\coveo\enumerable">
-      <UniqueIdentifier>{e886bb4c-bcf9-40e7-a01f-8792de7edcae}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="lib\coveo\enumerable\detail">
-      <UniqueIdentifier>{968b3e79-1aca-4eac-8e0e-367d50db5e8f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="lib\coveo\linq">
       <UniqueIdentifier>{9be1fde6-a3c7-4637-89a9-b12dba975fd4}</UniqueIdentifier>
     </Filter>
     <Filter Include="lib\coveo\linq\detail">
       <UniqueIdentifier>{7263456d-ef93-481a-baf8-53b4579317aa}</UniqueIdentifier>
     </Filter>
-    <Filter Include="tests\coveo\enumerable">
+    <Filter Include="lib\coveo\seq">
+      <UniqueIdentifier>{e886bb4c-bcf9-40e7-a01f-8792de7edcae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lib\coveo\seq\detail">
+      <UniqueIdentifier>{968b3e79-1aca-4eac-8e0e-367d50db5e8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\coveo\seq">
       <UniqueIdentifier>{6783813d-6a02-4247-95b5-2748196e13cd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -39,14 +39,8 @@
     <ClInclude Include="..\tests\coveo\linq\all_tests.h">
       <Filter>tests\coveo\linq</Filter>
     </ClInclude>
-    <ClInclude Include="..\lib\coveo\enumerable\enumerable.h">
-      <Filter>lib\coveo\enumerable</Filter>
-    </ClInclude>
     <ClInclude Include="..\lib\coveo\enumerable.h">
       <Filter>lib\coveo</Filter>
-    </ClInclude>
-    <ClInclude Include="..\lib\coveo\enumerable\detail\enumerable_detail.h">
-      <Filter>lib\coveo\enumerable\detail</Filter>
     </ClInclude>
     <ClInclude Include="..\lib\coveo\linq.h">
       <Filter>lib\coveo</Filter>
@@ -57,13 +51,25 @@
     <ClInclude Include="..\lib\coveo\linq\detail\linq_detail.h">
       <Filter>lib\coveo\linq\detail</Filter>
     </ClInclude>
-    <ClInclude Include="..\tests\coveo\enumerable\enumerable_tests.h">
-      <Filter>tests\coveo\enumerable</Filter>
-    </ClInclude>
     <ClInclude Include="..\tests\coveo\linq\linq_tests.h">
       <Filter>tests\coveo\linq</Filter>
     </ClInclude>
     <ClInclude Include="..\lib\coveo\linq\exception.h">
+      <Filter>lib\coveo\linq</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lib\coveo\seq\detail\enumerable_detail.h">
+      <Filter>lib\coveo\seq\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lib\coveo\seq\enumerable.h">
+      <Filter>lib\coveo\seq</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tests\coveo\seq\enumerable_tests.h">
+      <Filter>tests\coveo\seq</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lib\coveo\seq\sequence_util.h">
+      <Filter>lib\coveo\seq</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lib\coveo\linq\linq_util.h">
       <Filter>lib\coveo\linq</Filter>
     </ClInclude>
   </ItemGroup>
@@ -74,11 +80,11 @@
     <ClCompile Include="..\tests\coveo\linq\all_tests.cpp">
       <Filter>tests\coveo\linq</Filter>
     </ClCompile>
-    <ClCompile Include="..\tests\coveo\enumerable\enumerable_tests.cpp">
-      <Filter>tests\coveo\enumerable</Filter>
-    </ClCompile>
     <ClCompile Include="..\tests\coveo\linq\linq_tests.cpp">
       <Filter>tests\coveo\linq</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\coveo\seq\enumerable_tests.cpp">
+      <Filter>tests\coveo\seq</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

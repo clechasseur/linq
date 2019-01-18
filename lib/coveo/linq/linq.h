@@ -41,11 +41,11 @@ auto from(Seq&& seq_) -> decltype(std::forward<Seq>(seq_)) {
 //               | linq_operator(...)
 //               | ...;
 //
-template<typename ItBeg, typename ItEnd>
-auto from_range(ItBeg&& ibeg, ItEnd&& iend)
-    -> decltype(enumerate_range(std::forward<ItBeg>(ibeg), std::forward<ItEnd>(iend)))
+template<typename It>
+auto from_range(It ibeg, It iend)
+    -> decltype(enumerate_range(std::move(ibeg), std::move(iend)))
 {
-    return enumerate_range(std::forward<ItBeg>(ibeg), std::forward<ItEnd>(iend));
+    return enumerate_range(std::move(ibeg), std::move(iend));
 }
 
 // Entry point for the LINQ library for a range
@@ -62,11 +62,10 @@ auto from_int_range(IntT first, std::size_t count)
 {
     std::vector<typename std::decay<IntT>::type> vvalues;
     vvalues.reserve(count);
-    auto value = first;
-    for (std::size_t i = 0; i < count; ++i) {
-        vvalues.push_back(value++);
+    while (count-- > 0) {
+        vvalues.push_back(first++);
     }
-    return coveo::enumerate_container(std::move(vvalues));
+    return enumerate_container(std::move(vvalues));
 }
 
 // Entry point for the LINQ library for a range
@@ -83,10 +82,10 @@ auto from_repeated(const T& value, std::size_t count)
 {
     std::vector<typename std::decay<T>::type> vvalues;
     vvalues.reserve(count);
-    for (std::size_t i = 0; i < count; ++i) {
+    while (count-- > 0) {
         vvalues.push_back(value);
     }
-    return coveo::enumerate_container(std::move(vvalues));
+    return enumerate_container(std::move(vvalues));
 }
 
 // Applies a LINQ operator to a sequence.
@@ -378,8 +377,9 @@ auto first_or_default(const Pred& pred)
 // C++ LINQ operators: group_by, group_values_by, group_by_and_fold, group_values_by_and_fold
 // .NET equivalent: GroupBy
 
-// Operator that groups elements in a sequence according
-// to their keys, as returned by a key selector.
+// Operator that groups elements in a sequence according to their keys, as returned by a key selector.
+// Returns a sequence of pairs whose first element is the common key and second element is a sequence
+// of values matching that key.
 template<typename KeySelector>
 auto group_by(KeySelector&& key_sel)
     -> detail::group_by_impl<KeySelector,
@@ -456,9 +456,10 @@ auto group_values_by(KeySelector&& key_sel,
                                        std::forward<Pred>(pred));
 }
 
-// Operator that groups a sequence's elements by keys as returned by
-// a key selector, then folds each group into a final result using
-// a result selector.
+// Operator that groups a sequence's elements by keys as returned by a key selector,
+// then folds each group into a final result using a result selector. The result
+// selector is called with two arguments: the common key of all elements and a
+// sequence of values matching that key.
 template<typename KeySelector,
          typename ResultSelector>
 auto group_by_and_fold(KeySelector&& key_sel,
@@ -550,6 +551,8 @@ auto group_values_by_and_fold(KeySelector&& key_sel,
 // Operator that extracts keys from an outer and inner sequences using key selectors,
 // then creates groups of elements from inner sequence matching keys of elements in
 // outer sequence. A result selector is then used to convert each group into a final result.
+// The result selector is called with two arguments: an element from the outer sequence
+// and a sequence of elements from the inner sequence whose keys match.
 template<typename InnerSeq,
          typename OuterKeySelector,
          typename InnerKeySelector,
@@ -631,6 +634,8 @@ auto intersect(Seq2&& seq2, Pred&& pred)
 
 // Operator that extracts keys from elements in two sequences and joins
 // elements with matching keys using a result selector, like a database JOIN.
+// The result selector is called with two arguments: an element from the outer
+// sequence and an element from the inner sequence whose key matches.
 template<typename InnerSeq,
          typename OuterKeySelector,
          typename InnerKeySelector,
@@ -843,7 +848,7 @@ auto then_by(KeySelector&& key_sel, Pred&& pred)
 }
 
 // Operator that further orders a sequence previously ordered via order_by
-// using a different key selector, but in descending order
+// using a different key selector, but in descending order.
 template<typename KeySelector>
 auto then_by_descending(KeySelector&& key_sel)
     -> decltype(order_by_descending(std::forward<KeySelector>(key_sel)))
@@ -1088,7 +1093,6 @@ auto to_vector()
 // Operator that converts a sequence into a specific type
 // of associative container (like std::map), using a key
 // selector function to fetch a key for each element.
-// Associative type must support the insert_or_assign function.
 template<typename Container,
          typename KeySelector>
 auto to_associative(const KeySelector& key_sel)

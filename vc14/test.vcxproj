@@ -365,21 +365,21 @@ copy /Y "$(TargetPath)" "$(SolutionDir)out\"</Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\lib\coveo\enumerable.h" />
-    <ClInclude Include="..\lib\coveo\enumerable\detail\enumerable_detail.h" />
-    <ClInclude Include="..\lib\coveo\enumerable\enumerable.h" />
     <ClInclude Include="..\lib\coveo\linq.h" />
     <ClInclude Include="..\lib\coveo\linq\detail\linq_detail.h" />
     <ClInclude Include="..\lib\coveo\linq\exception.h" />
     <ClInclude Include="..\lib\coveo\linq\linq.h" />
-    <ClInclude Include="..\tests\coveo\enumerable\enumerable_tests.h" />
+    <ClInclude Include="..\lib\coveo\seq\detail\enumerable_detail.h" />
+    <ClInclude Include="..\lib\coveo\seq\enumerable.h" />
     <ClInclude Include="..\tests\coveo\linq\all_tests.h" />
     <ClInclude Include="..\tests\coveo\linq\linq_tests.h" />
+    <ClInclude Include="..\tests\coveo\seq\enumerable_tests.h" />
     <ClInclude Include="..\tests\coveo\test_framework.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\tests\coveo\enumerable\enumerable_tests.cpp" />
     <ClCompile Include="..\tests\coveo\linq\all_tests.cpp" />
     <ClCompile Include="..\tests\coveo\linq\linq_tests.cpp" />
+    <ClCompile Include="..\tests\coveo\seq\enumerable_tests.cpp" />
     <ClCompile Include="..\tests\tests_main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

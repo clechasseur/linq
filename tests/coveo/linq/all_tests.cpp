@@ -3,7 +3,7 @@
 
 #include "coveo/linq/all_tests.h"
 
-#include <coveo/enumerable/enumerable_tests.h>
+#include <coveo/seq/enumerable_tests.h>
 #include <coveo/linq/linq_tests.h>
 
 namespace coveo_tests {
@@ -13,7 +13,6 @@ namespace linq {
 void all_tests()
 {
     // enumerable
-    using namespace coveo_tests::enumerable;
     enumerable_tests();
 
     // linq

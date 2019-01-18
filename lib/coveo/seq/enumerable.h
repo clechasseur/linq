@@ -6,7 +6,8 @@
 #ifndef COVEO_ENUMERABLE_H
 #define COVEO_ENUMERABLE_H
 
-#include <coveo/enumerable/detail/enumerable_detail.h>
+#include "coveo/seq/sequence_util.h"
+#include <coveo/seq/detail/enumerable_detail.h>
 
 #include <cstddef>
 #include <iterator>
@@ -17,7 +18,7 @@
 namespace coveo {
 
 // Wrapper for a multipass, forward-only sequence of elements.
-// Uses a delegate to fetch the elements to return. The sequence
+// Uses a delegate to fetch the elements to return.The sequence
 // supports iteration via the standard begin/end methods.
 template<typename T>
 class enumerable
@@ -27,23 +28,23 @@ class enumerable
 
 public:
     // Types for elements in the sequence.
-    typedef typename detail::seq_element_traits<T>::value_type          value_type;         // Type of element in the sequence.
-    typedef typename detail::seq_element_traits<T>::raw_value_type      raw_value_type;     // Raw /value_type/, not cv-qualified.
-    typedef typename detail::seq_element_traits<T>::pointer             pointer;            // Pointer to a sequence element.
-    typedef typename detail::seq_element_traits<T>::reference           reference;          // Reference to a sequence element.
+    using value_type        = typename seq_element_traits<T>::value_type;
+    using raw_value_type    = typename seq_element_traits<T>::raw_value_type;
+    using pointer           = typename seq_element_traits<T>::pointer;
+    using reference         = typename seq_element_traits<T>::reference;
 
     // Delegate that returns next element in sequence, or nullptr when done.
-    typedef std::function<pointer()>                                    next_delegate;
+    using next_delegate     = std::function<pointer()>;
 
     // Delegate that returns number of elements in sequence.
-    typedef std::function<std::size_t()>                                size_delegate;
+    using size_delegate     = std::function<std::size_t()>;
 
     // Forward declaration of iterator class.
     class iterator;
 
     // Even though begin() and end() are already const, some might want
     // to use const_iterator, to let's create an alias.
-    typedef iterator        const_iterator;
+    using const_iterator    = iterator;
 
 private:
     next_delegate zero_;    // Next delegate which we will clone to iterate sequence.
@@ -58,7 +59,7 @@ public:
     // Constructor with next delegate and optional size delegate
     template<typename F,
              typename _S = std::nullptr_t,
-             typename = typename std::enable_if<!detail::is_enumerable<typename std::decay<F>::type>::value &&
+             typename = typename std::enable_if<!is_enumerable<typename std::decay<F>::type>::value &&
                                                 (!detail::has_begin<typename std::decay<F>::type>::value ||
                                                  !detail::has_end<typename std::decay<F>::type>::value ||
                                                  !detail::has_size_const_method<typename std::decay<F>::type>::value), void>::type>
@@ -67,38 +68,25 @@ public:
 
     // Constructor with container
     template<typename C,
-             typename = typename std::enable_if<!detail::is_enumerable<typename std::decay<C>::type>::value &&
+             typename = typename std::enable_if<!is_enumerable<typename std::decay<C>::type>::value &&
                                                 detail::has_begin<typename std::decay<C>::type>::value &&
                                                 detail::has_end<typename std::decay<C>::type>::value &&
                                                 detail::has_size_const_method<typename std::decay<C>::type>::value, void>::type>
     enumerable(C&& cnt)
         : zero_(), size_() { *this = for_container(std::forward<C>(cnt)); }
 
-    // Constructors allowing non-const to const construction
+    // Constructor allowing non-const to const construction
     template<typename U,
              typename = typename std::enable_if<!std::is_const<U>::value &&
                                                 std::is_same<T, typename std::add_const<U>::type>::value, void>::type>
-    enumerable(const enumerable<U>& e)
-        : zero_(e.zero_), size_(e.size_) { }
-    template<typename U,
-             typename = typename std::enable_if<!std::is_const<U>::value &&
-                                                std::is_same<T, typename std::add_const<U>::type>::value, void>::type>
-    enumerable(enumerable<U>&& e)
+    enumerable(enumerable<U> e)
         : zero_(std::move(e.zero_)), size_(std::move(e.size_)) { }
 
-    // Assignment operators for non-const to const assignment
+    // Assignment operator for non-const to const assignment
     template<typename U,
              typename = typename std::enable_if<!std::is_const<U>::value &&
                                                 std::is_same<T, typename std::add_const<U>::type>::value, void>::type>
-    enumerable& operator=(const enumerable<U>& e) {
-        zero_ = e.zero_;
-        size_ = e.size_;
-        return *this;
-    }
-    template<typename U,
-             typename = typename std::enable_if<!std::is_const<U>::value &&
-                                                std::is_same<T, typename std::add_const<U>::type>::value, void>::type>
-    enumerable& operator=(enumerable<U>&& e) {
+    enumerable& operator=(enumerable<U> e) {
         zero_ = std::move(e.zero_);
         size_ = std::move(e.size_);
         return *this;
@@ -141,19 +129,19 @@ public:
     {
     public:
         // Standard iterator typedefs, plus a few more
-        typedef std::forward_iterator_tag               iterator_category;
-        typedef typename enumerable<T>::value_type      value_type;
-        typedef typename enumerable<T>::raw_value_type  raw_value_type;     // Non-standard
-        typedef std::ptrdiff_t                          difference_type;
-        typedef typename enumerable<T>::pointer         pointer;
-        typedef typename enumerable<T>::reference       reference;
+        using iterator_category = std::forward_iterator_tag;
+        using value_type        = typename enumerable<T>::value_type;
+        using raw_value_type    = typename enumerable<T>::raw_value_type;
+        using difference_type   = std::ptrdiff_t;
+        using pointer           = typename enumerable<T>::pointer;
+        using reference         = typename enumerable<T>::reference;
 
     private:
-        const enumerable<T>* pparent_;                  // Parent enumerable or nullptr if unbound
-        mutable next_delegate next_;                    // Delegate to use to fetch elements
-        mutable pointer pcur_;                          // Pointer to current element or nullptr when at end of sequence
-        mutable bool has_cur_;                          // Whether pcur_ has been loaded for current element
-        size_t pos_;                                    // Position in sequence, to compare iterators
+        const enumerable<T>* pparent_ = nullptr;        // Parent enumerable or nullptr if unbound
+        mutable next_delegate next_;                    // Delegate used to fetch elements
+        mutable pointer pcur_ = nullptr;                // Pointer to current element or nullptr when at end of sequence
+        mutable bool has_cur_ = true;                   // Whether pcur_ has been loaded for current element
+        size_t pos_ = 0;                                // Position in sequence, to compare iterators
 
         // Fetches value of pcur_, late-loading it if needed
         pointer get_pcur() const {
@@ -166,18 +154,14 @@ public:
     
     public:
         // Default constructor
-        iterator()
-            : pparent_(nullptr), next_(), pcur_(nullptr), has_cur_(true), pos_(0) { }
+        iterator() = default;
 
         // Constructor from enumerable
         iterator(const enumerable<T>& parent, bool is_end)
-            : pparent_(&parent), next_(!is_end ? parent.zero_ : next_delegate()),
-              pcur_(nullptr), has_cur_(is_end), pos_(0) { }
+            : pparent_(&parent), next_(!is_end ? parent.zero_ : next_delegate()), has_cur_(is_end) { }
 
         // Copy/move semantics
-        iterator(const iterator& obj)
-            : pparent_(obj.pparent_), next_(obj.next_), pcur_(obj.pcur_),
-              has_cur_(obj.has_cur_), pos_(obj.pos_) { }
+        iterator(const iterator& obj) = default;
         iterator(iterator&& obj)
             : pparent_(obj.pparent_), next_(std::move(obj.next_)), pcur_(obj.pcur_),
               has_cur_(obj.has_cur_), pos_(obj.pos_)
@@ -188,16 +172,7 @@ public:
             obj.pos_ = 0;
         }
 
-        iterator& operator=(const iterator& obj) {
-            if (this != &obj) {
-                pparent_ = obj.pparent_;
-                next_ = obj.next_;
-                pcur_ = obj.pcur_;
-                has_cur_ = obj.has_cur_;
-                pos_ = obj.pos_;
-            }
-            return *this;
-        }
+        iterator& operator=(const iterator& obj) = default;
         iterator& operator=(iterator&& obj) {
             pparent_ = obj.pparent_;
             next_ = std::move(obj.next_);
@@ -290,19 +265,18 @@ public:
     }
 
     // Returns enumerable over sequence bound by two iterators.
-    template<typename ItBeg, typename ItEnd>
-    static enumerable<T> for_range(ItBeg&& ibeg, ItEnd&& iend) {
-        auto it = std::forward<ItBeg>(ibeg);
-        auto end = std::forward<ItEnd>(iend);
-        return enumerable<T>([it, end]() mutable {
+    template<typename It>
+    static enumerable<T> for_range(It ibeg, It iend) {
+        auto it = std::move(ibeg);
+        return enumerable<T>([it, iend]() mutable {
             pointer pobj = nullptr;
-            if (it != end) {
+            if (it != iend) {
                 reference robj = *it;
                 pobj = std::addressof(robj);
                 ++it;
             }
             return pobj;
-        }, detail::get_size_delegate_for_iterators(it, end));
+        }, detail::get_size_delegate_for_iterators(it, iend));
     }
 
     // Returns enumerable over a container, stored externally.
@@ -345,7 +319,6 @@ public:
 
     // Returns enumerable over dynamic array.
     static enumerable<T> for_array(pointer parr, size_t siz) {
-        // This works even if siz is 0 or if parr is nullptr.
         return for_range(parr, parr + siz);
     }
 };
@@ -354,10 +327,8 @@ public:
 
 // Returns enumerable for sequence of one element, stored internally (moved if possible).
 template<typename U>
-auto enumerate_one(U&& obj)
-    -> enumerable<typename detail::seq_element_traits<U>::const_value_type>
-{
-    return enumerable<typename detail::seq_element_traits<U>::const_value_type>::for_one(std::forward<U>(obj));
+auto enumerate_one(U&& obj) -> enumerable<typename seq_element_traits<U>::const_value_type> {
+    return enumerable<typename seq_element_traits<U>::const_value_type>::for_one(std::forward<U>(obj));
 }
 
 // Returns enumerable for sequence of one element, stored externally.
@@ -367,20 +338,20 @@ auto enumerate_one_ref(T& obj) -> enumerable<T> {
 }
 
 // Returns enumerable for sequence defined by two iterators.
-template<typename ItBeg, typename ItEnd>
-auto enumerate_range(ItBeg&& ibeg, ItEnd&& iend)
-    -> enumerable<typename detail::seq_element_traits<decltype(*std::declval<ItBeg>())>::value_type>
+template<typename It>
+auto enumerate_range(It ibeg, It iend)
+    -> enumerable<typename seq_element_traits<decltype(*std::declval<It>())>::value_type>
 {
-    return enumerable<typename detail::seq_element_traits<decltype(*std::declval<ItBeg>())>::value_type>::for_range(
-        std::forward<ItBeg>(ibeg), std::forward<ItEnd>(iend));
+    return enumerable<typename seq_element_traits<decltype(*std::declval<It>())>::value_type>::for_range(
+        std::move(ibeg), std::move(iend));
 }
 
 // Returns enumerable for container, stored externally.
 template<typename C>
 auto enumerate_container(C& cnt)
-    -> enumerable<typename detail::seq_element_traits<decltype(*std::begin(std::declval<C>()))>::value_type>
+    -> enumerable<typename seq_element_traits<decltype(*std::begin(std::declval<C>()))>::value_type>
 {
-    return enumerable<typename detail::seq_element_traits<decltype(*std::begin(std::declval<C>()))>::value_type>::for_container(
+    return enumerable<typename seq_element_traits<decltype(*std::begin(std::declval<C>()))>::value_type>::for_container(
         cnt);
 }
 
@@ -388,17 +359,15 @@ auto enumerate_container(C& cnt)
 template<typename C,
          typename = typename std::enable_if<!std::is_reference<C>::value, void>::type>
 auto enumerate_container(C&& cnt)
-    -> enumerable<typename detail::seq_element_traits<decltype(*std::begin(std::declval<C>()))>::const_value_type>
+    -> enumerable<typename seq_element_traits<decltype(*std::begin(std::declval<C>()))>::const_value_type>
 {
-    return enumerable<typename detail::seq_element_traits<decltype(*std::begin(std::declval<C>()))>::const_value_type>::for_container(
+    return enumerable<typename seq_element_traits<decltype(*std::begin(std::declval<C>()))>::const_value_type>::for_container(
         std::move(cnt));
 }
 
 // Returns enumerable for dynamic array.
 template<typename T>
-auto enumerate_array(T* parr, size_t siz)
-    -> enumerable<T>
-{
+auto enumerate_array(T* parr, size_t siz) -> enumerable<T> {
     return enumerable<T>::for_array(parr, siz);
 }
 

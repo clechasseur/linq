@@ -6,6 +6,6 @@
 #ifndef COVEO_ENUMERABLE_FWD_H
 #define COVEO_ENUMERABLE_FWD_H
 
-#include <coveo/enumerable/enumerable.h>
+#include <coveo/seq/enumerable.h>
 
 #endif // COVEO_ENUMERABLE_FWD_H

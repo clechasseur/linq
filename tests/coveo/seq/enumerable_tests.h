@@ -5,11 +5,9 @@
 #define COVEO_ENUMERABLE_TESTS_H
 
 namespace coveo_tests {
-namespace enumerable {
 
 void enumerable_tests();
 
-} // enumerable
 } // coveo_tests
 
 #endif // COVEO_ENUMERABLE_TESTS_H

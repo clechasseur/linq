@@ -1,7 +1,7 @@
 // Copyright (c) 2016, Coveo Solutions Inc.
 // Distributed under the MIT license (see LICENSE).
 
-// Implementation details of coveo::enumerable.
+// Implementation details of coveo::seq::enumerable.
 
 #ifndef COVEO_ENUMERABLE_DETAIL_H
 #define COVEO_ENUMERABLE_DETAIL_H
@@ -13,40 +13,7 @@
 #include <utility>
 
 namespace coveo {
-
-// Forward declaration of enumerable, for type traits
-template<typename> class enumerable;
-
 namespace detail {
-
-// Traits class used by coveo::enumerable. Provides information about types in a sequence.
-// For sequences of references or std::reference_wrapper's, provides information about
-// the referred type instead.
-template<typename T>
-struct seq_element_traits
-{
-    typedef T                               value_type;         // Type of values stored in sequence.
-    typedef const value_type                const_value_type;   // Same as value_type, but const.
-    typedef typename std::remove_cv<value_type>::type
-                                            raw_value_type;     // Same as value_type, without const/volatile.
-    
-    typedef value_type*                     pointer;
-    typedef value_type&                     reference;
-
-    typedef const_value_type*               const_pointer;
-    typedef const_value_type&               const_reference;
-};
-template<typename T> struct seq_element_traits<T&> : seq_element_traits<T> { };
-template<typename T> struct seq_element_traits<T&&> : seq_element_traits<T> { };
-template<typename T> struct seq_element_traits<std::reference_wrapper<T>> : seq_element_traits<T> { };
-
-// Traits class used to identify enumerable objects.
-template<typename> struct is_enumerable : std::false_type { };
-template<typename T> struct is_enumerable<coveo::enumerable<T>> : std::true_type { };
-
-// Traits class used to identify reference_wrappers.
-template<typename> struct is_reference_wrapper : std::false_type { };
-template<typename T> struct is_reference_wrapper<std::reference_wrapper<T>> : std::true_type { };
 
 // Type trait that can be used to know if std::begin(T) is valid.
 // Detects both std::begin specializations and begin methods.
@@ -59,7 +26,7 @@ class has_begin
     template<typename C> static std::int_least8_t  test(decltype(std::begin(std::declval<C>()))*);  // Will be selected if std::begin(C) works
     template<typename C> static std::int_least32_t test(...);                                       // Will be selected otherwise
 public:
-    static const bool value = sizeof(test<T>(nullptr)) == sizeof(std::int_least8_t);
+    static constexpr bool value = sizeof(test<T>(nullptr)) == sizeof(std::int_least8_t);
 };
 
 // Type trait that can be used to know if std::end(T) is valid.
