@@ -61,199 +61,276 @@ bool seq_second_equal(const TwoIntsSeq& tiseq, const IntSeq& iseq) {
 
 } // detail
 
-// Run all tests for coveo::linq operators
+// from tests
+
+void test_from()
+{
+    const auto v = { 42, 23, 66 };
+    const std::vector<int> expected = { 42, 23, 66 };
+
+    using namespace coveo::linq;
+    auto seq = from(v);
+    COVEO_ASSERT(detail::equal(std::begin(seq), std::end(seq),
+                               std::begin(expected), std::end(expected)));
+}
+
+void test_from_range()
+{
+    const auto v = { 42, 23, 66 };
+    const std::vector<int> expected = { 42, 23, 66 };
+
+    using namespace coveo::linq;
+    auto seq = from_range(std::begin(v), std::end(v));
+    COVEO_ASSERT(detail::equal(std::begin(seq), std::end(seq),
+                               std::begin(expected), std::end(expected)));
+}
+
+void test_from_int_range()
+{
+    const std::vector<int> expected = { 42, 43, 44, 45, 46, 47, 48 };
+
+    using namespace coveo::linq;
+    auto seq = from_int_range(42, 7);
+    COVEO_ASSERT(detail::equal(std::begin(seq), std::end(seq),
+                               std::begin(expected), std::end(expected)));
+}
+
+void test_from_repeated()
+{
+    const std::vector<int> expected = { 42, 42, 42, 42, 42, 42, 42 };
+
+    using namespace coveo::linq;
+    auto seq = from_repeated(42, 7);
+    COVEO_ASSERT(detail::equal(std::begin(seq), std::end(seq),
+                               std::begin(expected), std::end(expected)));
+}
+
+void test_all_froms()
+{
+    test_from();
+    test_from_range();
+    test_from_int_range();
+    test_from_repeated();
+}
+
+// aggregate tests
+
+void test_aggregate_1()
+{
+    const std::vector<int> v = { 42, 23, 66 };
+
+    using namespace coveo::linq;
+    auto agg = from(v)
+             | aggregate([](int a, int b) { return a + b; });
+    COVEO_ASSERT_EQUAL(131, agg);
+}
+
+void test_aggregate_1_with_empty_sequence()
+{
+    const std::vector<int> ev;
+
+    using namespace coveo::linq;
+    COVEO_ASSERT_THROW(from(ev)
+                     | aggregate([](int a, int b) { return a + b; }));
+}
+
+void test_aggregate_2()
+{
+    const char STR[] = "world!";
+
+    using namespace coveo::linq;
+    auto agg = from(coveo::enumerate_array(STR, 6))
+             | aggregate(std::string("Hello, "),
+                         [](const std::string& agg, char c) { return agg + c; });
+    COVEO_ASSERT_EQUAL("Hello, world!", agg);
+}
+
+void test_aggregate_3()
+{
+    const char NUMS[] = "31337";
+
+    using namespace coveo::linq;
+    auto agg = from(coveo::enumerate_array(NUMS, 5))
+             | aggregate(std::string(""),
+                         [](const std::string& agg, char c) { return agg + c; },
+                         [](const std::string& agg) {
+                             std::istringstream iss(agg);
+                             int n = 0;
+                             iss >> n;
+                             return n;
+                         });
+    COVEO_ASSERT_EQUAL(31337, agg);
+}
+
+void test_aggregate()
+{
+    test_aggregate_1();
+    test_aggregate_1_with_empty_sequence();
+    test_aggregate_2();
+    test_aggregate_3();
+}
+
+// all tests
+
+void test_all()
+{
+    const std::vector<int> v = { 42, 23, 66 };
+    const std::vector<int> empty;
+
+    using namespace coveo::linq;
+    COVEO_ASSERT(from(v) | all([](int i) { return i > 11; }));
+    COVEO_ASSERT(!(from(v) | all([](int i) { return i % 2 == 0; })));
+    COVEO_ASSERT(from(empty) | all([](int i) { return i == 7; }));
+}
+
+// any tests
+
+void test_any_0()
+{
+    std::vector<int> v = { 42, 23, 66 };
+
+    using namespace coveo::linq;
+    COVEO_ASSERT(from(v) | any());
+
+    v.clear();
+    COVEO_ASSERT(!(from(v) | any()));
+}
+
+void test_any_1()
+{
+    const std::vector<int> v = { 42, 23, 66 };
+    const std::vector<int> empty;
+
+    using namespace coveo::linq;
+    COVEO_ASSERT(from(v) | any([](int i) { return i > 11; }));
+    COVEO_ASSERT(from(v) | any([](int i) { return i % 2 == 0; }));
+    COVEO_ASSERT(!(from(empty) | any([](int i) { return i == 7; })));
+}
+
+void test_any()
+{
+    test_any_0();
+    test_any_1();
+}
+
+// average tests
+
+void test_average_1()
+{
+    const std::vector<int> v = { 42, 23, 66 };
+
+    using namespace coveo::linq;
+    auto avg_int = from(v)
+                 | average([](int i) { return i; });
+    COVEO_ASSERT_EQUAL(43, avg_int);
+
+    auto avg_dbl = from(v)
+                 | average([](int i) { return static_cast<double>(i); });
+    COVEO_ASSERT(avg_dbl >= 43.66 && avg_dbl < 43.67);
+}
+
+void test_average_1_with_empty_sequence()
+{
+    const std::vector<int> ev;
+
+    using namespace coveo::linq;
+    COVEO_ASSERT_THROW(from(ev)
+                     | average([](int i) { return i; }));
+}
+
+void test_average()
+{
+    test_average_1();
+    test_average_1_with_empty_sequence();
+}
+
+// cast tests
+
+void test_cast_with_vector()
+{
+    const std::vector<int> vi = { 42, 23, 66 };
+    const std::vector<double> vd = { 42.0, 23.0, 66.0 };
+
+    using namespace coveo::linq;
+    auto seq_d = from(vi)
+               | cast<double>();
+    COVEO_ASSERT(detail::equal(std::begin(seq_d), std::end(seq_d),
+                               std::begin(vd), std::end(vd)));
+    COVEO_ASSERT(seq_d.has_fast_size());
+    COVEO_ASSERT_EQUAL(vd.size(), seq_d.size());
+}
+
+void test_cast_with_forward_list()
+{
+    const std::vector<double> vd = { 42.0, 23.0, 66.0 };
+
+    using namespace coveo::linq;
+    auto seq_d = from(std::forward_list<int>{ 42, 23, 66 })
+               | cast<double>();
+    COVEO_ASSERT(detail::equal(std::begin(seq_d), std::end(seq_d),
+                               std::begin(vd), std::end(vd)));
+    COVEO_ASSERT(!seq_d.has_fast_size());
+    COVEO_ASSERT_EQUAL(vd.size(), seq_d.size());
+}
+
+void test_cast()
+{
+    test_cast_with_vector();
+    test_cast_with_forward_list();
+}
+
+// concat tests
+
+void test_concat_with_const_sequence()
+{
+    const std::vector<int> a = { 42, 23 };
+    const std::vector<int> b = { 66, 67 };
+    const std::vector<int> ab = { 42, 23, 66, 67, 11, 7 };
+
+    using namespace coveo::linq;
+    auto all = from(a)
+             | concat(b)
+             | concat(std::vector<int>{ 11, 7 });
+    COVEO_ASSERT(detail::equal(std::begin(all), std::end(all),
+                               std::begin(ab), std::end(ab)));
+    COVEO_ASSERT(all.has_fast_size());
+    COVEO_ASSERT_EQUAL(ab.size(), all.size());
+}
+
+void test_concat_with_non_const_sequence()
+{
+    std::vector<int> v1 = { 42, 23 };
+    std::vector<int> v2 = { 66, 67 };
+    const std::vector<int> expected = { 43, 24, 67, 68, 12, 8 };
+
+    using namespace coveo::linq;
+    auto all = from(v1)
+             | concat(v2)
+             | concat(std::vector<int>{ 11, 7 });
+    for (int& i : all) {
+        ++i;
+    }
+    COVEO_ASSERT(detail::equal(std::begin(all), std::end(all),
+                               std::begin(expected), std::end(expected)));
+}
+
+void test_concat()
+{
+    test_concat_with_const_sequence();
+    test_concat_with_non_const_sequence();
+}
+
+// all tests for coveo::linq operators
+
 void linq_tests()
 {
-    // from
-    {
-        const auto v = { 42, 23, 66 };
-        const std::vector<int> expected = { 42, 23, 66 };
-
-        using namespace coveo::linq;
-        auto seq = from(v);
-        COVEO_ASSERT(detail::equal(std::begin(seq), std::end(seq),
-                                   std::begin(expected), std::end(expected)));
-    }
-
-    // from_range
-    {
-        const auto v = { 42, 23, 66 };
-        const std::vector<int> expected = { 42, 23, 66 };
-
-        using namespace coveo::linq;
-        auto seq = from_range(std::begin(v), std::end(v));
-        COVEO_ASSERT(detail::equal(std::begin(seq), std::end(seq),
-                                   std::begin(expected), std::end(expected)));
-    }
-
-    // from_int_range
-    {
-        const std::vector<int> expected = { 42, 43, 44, 45, 46, 47, 48 };
-
-        using namespace coveo::linq;
-        auto seq = from_int_range(42, 7);
-        COVEO_ASSERT(detail::equal(std::begin(seq), std::end(seq),
-                                   std::begin(expected), std::end(expected)));
-    }
-
-    // from_repeated
-    {
-        const std::vector<int> expected = { 42, 42, 42, 42, 42, 42, 42 };
-
-        using namespace coveo::linq;
-        auto seq = from_repeated(42, 7);
-        COVEO_ASSERT(detail::equal(std::begin(seq), std::end(seq),
-                                   std::begin(expected), std::end(expected)));
-    }
-
-    // aggregate
-    {
-        const std::vector<int> v = { 42, 23, 66 };
-
-        using namespace coveo::linq;
-        auto agg = from(v)
-                 | aggregate([](int a, int b) { return a + b; });
-        COVEO_ASSERT(agg == 131);
-    }
-    {
-        const std::vector<int> ev;
-
-        using namespace coveo::linq;
-        COVEO_ASSERT_THROW(from(ev)
-                         | aggregate([](int a, int b) { return a + b; }));
-    }
-    {
-        const char STR[] = "world!";
-
-        using namespace coveo::linq;
-        auto agg = from(coveo::enumerate_array(STR, 6))
-                 | aggregate(std::string("Hello, "),
-                             [](const std::string& agg, char c) { return agg + c; });
-        COVEO_ASSERT(agg == "Hello, world!");
-    }
-    {
-        const char NUMS[] = "31337";
-
-        using namespace coveo::linq;
-        auto agg = from(coveo::enumerate_array(NUMS, 5))
-                 | aggregate(std::string(""),
-                             [](const std::string& agg, char c) { return agg + c; },
-                             [](const std::string& agg) {
-                                 std::istringstream iss(agg);
-                                 int n = 0;
-                                 iss >> n;
-                                 return n;
-                             });
-        COVEO_ASSERT(agg == 31337);
-    }
-
-    // all
-    {
-        const std::vector<int> v = { 42, 23, 66 };
-        const std::vector<int> empty;
-
-        using namespace coveo::linq;
-        COVEO_ASSERT(from(v) | all([](int i) { return i > 11; }));
-        COVEO_ASSERT(!(from(v) | all([](int i) { return i % 2 == 0; })));
-        COVEO_ASSERT(from(empty) | all([](int i) { return i == 7; }));
-    }
-
-    // any
-    {
-        std::vector<int> v = { 42, 23, 66 };
-
-        using namespace coveo::linq;
-        COVEO_ASSERT(from(v) | any());
-
-        v.clear();
-        COVEO_ASSERT(!(from(v) | any()));
-    }
-    {
-        const std::vector<int> v = { 42, 23, 66 };
-        const std::vector<int> empty;
-
-        using namespace coveo::linq;
-        COVEO_ASSERT(from(v) | any([](int i) { return i > 11; }));
-        COVEO_ASSERT(from(v) | any([](int i) { return i % 2 == 0; }));
-        COVEO_ASSERT(!(from(empty) | any([](int i) { return i == 7; })));
-    }
-
-    // average
-    {
-        const std::vector<int> v = { 42, 23, 66 };
-
-        using namespace coveo::linq;
-        auto avg_int = from(v)
-                     | average([](int i) { return i; });
-        COVEO_ASSERT(avg_int == 43);
-
-        auto avg_dbl = from(v)
-                     | average([](int i) { return double(i); });
-        COVEO_ASSERT(avg_dbl >= 43.66 && avg_dbl < 43.67);
-    }
-    {
-        const std::vector<int> ev;
-
-        using namespace coveo::linq;
-        COVEO_ASSERT_THROW(from(ev)
-                         | average([](int i) { return i; }));
-    }
-
-    // cast
-    {
-        const std::vector<int> vi = { 42, 23, 66 };
-        const std::vector<double> vd = { 42.0, 23.0, 66.0 };
-
-        using namespace coveo::linq;
-        auto seq_d = from(vi)
-                   | cast<double>();
-        COVEO_ASSERT(detail::equal(std::begin(seq_d), std::end(seq_d),
-                                   std::begin(vd), std::end(vd)));
-        COVEO_ASSERT(seq_d.has_fast_size());
-        COVEO_ASSERT(seq_d.size() == vd.size());
-    }
-    {
-        const std::vector<double> vd = { 42.0, 23.0, 66.0 };
-
-        using namespace coveo::linq;
-        auto seq_d = from(std::forward_list<int>{ 42, 23, 66 })
-                   | cast<double>();
-        COVEO_ASSERT(detail::equal(std::begin(seq_d), std::end(seq_d),
-                                   std::begin(vd), std::end(vd)));
-        COVEO_ASSERT(!seq_d.has_fast_size());
-        COVEO_ASSERT(seq_d.size() == vd.size());
-    }
-
-    // concat
-    {
-        const std::vector<int> a = { 42, 23 };
-        const std::vector<int> b = { 66, 67 };
-        const std::vector<int> ab = { 42, 23, 66, 67, 11, 7 };
-
-        using namespace coveo::linq;
-        auto all = from(a)
-                 | concat(b)
-                 | concat(std::vector<int>{ 11, 7 });
-        COVEO_ASSERT(detail::equal(std::begin(all), std::end(all),
-                                   std::begin(ab), std::end(ab)));
-        COVEO_ASSERT(all.has_fast_size());
-        COVEO_ASSERT(all.size() == ab.size());
-    }
-    {
-        std::vector<int> v1 = { 42, 23 };
-        std::vector<int> v2 = { 66, 67 };
-        const std::vector<int> expected = { 43, 24, 67, 68, 12, 8 };
-
-        using namespace coveo::linq;
-        auto all = from(v1)
-                 | concat(v2)
-                 | concat(std::vector<int>{ 11, 7 });
-        for (int& i : all) {
-            ++i;
-        }
-        COVEO_ASSERT(detail::equal(std::begin(all), std::end(all),
-                                   std::begin(expected), std::end(expected)));
-    }
+    test_all_froms();
+    test_aggregate();
+    test_all();
+    test_any();
+    test_average();
+    test_cast();
+    test_concat();
 
     // contains
     {
