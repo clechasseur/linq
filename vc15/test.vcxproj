@@ -377,6 +377,7 @@ copy /Y "$(TargetPath)" "$(SolutionDir)out\"</Command>
     <ClInclude Include="..\tests\coveo\linq\all_tests.h" />
     <ClInclude Include="..\tests\coveo\linq\linq_tests.h" />
     <ClInclude Include="..\tests\coveo\seq\enumerable_tests.h" />
+    <ClInclude Include="..\tests\coveo\seq\enumerable_test_util.h" />
     <ClInclude Include="..\tests\coveo\test_framework.h" />
   </ItemGroup>
   <ItemGroup>

@@ -1944,6 +1944,12 @@ public:
         }
         return enum_.end();
     }
+    iterator cbegin() const {
+        return begin();
+    }
+    iterator cend() const {
+        return end();
+    }
 
     // Support for sequence size (a bit like the enumerable API)
     bool has_fast_size() const {

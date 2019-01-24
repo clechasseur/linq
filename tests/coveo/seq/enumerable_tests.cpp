@@ -5,32 +5,13 @@
 
 #include <coveo/enumerable.h>
 #include <coveo/test_framework.h>
+#include "coveo/seq/enumerable_test_util.h"
 
 #include <list>
 #include <vector>
 
 namespace coveo_tests {
 namespace detail {
-
-// Compares enumerable sequence with content of container
-template<typename T, typename C>
-void validate_sequence(const coveo::enumerable<T>& seq, const C& expected, bool expect_fast_size) {
-    auto eit = std::begin(expected);
-    auto eend = std::end(expected);
-    for (auto&& obj : seq) {
-        COVEO_ASSERT(eit != eend);
-        COVEO_ASSERT_EQUAL(*eit++, obj);
-    }
-    COVEO_ASSERT(eit == eend);
-    eit = std::begin(expected);
-    for (auto sit = seq.cbegin(), send = seq.cend(); sit != send; ++sit) {
-        COVEO_ASSERT(eit != eend);
-        COVEO_ASSERT_EQUAL(*eit++, *sit);
-    }
-    COVEO_ASSERT(eit == eend);
-    COVEO_ASSERT_EQUAL(expect_fast_size, seq.has_fast_size());
-    COVEO_ASSERT_EQUAL(expected.size(), seq.size());
-}
 
 // Simple struct that cannot be copied.
 struct no_copy {
@@ -57,16 +38,16 @@ void test_with_empty_non_const_sequence()
 {
     std::vector<int> vempty;
     auto empty_seq = coveo::enumerable<int>::empty();
-    detail::validate_sequence(empty_seq, vempty, true);
+    validate_enumerable(empty_seq, vempty, should_have_fast_size::yes);
     auto empty_cseq = empty_seq.as_const();
-    detail::validate_sequence(empty_cseq, vempty, true);
+    validate_enumerable(empty_cseq, vempty, should_have_fast_size::yes);
 }
 
 void test_with_empty_const_sequence()
 {
     const std::vector<int> vempty;
     auto empty_seq = coveo::enumerable<const int>::empty();
-    detail::validate_sequence(empty_seq, vempty, true);
+    validate_enumerable(empty_seq, vempty, should_have_fast_size::yes);
 }
 
 void test_with_empty_sequence()
@@ -89,9 +70,9 @@ void test_with_next_delegate_non_const()
             return nullptr;
         }
     });
-    detail::validate_sequence(seq_i, vi, false);
+    validate_enumerable(seq_i, vi, should_have_fast_size::no);
     auto seq_ci = seq_i.as_const();
-    detail::validate_sequence(seq_ci, vi, false);
+    validate_enumerable(seq_ci, vi, should_have_fast_size::no);
 }
 
 void test_with_next_delegate_const()
@@ -106,7 +87,7 @@ void test_with_next_delegate_const()
             return nullptr;
         }
     });
-    detail::validate_sequence(seq_i, vi, false);
+    validate_enumerable(seq_i, vi, should_have_fast_size::no);
 }
 
 void test_with_next_delegate()
@@ -121,23 +102,23 @@ void test_with_one_element_non_const_via_helper_method()
 {
     std::vector<int> vone = { 42 };
     auto seq_one = coveo::enumerable<int>::for_one(42);
-    detail::validate_sequence(seq_one, vone, true);
+    validate_enumerable(seq_one, vone, should_have_fast_size::yes);
     auto seq_cone = seq_one.as_const();
-    detail::validate_sequence(seq_cone, vone, true);
+    validate_enumerable(seq_cone, vone, should_have_fast_size::yes);
 }
 
 void test_with_one_element_const_via_helper_method()
 {
     const std::vector<int> vone = { 42 };
     auto seq_one = coveo::enumerable<const int>::for_one(42);
-    detail::validate_sequence(seq_one, vone, true);
+    validate_enumerable(seq_one, vone, should_have_fast_size::yes);
 }
 
 void test_with_one_element_via_helper_function()
 {
     const std::vector<int> vone = { 42 };
     auto seq_one = coveo::enumerate_one(42);
-    detail::validate_sequence(seq_one, vone, true);
+    validate_enumerable(seq_one, vone, should_have_fast_size::yes);
 }
 
 void test_with_one_element()
@@ -154,9 +135,9 @@ void test_with_one_element_by_non_const_ref_via_helper_method()
     int hangar = 23;
     std::vector<int> vone = { 23 };
     auto seq_one_ref = coveo::enumerable<int>::for_one_ref(hangar);
-    detail::validate_sequence(seq_one_ref, vone, true);
+    validate_enumerable(seq_one_ref, vone, should_have_fast_size::yes);
     auto seq_cone_ref = seq_one_ref.as_const();
-    detail::validate_sequence(seq_cone_ref, vone, true);
+    validate_enumerable(seq_cone_ref, vone, should_have_fast_size::yes);
 }
 
 void test_with_one_element_by_non_const_ref_via_helper_function()
@@ -164,7 +145,7 @@ void test_with_one_element_by_non_const_ref_via_helper_function()
     int hangar = 23;
     std::vector<int> vone = { 23 };
     auto seq_one_ref = coveo::enumerate_one_ref(hangar);
-    detail::validate_sequence(seq_one_ref, vone, true);
+    validate_enumerable(seq_one_ref, vone, should_have_fast_size::yes);
 }
 
 void test_with_one_element_by_const_ref_via_helper_method()
@@ -172,7 +153,7 @@ void test_with_one_element_by_const_ref_via_helper_method()
     const int hangar = 23;
     const std::vector<int> vone = { 23 };
     auto seq_one_ref = coveo::enumerable<const int>::for_one_ref(hangar);
-    detail::validate_sequence(seq_one_ref, vone, true);
+    validate_enumerable(seq_one_ref, vone, should_have_fast_size::yes);
 }
 
 void test_with_one_element_by_const_ref_via_helper_function()
@@ -180,7 +161,7 @@ void test_with_one_element_by_const_ref_via_helper_function()
     const int hangar = 23;
     const std::vector<int> vone = { 23 };
     auto seq_one_ref = coveo::enumerate_one_ref(hangar);
-    detail::validate_sequence(seq_one_ref, vone, true);
+    validate_enumerable(seq_one_ref, vone, should_have_fast_size::yes);
 }
 
 void test_with_one_element_by_ref()
@@ -198,9 +179,9 @@ void test_with_non_const_iterators_via_helper_method()
     std::vector<int> vforseq = { 42, 23, 66 };
     std::vector<int> vexpected = { 42, 23, 66 };
     auto seq_range = coveo::enumerable<int>::for_range(vforseq.begin(), vforseq.end());
-    detail::validate_sequence(seq_range, vexpected, true);
+    validate_enumerable(seq_range, vexpected, should_have_fast_size::yes);
     auto seq_crange = seq_range.as_const();
-    detail::validate_sequence(seq_crange, vexpected, true);
+    validate_enumerable(seq_crange, vexpected, should_have_fast_size::yes);
 }
 
 void test_with_non_const_iterators_via_helper_function()
@@ -208,7 +189,7 @@ void test_with_non_const_iterators_via_helper_function()
     std::vector<int> vforseq = { 42, 23, 66 };
     std::vector<int> vexpected = { 42, 23, 66 };
     auto seq_range = coveo::enumerate_range(vforseq.begin(), vforseq.end());
-    detail::validate_sequence(seq_range, vexpected, true);
+    validate_enumerable(seq_range, vexpected, should_have_fast_size::yes);
 }
 
 void test_with_const_iterators_via_helper_method()
@@ -216,7 +197,7 @@ void test_with_const_iterators_via_helper_method()
     const std::vector<int> vforseq = { 42, 23, 66 };
     const std::vector<int> vexpected = { 42, 23, 66 };
     auto seq_range = coveo::enumerable<const int>::for_range(vforseq.begin(), vforseq.end());
-    detail::validate_sequence(seq_range, vexpected, true);
+    validate_enumerable(seq_range, vexpected, should_have_fast_size::yes);
 }
 
 void test_with_const_iterators_via_helper_function()
@@ -224,7 +205,7 @@ void test_with_const_iterators_via_helper_function()
     const std::vector<int> vforseq = { 42, 23, 66 };
     const std::vector<int> vexpected = { 42, 23, 66 };
     auto seq_range = coveo::enumerate_range(vforseq.begin(), vforseq.end());
-    detail::validate_sequence(seq_range, vexpected, true);
+    validate_enumerable(seq_range, vexpected, should_have_fast_size::yes);
 }
 
 void test_with_iterators()
@@ -242,9 +223,9 @@ void test_with_non_const_external_container_via_constructor()
     std::vector<int> vcnt = { 42, 23, 66 };
     std::vector<int> vexpected = { 42, 23, 66 };
     auto seq_cnt = coveo::enumerable<int>(vcnt);
-    detail::validate_sequence(seq_cnt, vexpected, true);
+    validate_enumerable(seq_cnt, vexpected, should_have_fast_size::yes);
     auto seq_ccnt = seq_cnt.as_const();
-    detail::validate_sequence(seq_ccnt, vexpected, true);
+    validate_enumerable(seq_ccnt, vexpected, should_have_fast_size::yes);
 }
 
 void test_with_non_const_external_container_via_helper_method()
@@ -252,7 +233,7 @@ void test_with_non_const_external_container_via_helper_method()
     std::vector<int> vcnt = { 42, 23, 66 };
     std::vector<int> vexpected = { 42, 23, 66 };
     auto seq_cnt = coveo::enumerable<int>::for_container(vcnt);
-    detail::validate_sequence(seq_cnt, vexpected, true);
+    validate_enumerable(seq_cnt, vexpected, should_have_fast_size::yes);
 }
 
 void test_with_non_const_external_container_via_helper_function()
@@ -260,7 +241,7 @@ void test_with_non_const_external_container_via_helper_function()
     std::vector<int> vcnt = { 42, 23, 66 };
     std::vector<int> vexpected = { 42, 23, 66 };
     auto seq_cnt = coveo::enumerate_container(vcnt);
-    detail::validate_sequence(seq_cnt, vexpected, true);
+    validate_enumerable(seq_cnt, vexpected, should_have_fast_size::yes);
 }
 
 void test_with_const_external_container_via_constructor()
@@ -268,7 +249,7 @@ void test_with_const_external_container_via_constructor()
     const std::vector<int> vcnt = { 42, 23, 66 };
     const std::vector<int> vexpected = { 42, 23, 66 };
     auto seq_cnt = coveo::enumerable<const int>(vcnt);
-    detail::validate_sequence(seq_cnt, vexpected, true);
+    validate_enumerable(seq_cnt, vexpected, should_have_fast_size::yes);
 }
 
 void test_with_const_external_container_via_helper_method()
@@ -276,7 +257,7 @@ void test_with_const_external_container_via_helper_method()
     const std::vector<int> vcnt = { 42, 23, 66 };
     const std::vector<int> vexpected = { 42, 23, 66 };
     auto seq_cnt = coveo::enumerable<const int>::for_container(vcnt);
-    detail::validate_sequence(seq_cnt, vexpected, true);
+    validate_enumerable(seq_cnt, vexpected, should_have_fast_size::yes);
 }
 
 void test_with_const_external_container_via_helper_function()
@@ -284,7 +265,7 @@ void test_with_const_external_container_via_helper_function()
     const std::vector<int> vcnt = { 42, 23, 66 };
     const std::vector<int> vexpected = { 42, 23, 66 };
     auto seq_cnt = coveo::enumerate_container(vcnt);
-    detail::validate_sequence(seq_cnt, vexpected, true);
+    validate_enumerable(seq_cnt, vexpected, should_have_fast_size::yes);
 }
 
 void test_with_external_container()
@@ -303,39 +284,39 @@ void test_with_internal_container_non_const_via_constructor()
 {
     std::vector<int> vexpected = { 42, 23, 66 };
     auto seq_cnt_mv = coveo::enumerable<int>(std::vector<int> { 42, 23, 66 });
-    detail::validate_sequence(seq_cnt_mv, vexpected, true);
+    validate_enumerable(seq_cnt_mv, vexpected, should_have_fast_size::yes);
     auto seq_ccnt_mv = seq_cnt_mv.as_const();
-    detail::validate_sequence(seq_ccnt_mv, vexpected, true);
+    validate_enumerable(seq_ccnt_mv, vexpected, should_have_fast_size::yes);
 }
 
 void test_with_internal_container_non_const_via_helper_method()
 {
     std::vector<int> vexpected = { 42, 23, 66 };
     auto seq_cnt_mv = coveo::enumerable<int>::for_container(std::vector<int> { 42, 23, 66 });
-    detail::validate_sequence(seq_cnt_mv, vexpected, true);
+    validate_enumerable(seq_cnt_mv, vexpected, should_have_fast_size::yes);
     auto seq_ccnt_mv = seq_cnt_mv.as_const();
-    detail::validate_sequence(seq_ccnt_mv, vexpected, true);
+    validate_enumerable(seq_ccnt_mv, vexpected, should_have_fast_size::yes);
 }
 
 void test_with_internal_container_const_via_constructor()
 {
     const std::vector<int> vexpected = { 42, 23, 66 };
     auto seq_cnt_mv = coveo::enumerable<const int>(std::vector<int> { 42, 23, 66 });
-    detail::validate_sequence(seq_cnt_mv, vexpected, true);
+    validate_enumerable(seq_cnt_mv, vexpected, should_have_fast_size::yes);
 }
 
 void test_with_internal_container_const_via_helper_method()
 {
     const std::vector<int> vexpected = { 42, 23, 66 };
     auto seq_cnt_mv = coveo::enumerable<const int>::for_container(std::vector<int> { 42, 23, 66 });
-    detail::validate_sequence(seq_cnt_mv, vexpected, true);
+    validate_enumerable(seq_cnt_mv, vexpected, should_have_fast_size::yes);
 }
 
 void test_with_internal_container_via_helper_function()
 {
     const std::vector<int> vexpected = { 42, 23, 66 };
     auto seq_cnt_mv = coveo::enumerate_container(std::vector<int> { 42, 23, 66 });
-    detail::validate_sequence(seq_cnt_mv, vexpected, true);
+    validate_enumerable(seq_cnt_mv, vexpected, should_have_fast_size::yes);
 }
 
 void test_with_internal_container()
@@ -355,9 +336,9 @@ void test_with_non_const_array_via_helper_method()
     size_t arr_size = sizeof(arr) / sizeof(arr[0]);
     std::vector<int> vexpected = { 42, 23, 66 };
     auto seq_arr = coveo::enumerable<int>::for_array(arr, arr_size);
-    detail::validate_sequence(seq_arr, vexpected, true);
+    validate_enumerable(seq_arr, vexpected, should_have_fast_size::yes);
     auto seq_carr = seq_arr.as_const();
-    detail::validate_sequence(seq_carr, vexpected, true);
+    validate_enumerable(seq_carr, vexpected, should_have_fast_size::yes);
 }
 
 void test_with_non_const_array_via_helper_function()
@@ -366,7 +347,7 @@ void test_with_non_const_array_via_helper_function()
     size_t arr_size = sizeof(arr) / sizeof(arr[0]);
     std::vector<int> vexpected = { 42, 23, 66 };
     auto seq_arr = coveo::enumerate_array(arr, arr_size);
-    detail::validate_sequence(seq_arr, vexpected, true);
+    validate_enumerable(seq_arr, vexpected, should_have_fast_size::yes);
 }
 
 void test_with_const_array_via_helper_method()
@@ -375,7 +356,7 @@ void test_with_const_array_via_helper_method()
     size_t arr_size = sizeof(arr) / sizeof(arr[0]);
     const std::vector<int> vexpected = { 42, 23, 66 };
     auto seq_arr = coveo::enumerable<const int>::for_array(arr, arr_size);
-    detail::validate_sequence(seq_arr, vexpected, true);
+    validate_enumerable(seq_arr, vexpected, should_have_fast_size::yes);
 }
 
 void test_with_const_array_via_helper_function()
@@ -384,7 +365,7 @@ void test_with_const_array_via_helper_function()
     size_t arr_size = sizeof(arr) / sizeof(arr[0]);
     const std::vector<int> vexpected = { 42, 23, 66 };
     auto seq_arr = coveo::enumerate_array(arr, arr_size);
-    detail::validate_sequence(seq_arr, vexpected, true);
+    validate_enumerable(seq_arr, vexpected, should_have_fast_size::yes);
 }
 
 void test_with_array()
@@ -411,9 +392,9 @@ void test_with_non_const_non_copyable_object()
     });
     std::list<detail::no_copy> lexpected;
     lexpected.emplace_back(42);
-    detail::validate_sequence(seq, lexpected, false);
+    validate_enumerable(seq, lexpected, should_have_fast_size::no);
     auto cseq = seq.as_const();
-    detail::validate_sequence(cseq, lexpected, false);
+    validate_enumerable(cseq, lexpected, should_have_fast_size::no);
 }
 
 void test_with_const_non_copyable_object()
@@ -433,7 +414,7 @@ void test_with_const_non_copyable_object()
         l.emplace_back(42);
         return l;
     }();
-    detail::validate_sequence(seq, lexpected, false);
+    validate_enumerable(seq, lexpected, should_have_fast_size::no);
 }
 
 void test_with_non_copyable_object()
@@ -448,7 +429,7 @@ void test_non_const_to_const_conversion()
 {
     auto validat = [](const coveo::enumerable<const int>& seq) {
         const std::vector<int> vexpected = { 42, 23, 66 };
-        detail::validate_sequence(seq, vexpected, true);
+        validate_enumerable(seq, vexpected, should_have_fast_size::yes);
     };
     std::vector<int> vforseq = { 42, 23, 66 };
     auto seq = coveo::enumerable<int>(vforseq);
