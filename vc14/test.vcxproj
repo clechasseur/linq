@@ -374,14 +374,16 @@ copy /Y "$(TargetPath)" "$(SolutionDir)out\"</Command>
     <ClInclude Include="..\lib\coveo\seq\enumerable.h" />
     <ClInclude Include="..\lib\coveo\seq\sequence_util.h" />
     <ClInclude Include="..\tests\coveo\linq\all_tests.h" />
-    <ClInclude Include="..\tests\coveo\linq\linq_tests.h" />
+    <ClInclude Include="..\tests\coveo\linq\linq_chaining_tests.h" />
+    <ClInclude Include="..\tests\coveo\linq\linq_operator_tests.h" />
     <ClInclude Include="..\tests\coveo\seq\enumerable_tests.h" />
     <ClInclude Include="..\tests\coveo\seq\enumerable_test_util.h" />
     <ClInclude Include="..\tests\coveo\test_framework.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\tests\coveo\linq\all_tests.cpp" />
-    <ClCompile Include="..\tests\coveo\linq\linq_tests.cpp" />
+    <ClCompile Include="..\tests\coveo\linq\linq_chaining_tests.cpp" />
+    <ClCompile Include="..\tests\coveo\linq\linq_operator_tests.cpp" />
     <ClCompile Include="..\tests\coveo\seq\enumerable_tests.cpp" />
     <ClCompile Include="..\tests\tests_main.cpp" />
   </ItemGroup>

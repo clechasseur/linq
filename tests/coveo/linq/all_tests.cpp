@@ -4,7 +4,8 @@
 #include "coveo/linq/all_tests.h"
 
 #include <coveo/seq/enumerable_tests.h>
-#include <coveo/linq/linq_tests.h>
+#include <coveo/linq/linq_operator_tests.h>
+#include <coveo/linq/linq_chaining_tests.h>
 
 namespace coveo_tests {
 namespace linq {
@@ -16,7 +17,7 @@ void all_tests()
     enumerable_tests();
 
     // linq
-    linq_operator_tests();
+    operator_tests();
     chaining_tests();
     bugs_tests();
 }

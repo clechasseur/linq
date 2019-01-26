@@ -51,9 +51,6 @@
     <ClInclude Include="..\lib\coveo\linq\detail\linq_detail.h">
       <Filter>lib\coveo\linq\detail</Filter>
     </ClInclude>
-    <ClInclude Include="..\tests\coveo\linq\linq_tests.h">
-      <Filter>tests\coveo\linq</Filter>
-    </ClInclude>
     <ClInclude Include="..\lib\coveo\linq\exception.h">
       <Filter>lib\coveo\linq</Filter>
     </ClInclude>
@@ -75,6 +72,12 @@
     <ClInclude Include="..\tests\coveo\seq\enumerable_test_util.h">
       <Filter>tests\coveo\seq</Filter>
     </ClInclude>
+    <ClInclude Include="..\tests\coveo\linq\linq_chaining_tests.h">
+      <Filter>tests\coveo\linq</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tests\coveo\linq\linq_operator_tests.h">
+      <Filter>tests\coveo\linq</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\tests\tests_main.cpp">
@@ -83,11 +86,14 @@
     <ClCompile Include="..\tests\coveo\linq\all_tests.cpp">
       <Filter>tests\coveo\linq</Filter>
     </ClCompile>
-    <ClCompile Include="..\tests\coveo\linq\linq_tests.cpp">
-      <Filter>tests\coveo\linq</Filter>
-    </ClCompile>
     <ClCompile Include="..\tests\coveo\seq\enumerable_tests.cpp">
       <Filter>tests\coveo\seq</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\coveo\linq\linq_chaining_tests.cpp">
+      <Filter>tests\coveo\linq</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\coveo\linq\linq_operator_tests.cpp">
+      <Filter>tests\coveo\linq</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
