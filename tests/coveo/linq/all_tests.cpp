@@ -16,7 +16,7 @@ void all_tests()
     enumerable_tests();
 
     // linq
-    linq_tests();
+    linq_operator_tests();
     chaining_tests();
     bugs_tests();
 }

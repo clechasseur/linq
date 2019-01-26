@@ -7,7 +7,7 @@
 namespace coveo_tests {
 namespace linq {
 
-void linq_tests();
+void linq_operator_tests();
 void chaining_tests();
 void bugs_tests();
 

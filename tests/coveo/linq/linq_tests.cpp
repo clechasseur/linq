@@ -62,7 +62,7 @@ bool seq_second_equal(const TwoIntsSeq& tiseq, const IntSeq& iseq) {
 
 } // detail
 
-// from tests
+// from/from_range/from_int_range/from_repeated tests
 
 void test_from()
 {
@@ -1687,9 +1687,790 @@ void test_select()
     test_select_many_with_index_with_forward_list();
 }
 
+// sequence_equal tests
+
+void test_sequence_equal_1()
+{
+    const std::vector<int> v = { 42, 23, 66, 11, 24 };
+    const std::forward_list<int> expected = { 42, 23, 66, 11, 24 };
+
+    using namespace coveo::linq;
+    COVEO_ASSERT(from(v) | sequence_equal(expected));
+}
+
+void test_sequence_equal_2()
+{
+    const std::vector<int> v = { 42, 23, 66, 11, 24 };
+    const std::forward_list<int> expected = { -42, 23, -66, -11, 24 };
+    auto fuzzy_equal = [](int i, int j) {
+        return std::abs(i) == std::abs(j);
+    };
+
+    using namespace coveo::linq;
+    COVEO_ASSERT(from(v) | sequence_equal(expected, fuzzy_equal));
+}
+
+void test_sequence_equal()
+{
+    test_sequence_equal_1();
+    test_sequence_equal_2();
+}
+
+// single tests
+
+void test_single_0()
+{
+    const std::vector<int> zero_v;
+    const std::vector<int> one_v = { 42 };
+    const std::vector<int> two_v = { 42, 23 };
+
+    using namespace coveo::linq;
+    COVEO_ASSERT_THROW(from(zero_v) | single());
+    COVEO_ASSERT_EQUAL(42, from(one_v) | single());
+    COVEO_ASSERT_THROW(from(two_v) | single());
+}
+
+void test_single_1()
+{
+    const std::vector<int> zero_v;
+    const std::vector<int> no_42_v = { 23, 66, 11 };
+    const std::vector<int> one_42_v = { 42, 23, 66, 11 };
+    const std::vector<int> two_42_v = { 42, 23, 66, 42, 11 };
+    auto equal_to_42 = std::bind(std::equal_to<int>(), std::placeholders::_1, 42);
+
+    using namespace coveo::linq;
+    COVEO_ASSERT_THROW(from(zero_v) | single(equal_to_42));
+    COVEO_ASSERT_THROW(from(no_42_v) | single(equal_to_42));
+    COVEO_ASSERT_EQUAL(42, from(one_42_v) | single(equal_to_42));
+    COVEO_ASSERT_THROW(from(two_42_v) | single(equal_to_42));
+}
+
+void test_single_0_non_const()
+{
+    std::vector<int> v = { 42 };
+    const std::vector<int> expected = { 43 };
+
+    using namespace coveo::linq;
+    (from(v) | single()) += 1;
+    COVEO_ASSERT(detail::equal(std::begin(v), std::end(v),
+                               std::begin(expected), std::end(expected)));
+}
+
+void test_single_1_non_const()
+{
+    std::vector<int> v = { 23, 42, 66 };
+    const std::vector<int> expected = { 23, 84, 66 };
+    auto equal_to_42 = std::bind(std::equal_to<int>(), std::placeholders::_1, 42);
+
+    using namespace coveo::linq;
+    (from(v) | single(equal_to_42)) *= 2;
+    COVEO_ASSERT(detail::equal(std::begin(v), std::end(v),
+                               std::begin(expected), std::end(expected)));
+}
+
+void test_single()
+{
+    test_single_0();
+    test_single_1();
+    test_single_0_non_const();
+    test_single_1_non_const();
+}
+
+// single_or_default tests
+
+void test_single_or_default_0()
+{
+    const std::vector<int> zero_v;
+    const std::vector<int> one_v = { 42 };
+    const std::vector<int> two_v = { 42, 23 };
+
+    using namespace coveo::linq;
+    COVEO_ASSERT_EQUAL(0, from(zero_v) | single_or_default());
+    COVEO_ASSERT_EQUAL(42, from(one_v) | single_or_default());
+    COVEO_ASSERT_EQUAL(0, from(two_v) | single_or_default());
+}
+
+void test_single_or_default_1()
+{
+    const std::vector<int> zero_v;
+    const std::vector<int> no_42_v = { 23, 66, 11 };
+    const std::vector<int> one_42_v = { 42, 23, 66, 11 };
+    const std::vector<int> two_42_v = { 42, 23, 66, 42, 11 };
+    auto equal_to_42 = std::bind(std::equal_to<int>(), std::placeholders::_1, 42);
+
+    using namespace coveo::linq;
+    COVEO_ASSERT_EQUAL(0, from(zero_v) | single_or_default(equal_to_42));
+    COVEO_ASSERT_EQUAL(0, from(no_42_v) | single_or_default(equal_to_42));
+    COVEO_ASSERT_EQUAL(42, from(one_42_v) | single_or_default(equal_to_42));
+    COVEO_ASSERT_EQUAL(0, from(two_42_v) | single_or_default(equal_to_42));
+}
+
+void test_single_or_default()
+{
+    test_single_or_default_0();
+    test_single_or_default_1();
+}
+
+// skip/skip_while/skip_while_with_index tests
+
+void test_skip_1()
+{
+    const std::vector<int> v = { 42, 23, 66, 11, 24 };
+    const std::vector<int> last_two = { 11, 24 };
+    const std::vector<int> none;
+
+    using namespace coveo::linq;
+    auto e_skip_3 = from(v)
+                  | skip(3);
+    auto e_skip_9 = from(v)
+                  | skip(9);
+    validate_enumerable(e_skip_3, last_two, should_have_fast_size::yes);
+    validate_enumerable(e_skip_9, none, should_have_fast_size::yes);
+}
+
+void test_skip_non_const()
+{
+    std::vector<detail::two_ints> v = { 42, 23, 66, 11, 24 };
+    const std::vector<int> expected = { 42, 23, 66, 22, 48 };
+
+    using namespace coveo::linq;
+    auto e_skip_3 = from(v)
+                  | skip(3);
+    for (auto&& ti : e_skip_3) {
+        ti.second *= 2;
+    }
+    COVEO_ASSERT(detail::seq_second_equal(v, expected));
+}
+
+void test_skip_with_forward_list()
+{
+    const std::vector<int> last_two = { 11, 24 };
+
+    using namespace coveo::linq;
+    auto e_skip_3 = from(std::forward_list<int>{ 42, 23, 66, 11, 24 })
+                  | skip(3);
+    validate_enumerable(e_skip_3, last_two, should_have_fast_size::no);
+}
+
+void test_skip_while_1()
+{
+    const std::vector<int> v = { 42, 23, 66, 11, 24 };
+    const std::vector<int> v_66_and_up = { 66, 11, 24 };
+    const std::vector<int> none;
+
+    using namespace coveo::linq;
+    auto e_after_60 = from(v)
+                    | skip_while([](int i) { return i < 60; });
+    auto e_after_90 = from(v)
+                    | skip_while([](int i) { return i < 90; });
+    validate_enumerable(e_after_60, v_66_and_up, should_have_fast_size::no);
+    validate_enumerable(e_after_90, none, should_have_fast_size::no);
+}
+
+void test_skip_while_non_const()
+{
+    std::vector<detail::two_ints> v = { 42, 23, 66, 11, 24 };
+    const std::vector<int> expected = { 42, 23, 132, 22, 48 };
+
+    using namespace coveo::linq;
+    auto e_after_60 = from(v)
+                    | skip_while([](const detail::two_ints& ti) { return ti.first < 60; });
+    for (auto&& ti : e_after_60) {
+        ti.second *= 2;
+    }
+    COVEO_ASSERT(detail::seq_second_equal(v, expected));
+}
+
+void test_skip_while_with_forward_list()
+{
+    const std::vector<int> v_66_and_up = { 66, 11, 24 };
+
+    using namespace coveo::linq;
+    auto e_after_60 = from(std::forward_list<int>{ 42, 23, 66, 11, 24 })
+                    | skip_while([](int i) { return i < 60; });
+    validate_enumerable(e_after_60, v_66_and_up, should_have_fast_size::no);
+}
+
+void test_skip_while_with_index_1()
+{
+    const std::vector<int> v = { 42, 23, 66, 11, 24 };
+    const std::vector<int> v_66_and_up = { 66, 11, 24 };
+    const std::vector<int> v_24_and_up = { 24 };
+
+    using namespace coveo::linq;
+    auto e_after_60 = from(v)
+                    | skip_while_with_index([](int i, std::size_t n) { return i < 60 && n < 4; });
+    auto e_after_90 = from(v)
+                    | skip_while_with_index([](int i, std::size_t n) { return i < 90 && n < 4; });
+    validate_enumerable(e_after_60, v_66_and_up, should_have_fast_size::no);
+    validate_enumerable(e_after_90, v_24_and_up, should_have_fast_size::no);
+}
+
+void test_skip_while_with_index_non_const()
+{
+    std::vector<detail::two_ints> v = { 42, 23, 66, 11, 24 };
+    const std::vector<int> expected = { 42, 23, 66, 11, 48 };
+
+    using namespace coveo::linq;
+    auto e_after_4th = from(v)
+                     | skip_while_with_index([](const detail::two_ints&, std::size_t n) { return n < 4; });
+    for (auto&& ti : e_after_4th) {
+        ti.second *= 2;
+    }
+    COVEO_ASSERT(detail::seq_second_equal(v, expected));
+}
+
+void test_skip_while_with_index_with_forward_list()
+{
+    const std::vector<int> v_66_and_up = { 66, 11, 24 };
+
+    using namespace coveo::linq;
+    auto e_after_60 = from(std::forward_list<int>{ 42, 23, 66, 11, 24 })
+                    | skip_while_with_index([](int i, std::size_t n) { return i < 60 && n < 4; });
+    validate_enumerable(e_after_60, v_66_and_up, should_have_fast_size::no);
+}
+
+void test_skip()
+{
+    test_skip_1();
+    test_skip_non_const();
+    test_skip_with_forward_list();
+    test_skip_while_1();
+    test_skip_while_non_const();
+    test_skip_while_with_forward_list();
+    test_skip_while_with_index_1();
+    test_skip_while_with_index_non_const();
+    test_skip_while_with_index_with_forward_list();
+}
+
+// sum tests
+
+void test_sum_direct()
+{
+    const std::vector<int> v = { 42, 23, 66 };
+
+    using namespace coveo::linq;
+    auto sum_int = from(v)
+                 | sum([](int i) { return i; });
+    COVEO_ASSERT_EQUAL(131, sum_int);
+}
+
+void test_sum_indirect()
+{
+    const std::vector<int> v = { 42, 23, 66 };
+
+    using namespace coveo::linq;
+    auto sum_dbl = from(v)
+                 | sum([](int i) { return static_cast<double>(i); });
+    COVEO_ASSERT(sum_dbl >= 131.0 && sum_dbl < 131.01);
+}
+
+void test_sum_empty()
+{
+    const std::vector<int> ev;
+
+    using namespace coveo::linq;
+    COVEO_ASSERT_THROW(from(ev) | sum([](int i) { return i; }));
+}
+
+void test_sum()
+{
+    test_sum_direct();
+    test_sum_indirect();
+    test_sum_empty();
+}
+
+// take/take_while/take_while_with_index tests
+
+void test_take_1()
+{
+    const std::vector<int> v = { 42, 23, 66, 11, 24 };
+    const std::vector<int> first_three = { 42, 23, 66 };
+    const std::vector<int> none;
+
+    using namespace coveo::linq;
+    auto e_take_3 = from(v)
+                  | take(3);
+    auto e_take_0 = from(v)
+                  | take(0);
+    validate_enumerable(e_take_3, first_three, should_have_fast_size::yes);
+    validate_enumerable(e_take_0, none, should_have_fast_size::yes);
+}
+
+void test_take_non_const()
+{
+    std::vector<detail::two_ints> v = { 42, 23, 66, 11, 24 };
+    const std::vector<int> expected = { 84, 46, 132, 11, 24 };
+
+    using namespace coveo::linq;
+    auto e_take_3 = from(v)
+                  | take(3);
+    for (auto&& ti : e_take_3) {
+        ti.second *= 2;
+    }
+    COVEO_ASSERT(detail::seq_second_equal(v, expected));
+}
+
+void test_take_with_forward_list()
+{
+    const std::vector<int> first_three = { 42, 23, 66 };
+
+    using namespace coveo::linq;
+    auto e_take_3 = from(std::forward_list<int>{ 42, 23, 66, 11, 24 })
+                    | take(3);
+    validate_enumerable(e_take_3, first_three, should_have_fast_size::no);
+}
+
+void test_take_while_1()
+{
+    const std::vector<int> v = { 42, 23, 66, 11, 24 };
+    const std::vector<int> v_before_66 = { 42, 23 };
+
+    using namespace coveo::linq;
+    auto e_before_60 = from(v)
+                     | take_while([](int i) { return i < 60; });
+    auto e_before_90 = from(v)
+                     | take_while([](int i) { return i < 90; });
+    validate_enumerable(e_before_60, v_before_66, should_have_fast_size::no);
+    validate_enumerable(e_before_90, v, should_have_fast_size::no);
+}
+
+void test_take_while_non_const()
+{
+    std::vector<detail::two_ints> v = { 42, 23, 66, 11, 24 };
+    const std::vector<int> expected = { 84, 46, 66, 11, 24 };
+        
+    using namespace coveo::linq;
+    auto e_before_60 = from(v)
+                     | take_while([](const detail::two_ints& ti) { return ti.first < 60; });
+    for (auto&& ti : e_before_60) {
+        ti.second *= 2;
+    }
+    COVEO_ASSERT(detail::seq_second_equal(v, expected));
+}
+
+void test_take_while_with_forward_list()
+{
+    const std::vector<int> v_before_66 = { 42, 23 };
+
+    using namespace coveo::linq;
+    auto e_before_60 = from(std::forward_list<int>{ 42, 23, 66, 11, 24 })
+                     | take_while([](int i) { return i < 60; });
+    validate_enumerable(e_before_60, v_before_66, should_have_fast_size::no);
+}
+
+void test_take_while_with_index_1()
+{
+    const std::vector<int> v = { 42, 23, 66, 11, 24 };
+    const std::vector<int> v_before_66 = { 42, 23 };
+    const std::vector<int> v_before_5th = { 42, 23, 66, 11 };
+
+    using namespace coveo::linq;
+    auto e_before_60 = from(v)
+                     | take_while_with_index([](int i, std::size_t n) { return i < 60 && n < 4; });
+    auto e_before_90 = from(v)
+                     | take_while_with_index([](int i, std::size_t n) { return i < 90 && n < 4; });
+    validate_enumerable(e_before_60, v_before_66, should_have_fast_size::no);
+    validate_enumerable(e_before_90, v_before_5th, should_have_fast_size::no);
+}
+
+void test_take_while_with_index_non_const()
+{
+    std::vector<detail::two_ints> v = { 42, 23, 66, 11, 24 };
+    const std::vector<int> expected = { 84, 46, 132, 22, 24 };
+
+    using namespace coveo::linq;
+    auto e_before_4th = from(v)
+                      | take_while_with_index([](const detail::two_ints&, std::size_t n) { return n < 4; });
+    for (auto&& ti : e_before_4th) {
+        ti.second *= 2;
+    }
+    COVEO_ASSERT(detail::seq_second_equal(v, expected));
+}
+
+void test_take_while_with_index_with_forward_list()
+{
+    const std::vector<int> v_before_66 = { 42, 23 };
+
+    using namespace coveo::linq;
+    auto e_before_60 = from(std::forward_list<int>{ 42, 23, 66, 11, 24 })
+                     | take_while_with_index([](int i, std::size_t n) { return i < 60 && n < 4; });
+    validate_enumerable(e_before_60, v_before_66, should_have_fast_size::no);
+}
+
+void test_take()
+{
+    test_take_1();
+    test_take_non_const();
+    test_take_with_forward_list();
+    test_take_while_1();
+    test_take_while_non_const();
+    test_take_while_with_forward_list();
+    test_take_while_with_index_1();
+    test_take_while_with_index_non_const();
+    test_take_while_with_index_with_forward_list();
+}
+
+// to/to_vector/to_associative/to_map tests
+
+void test_from_vector_to_forward_list()
+{
+    const std::vector<int> v = { 42, 23, 66, 11, 24 };
+    const std::forward_list<int> fl = { 42, 23, 66, 11, 24 };
+
+    using namespace coveo::linq;
+    auto linq_fl = from(v)
+                 | to<std::forward_list<int>>();
+    COVEO_ASSERT(linq_fl == fl);
+}
+
+void test_from_temporary_vector_to_forward_list()
+{
+    const std::forward_list<int> fl = { 42, 23, 66, 11, 24 };
+
+    using namespace coveo::linq;
+    auto linq_fl = from(std::vector<int>{ 42, 23, 66, 11, 24 })
+                 | to<std::forward_list<int>>();
+    COVEO_ASSERT(linq_fl == fl);
+}
+
+void test_from_forward_list_to_vector()
+{
+    const std::forward_list<int> fl = { 42, 23, 66, 11, 24 };
+    const std::vector<int> v = { 42, 23, 66, 11, 24 };
+
+    using namespace coveo::linq;
+    auto linq_v = from(fl)
+                | to_vector();
+    COVEO_ASSERT(linq_v == v);
+}
+
+void test_from_temporary_forward_list_to_vector()
+{
+    const std::vector<int> v = { 42, 23, 66, 11, 24 };
+
+    using namespace coveo::linq;
+    auto linq_v = from(std::forward_list<int>{ 42, 23, 66, 11, 24 })
+                | to_vector();
+    COVEO_ASSERT(linq_v == v);
+}
+
+void test_from_vector_to_associative_1()
+{
+    const std::vector<std::pair<int, std::string>> v = { { 42, "Life" }, { 23, "Hangar" } };
+    auto pair_first = [](std::pair<int, std::string> p) { return p.first; };
+
+    using namespace coveo::linq;
+    auto linq_m = from(v)
+                | to_associative<std::map<int, std::pair<int, std::string>>>(pair_first);
+    auto it = std::begin(linq_m);
+    COVEO_ASSERT_EQUAL(23, it->first);
+    COVEO_ASSERT_EQUAL(23, it->second.first);
+    COVEO_ASSERT_EQUAL("Hangar", it->second.second);
+    ++it;
+    COVEO_ASSERT_EQUAL(42, it->first);
+    COVEO_ASSERT_EQUAL(42, it->second.first);
+    COVEO_ASSERT_EQUAL("Life", it->second.second);
+    COVEO_ASSERT(++it == std::end(linq_m));
+}
+
+void test_from_vector_to_associative_2()
+{
+    const std::vector<std::pair<int, std::string>> v = { { 42, "Life" }, { 23, "Hangar" } };
+    auto pair_first = [](std::pair<int, std::string> p) { return p.first; };
+    auto pair_second = [](std::pair<int, std::string> p) { return p.second; };
+
+    using namespace coveo::linq;
+    auto linq_m = from(v)
+                | to_associative<std::map<int, std::string>>(pair_first, pair_second);
+    auto it = std::begin(linq_m);
+    COVEO_ASSERT_EQUAL(23, it->first);
+    COVEO_ASSERT_EQUAL("Hangar", it->second);
+    ++it;
+    COVEO_ASSERT_EQUAL(42, it->first);
+    COVEO_ASSERT_EQUAL("Life", it->second);
+    COVEO_ASSERT(++it == std::end(linq_m));
+}
+
+void test_from_temporary_vector_to_associative()
+{
+    auto pair_first = [](std::pair<int, std::string> p) { return p.first; };
+
+    using namespace coveo::linq;
+    auto linq_m = from(std::vector<std::pair<int, std::string>>{ { 42, "Life" }, { 23, "Hangar" } })
+                | to_associative<std::map<int, std::pair<int, std::string>>>(pair_first);
+    auto it = std::begin(linq_m);
+    COVEO_ASSERT_EQUAL(23, it->first);
+    COVEO_ASSERT_EQUAL(23, it->second.first);
+    COVEO_ASSERT_EQUAL("Hangar", it->second.second);
+    ++it;
+    COVEO_ASSERT_EQUAL(42, it->first);
+    COVEO_ASSERT_EQUAL(42, it->second.first);
+    COVEO_ASSERT_EQUAL("Life", it->second.second);
+    COVEO_ASSERT(++it == std::end(linq_m));
+}
+
+void test_from_vector_to_map_1()
+{
+    const std::vector<std::pair<int, std::string>> v = { { 42, "Life" }, { 23, "Hangar" } };
+    auto pair_first = [](std::pair<int, std::string> p) { return p.first; };
+
+    using namespace coveo::linq;
+    auto linq_m = from(v)
+                | to_map(pair_first);
+    auto it = std::begin(linq_m);
+    COVEO_ASSERT_EQUAL(23, it->first);
+    COVEO_ASSERT_EQUAL(23, it->second.first);
+    COVEO_ASSERT_EQUAL("Hangar", it->second.second);
+    ++it;
+    COVEO_ASSERT_EQUAL(42, it->first);
+    COVEO_ASSERT_EQUAL(42, it->second.first);
+    COVEO_ASSERT_EQUAL("Life", it->second.second);
+    COVEO_ASSERT(++it == std::end(linq_m));
+}
+
+void test_from_vector_to_map_2()
+{
+    const std::vector<std::pair<int, std::string>> v = { { 42, "Life" }, { 23, "Hangar" } };
+    auto pair_first = [](std::pair<int, std::string> p) { return p.first; };
+    auto pair_second = [](std::pair<int, std::string> p) { return p.second; };
+
+    using namespace coveo::linq;
+    auto linq_m = from(v)
+                | to_map(pair_first, pair_second);
+    auto it = std::begin(linq_m);
+    COVEO_ASSERT_EQUAL(23, it->first);
+    COVEO_ASSERT_EQUAL("Hangar", it->second);
+    ++it;
+    COVEO_ASSERT_EQUAL(42, it->first);
+    COVEO_ASSERT_EQUAL("Life", it->second);
+    COVEO_ASSERT(++it == std::end(linq_m));
+}
+
+void test_from_temporary_vector_to_map()
+{
+    auto pair_first = [](std::pair<int, std::string> p) { return p.first; };
+
+    using namespace coveo::linq;
+    auto linq_m = from(std::vector<std::pair<int, std::string>>{ { 42, "Life" }, { 23, "Hangar" } })
+                | to_map(pair_first);
+    auto it = std::begin(linq_m);
+    COVEO_ASSERT_EQUAL(23, it->first);
+    COVEO_ASSERT_EQUAL(23, it->second.first);
+    COVEO_ASSERT_EQUAL("Hangar", it->second.second);
+    ++it;
+    COVEO_ASSERT_EQUAL(42, it->first);
+    COVEO_ASSERT_EQUAL(42, it->second.first);
+    COVEO_ASSERT_EQUAL("Life", it->second.second);
+    COVEO_ASSERT(++it == std::end(linq_m));
+}
+
+void test_to()
+{
+    test_from_vector_to_forward_list();
+    test_from_temporary_vector_to_forward_list();
+    test_from_forward_list_to_vector();
+    test_from_temporary_forward_list_to_vector();
+    test_from_vector_to_associative_1();
+    test_from_vector_to_associative_2();
+    test_from_temporary_vector_to_associative();
+    test_from_vector_to_map_1();
+    test_from_vector_to_map_2();
+    test_from_temporary_vector_to_map();
+}
+
+// union_with tests
+
+void test_union_with_1()
+{
+    const std::vector<int> v1 = { 42, 23, 66, 42, 67, 66, 23, 11 };
+    const std::vector<int> v2 = { 11, 7, 67, 24, 44, 42, 44 };
+    const std::vector<int> v_union = { 42, 23, 66, 67, 11, 7, 24, 44 };
+
+    using namespace coveo::linq;
+    auto union1 = from(v1)
+                | union_with(v2);
+    validate_enumerable(union1, v_union, should_have_fast_size::no);
+}
+
+void test_union_with_2()
+{
+    const std::vector<int> v1 = { 42, 23, 66, 42, 67, 66, 23, 11 };
+    const std::vector<int> v2 = { 11, 7, 67, 24, 44, 42, 44 };
+    const std::vector<int> v_union = { 42, 23, 66, 67, 11, 7, 24, 44 };
+
+    using namespace coveo::linq;
+    auto union2 = from(v1)
+                | union_with(v2,
+                             [](int i, int j) { return i > j; });
+    validate_enumerable(union2, v_union, should_have_fast_size::no);
+}
+
+void test_union_with_non_const()
+{
+    std::vector<detail::two_ints> v1 = { 42, 23, 66 };
+    std::vector<detail::two_ints> v2 = { 11, 7, 23, 42, 67 };
+    const std::vector<int> expected1 = { 84, 46, 132 };
+    const std::vector<int> expected2 = { 22, 14, 23, 42, 134 };
+
+    using namespace coveo::linq;
+    auto union1 = from(v1)
+                | union_with(v2);
+    for (auto&& ti : union1) {
+        ti.second *= 2;
+    }
+    COVEO_ASSERT(detail::seq_second_equal(v1, expected1));
+    COVEO_ASSERT(detail::seq_second_equal(v2, expected2));
+}
+
+void test_union_with_with_forward_lists()
+{
+    const std::vector<int> v_union = { 42, 23, 66, 67, 11, 7, 24, 44 };
+
+    using namespace coveo::linq;
+    auto union1 = from(std::forward_list<int>{ 42, 23, 66, 42, 67, 66, 23, 11 })
+                | union_with(std::forward_list<int>{ 11, 7, 67, 24, 44, 42, 44 });
+    validate_enumerable(union1, v_union, should_have_fast_size::no);
+}
+
+void test_union_with()
+{
+    test_union_with_1();
+    test_union_with_2();
+    test_union_with_non_const();
+    test_union_with_with_forward_lists();
+}
+
+// where/where_with_index tests
+
+void test_where_1()
+{
+    const std::vector<int> v = { 42, 23, 66, 11, 7, 24 };
+    const std::vector<int> expected_odd = { 23, 11, 7 };
+    const std::vector<int> expected_div_3 = { 42, 66, 24 };
+    auto is_odd = [](int i) { return i % 2 != 0; };
+    auto is_div_3 = [](int i) { return i % 3 == 0; };
+
+    using namespace coveo::linq;
+    auto e1 = from(v)
+            | where(is_odd);
+    validate_enumerable(e1, expected_odd, should_have_fast_size::no);
+
+    auto e2 = from(v)
+            | where(is_div_3);
+    validate_enumerable(e2, expected_div_3, should_have_fast_size::no);
+}
+
+void test_where_non_const()
+{
+    std::vector<detail::two_ints> v = { 42, 23, 66, 11, 7, 24 };
+    const std::vector<int> expected = { 42, 46, 66, 22, 14, 24 };
+    auto is_odd = [](const detail::two_ints& ti) { return ti.first % 2 != 0; };
+
+    using namespace coveo::linq;
+    auto e = from(v)
+           | where(is_odd);
+    for (auto&& ti : e) {
+        ti.second *= 2;
+    }
+    COVEO_ASSERT(detail::seq_second_equal(v, expected));
+}
+
+void test_where_with_forward_list()
+{
+    const std::vector<int> expected_odd = { 23, 11, 7 };
+    auto is_odd = [](int i) { return i % 2 != 0; };
+
+    using namespace coveo::linq;
+    auto e1 = from(std::forward_list<int>{ 42, 23, 66, 11, 7, 24 })
+            | where(is_odd);
+    validate_enumerable(e1, expected_odd, should_have_fast_size::no);
+}
+
+void test_where_with_index_1()
+{
+    const std::vector<int> v = { 42, 23, 66, 11, 7, 24 };
+    const std::vector<int> expected_odd_idx = { 23, 11, 24 };
+    auto is_odd_idx = [](int, std::size_t idx) { return idx % 2 != 0; };
+
+    using namespace coveo::linq;
+    auto e = from(v)
+           | where_with_index(is_odd_idx);
+    validate_enumerable(e, expected_odd_idx, should_have_fast_size::no);
+}
+
+void test_where_with_index_non_const()
+{
+    std::vector<detail::two_ints> v = { 42, 23, 66, 11, 7, 24 };
+    const std::vector<int> expected = { 42, 46, 66, 22, 7, 48 };
+    auto is_odd_idx = [](const detail::two_ints&, std::size_t idx) { return idx % 2 != 0; };
+
+    using namespace coveo::linq;
+    auto e = from(v)
+           | where_with_index(is_odd_idx);
+    for (auto&& ti : e) {
+        ti.second *= 2;
+    }
+    COVEO_ASSERT(detail::seq_second_equal(v, expected));
+}
+
+void test_where_with_index_with_forward_list()
+{
+    const std::vector<int> expected_odd_idx = { 23, 11, 24 };
+    auto is_odd_idx = [](int, std::size_t idx) { return idx % 2 != 0; };
+
+    using namespace coveo::linq;
+    auto e = from(std::forward_list<int>{ 42, 23, 66, 11, 7, 24 })
+           | where_with_index(is_odd_idx);
+    validate_enumerable(e, expected_odd_idx, should_have_fast_size::no);
+}
+
+void test_where()
+{
+    test_where_1();
+    test_where_non_const();
+    test_where_with_forward_list();
+    test_where_with_index_1();
+    test_where_with_index_non_const();
+    test_where_with_index_with_forward_list();
+}
+
+// zip tests
+
+void test_zip_with_vector()
+{
+    const std::vector<int> v1 = { 42, 23, 66 };
+    const std::vector<int> v2 = { 11, 7, 24, 67 };
+    const std::vector<int> expected = { 53, 30, 90 };
+    auto add = [](int i, int j) { return i + j; };
+
+    using namespace coveo::linq;
+    auto zipped = from(v1)
+                | zip(v2, add);
+    validate_enumerable(zipped, expected, should_have_fast_size::yes);
+}
+
+void test_zip_with_forward_list()
+{
+    const std::vector<int> expected = { 53, 30, 90 };
+    auto add = [](int i, int j) { return i + j; };
+
+    using namespace coveo::linq;
+    auto zipped = from(std::forward_list<int>{ 42, 23, 66 })
+                | zip(std::forward_list<int>{ 11, 7, 24, 67 },
+                        add);
+    validate_enumerable(zipped, expected, should_have_fast_size::no);
+}
+
+void test_zip()
+{
+    test_zip_with_vector();
+    test_zip_with_forward_list();
+}
+
 // all tests for coveo::linq operators
 
-void linq_tests()
+void linq_operator_tests()
 {
     test_all_froms();
     test_aggregate();
@@ -1719,594 +2500,16 @@ void linq_tests()
     test_order_by();
     test_reverse();
     test_select();
-
-    // sequence_equal
-    {
-        const std::vector<int> v = { 42, 23, 66, 11, 24 };
-        const std::forward_list<int> expected = { 42, 23, 66, 11, 24 };
-
-        using namespace coveo::linq;
-        COVEO_ASSERT(from(v) | sequence_equal(expected));
-    }
-    {
-        const std::vector<int> v = { 42, 23, 66, 11, 24 };
-        const std::forward_list<int> expected = { -42, 23, -66, -11, 24 };
-        auto fuzzy_equal = [](int i, int j) {
-            return std::abs(i) == std::abs(j);
-        };
-
-        using namespace coveo::linq;
-        COVEO_ASSERT(from(v) | sequence_equal(expected, fuzzy_equal));
-    }
-
-    // single
-    {
-        const std::vector<int> zero_v;
-        const std::vector<int> one_v = { 42 };
-        const std::vector<int> two_v = { 42, 23 };
-
-        using namespace coveo::linq;
-        COVEO_ASSERT_THROW(from(zero_v) | single());
-        COVEO_ASSERT((from(one_v) | single()) == 42);
-        COVEO_ASSERT_THROW(from(two_v) | single());
-    }
-    {
-        const std::vector<int> zero_v;
-        const std::vector<int> no_42_v = { 23, 66, 11 };
-        const std::vector<int> one_42_v = { 42, 23, 66, 11 };
-        const std::vector<int> two_42_v = { 42, 23, 66, 42, 11 };
-        auto equal_to_42 = std::bind(std::equal_to<int>(), std::placeholders::_1, 42);
-
-        using namespace coveo::linq;
-        COVEO_ASSERT_THROW(from(zero_v) | single(equal_to_42));
-        COVEO_ASSERT_THROW(from(no_42_v) | single(equal_to_42));
-        COVEO_ASSERT((from(one_42_v) | single(equal_to_42)) == 42);
-        COVEO_ASSERT_THROW(from(two_42_v) | single(equal_to_42));
-    }
-    {
-        std::vector<int> v = { 42 };
-        const std::vector<int> expected = { 43 };
-
-        using namespace coveo::linq;
-        (from(v) | single()) += 1;
-        COVEO_ASSERT(detail::equal(std::begin(v), std::end(v),
-                                   std::begin(expected), std::end(expected)));
-    }
-    {
-        std::vector<int> v = { 23, 42, 66 };
-        const std::vector<int> expected = { 23, 84, 66 };
-        auto equal_to_42 = std::bind(std::equal_to<int>(), std::placeholders::_1, 42);
-
-        using namespace coveo::linq;
-        (from(v) | single(equal_to_42)) *= 2;
-        COVEO_ASSERT(detail::equal(std::begin(v), std::end(v),
-                                   std::begin(expected), std::end(expected)));
-    }
-
-    // single_or_default
-    {
-        const std::vector<int> zero_v;
-        const std::vector<int> one_v = { 42 };
-        const std::vector<int> two_v = { 42, 23 };
-
-        using namespace coveo::linq;
-        COVEO_ASSERT((from(zero_v) | single_or_default()) == 0);
-        COVEO_ASSERT((from(one_v) | single_or_default()) == 42);
-        COVEO_ASSERT((from(two_v) | single_or_default()) == 0);
-    }
-    {
-        const std::vector<int> zero_v;
-        const std::vector<int> no_42_v = { 23, 66, 11 };
-        const std::vector<int> one_42_v = { 42, 23, 66, 11 };
-        const std::vector<int> two_42_v = { 42, 23, 66, 42, 11 };
-        auto equal_to_42 = std::bind(std::equal_to<int>(), std::placeholders::_1, 42);
-
-        using namespace coveo::linq;
-        COVEO_ASSERT((from(zero_v) | single_or_default(equal_to_42)) == 0);
-        COVEO_ASSERT((from(no_42_v) | single_or_default(equal_to_42)) == 0);
-        COVEO_ASSERT((from(one_42_v) | single_or_default(equal_to_42)) == 42);
-        COVEO_ASSERT((from(two_42_v) | single_or_default(equal_to_42)) == 0);
-    }
-
-    // skip
-    {
-        const std::vector<int> v = { 42, 23, 66, 11, 24 };
-        const std::vector<int> last_two = { 11, 24 };
-        const std::vector<int> none;
-
-        using namespace coveo::linq;
-        auto e_skip_3 = from(v)
-                      | skip(3);
-        auto e_skip_9 = from(v)
-                      | skip(9);
-        validate_enumerable(e_skip_3, last_two, should_have_fast_size::yes);
-        validate_enumerable(e_skip_9, none, should_have_fast_size::yes);
-    }
-    {
-        std::vector<detail::two_ints> v = { 42, 23, 66, 11, 24 };
-        const std::vector<int> expected = { 42, 23, 66, 22, 48 };
-
-        using namespace coveo::linq;
-        auto e_skip_3 = from(v)
-                      | skip(3);
-        for (auto&& ti : e_skip_3) {
-            ti.second *= 2;
-        }
-        COVEO_ASSERT(detail::seq_second_equal(v, expected));
-    }
-    {
-        const std::vector<int> last_two = { 11, 24 };
-
-        using namespace coveo::linq;
-        auto e_skip_3 = from(std::forward_list<int>{ 42, 23, 66, 11, 24 })
-                      | skip(3);
-        validate_enumerable(e_skip_3, last_two, should_have_fast_size::no);
-    }
-
-    // skip_while
-    {
-        const std::vector<int> v = { 42, 23, 66, 11, 24 };
-        const std::vector<int> v_66_and_up = { 66, 11, 24 };
-        const std::vector<int> none;
-
-        using namespace coveo::linq;
-        auto e_after_60 = from(v)
-                        | skip_while([](int i) { return i < 60; });
-        auto e_after_90 = from(v)
-                        | skip_while([](int i) { return i < 90; });
-        validate_enumerable(e_after_60, v_66_and_up, should_have_fast_size::no);
-        validate_enumerable(e_after_90, none, should_have_fast_size::no);
-    }
-    {
-        std::vector<detail::two_ints> v = { 42, 23, 66, 11, 24 };
-        const std::vector<int> expected = { 42, 23, 132, 22, 48 };
-
-        using namespace coveo::linq;
-        auto e_after_60 = from(v)
-                        | skip_while([](const detail::two_ints& ti) { return ti.first < 60; });
-        for (auto&& ti : e_after_60) {
-            ti.second *= 2;
-        }
-        COVEO_ASSERT(detail::seq_second_equal(v, expected));
-    }
-    {
-        const std::vector<int> v_66_and_up = { 66, 11, 24 };
-
-        using namespace coveo::linq;
-        auto e_after_60 = from(std::forward_list<int>{ 42, 23, 66, 11, 24 })
-                        | skip_while([](int i) { return i < 60; });
-        validate_enumerable(e_after_60, v_66_and_up, should_have_fast_size::no);
-    }
-
-    // skip_while_with_index
-    {
-        const std::vector<int> v = { 42, 23, 66, 11, 24 };
-        const std::vector<int> v_66_and_up = { 66, 11, 24 };
-        const std::vector<int> v_24_and_up = { 24 };
-
-        using namespace coveo::linq;
-        auto e_after_60 = from(v)
-                        | skip_while_with_index([](int i, std::size_t n) { return i < 60 && n < 4; });
-        auto e_after_90 = from(v)
-                        | skip_while_with_index([](int i, std::size_t n) { return i < 90 && n < 4; });
-        validate_enumerable(e_after_60, v_66_and_up, should_have_fast_size::no);
-        validate_enumerable(e_after_90, v_24_and_up, should_have_fast_size::no);
-    }
-    {
-        std::vector<detail::two_ints> v = { 42, 23, 66, 11, 24 };
-        const std::vector<int> expected = { 42, 23, 66, 11, 48 };
-
-        using namespace coveo::linq;
-        auto e_after_4th = from(v)
-                         | skip_while_with_index([](const detail::two_ints&, std::size_t n) { return n < 4; });
-        for (auto&& ti : e_after_4th) {
-            ti.second *= 2;
-        }
-        COVEO_ASSERT(detail::seq_second_equal(v, expected));
-    }
-    {
-        const std::vector<int> v_66_and_up = { 66, 11, 24 };
-
-        using namespace coveo::linq;
-        auto e_after_60 = from(std::forward_list<int>{ 42, 23, 66, 11, 24 })
-                        | skip_while_with_index([](int i, std::size_t n) { return i < 60 && n < 4; });
-        validate_enumerable(e_after_60, v_66_and_up, should_have_fast_size::no);
-    }
-
-    // sum
-    {
-        const std::vector<int> v = { 42, 23, 66 };
-
-        using namespace coveo::linq;
-        auto sum_int = from(v)
-                     | sum([](int i) { return i; });
-        COVEO_ASSERT(sum_int == 131);
-
-        auto sum_dbl = from(v)
-                     | sum([](int i) { return double(i); });
-        COVEO_ASSERT(sum_dbl >= 131.0 && sum_dbl < 131.01);
-    }
-    {
-        const std::vector<int> ev;
-
-        using namespace coveo::linq;
-        COVEO_ASSERT_THROW(from(ev)
-                         | sum([](int i) { return i; }));
-    }
-
-    // take
-    {
-        const std::vector<int> v = { 42, 23, 66, 11, 24 };
-        const std::vector<int> first_three = { 42, 23, 66 };
-        const std::vector<int> none;
-
-        using namespace coveo::linq;
-        auto e_take_3 = from(v)
-                      | take(3);
-        auto e_take_0 = from(v)
-                      | take(0);
-        validate_enumerable(e_take_3, first_three, should_have_fast_size::yes);
-        validate_enumerable(e_take_0, none, should_have_fast_size::yes);
-    }
-    {
-        std::vector<detail::two_ints> v = { 42, 23, 66, 11, 24 };
-        const std::vector<int> expected = { 84, 46, 132, 11, 24 };
-
-        using namespace coveo::linq;
-        auto e_take_3 = from(v)
-                      | take(3);
-        for (auto&& ti : e_take_3) {
-            ti.second *= 2;
-        }
-        COVEO_ASSERT(detail::seq_second_equal(v, expected));
-    }
-    {
-        const std::vector<int> first_three = { 42, 23, 66 };
-
-        using namespace coveo::linq;
-        auto e_take_3 = from(std::forward_list<int>{ 42, 23, 66, 11, 24 })
-                      | take(3);
-        validate_enumerable(e_take_3, first_three, should_have_fast_size::no);
-    }
-
-    // take_while
-    {
-        const std::vector<int> v = { 42, 23, 66, 11, 24 };
-        const std::vector<int> v_before_66 = { 42, 23 };
-
-        using namespace coveo::linq;
-        auto e_before_60 = from(v)
-                        | take_while([](int i) { return i < 60; });
-        auto e_before_90 = from(v)
-                        | take_while([](int i) { return i < 90; });
-        validate_enumerable(e_before_60, v_before_66, should_have_fast_size::no);
-        validate_enumerable(e_before_90, v, should_have_fast_size::no);
-    }
-    {
-        std::vector<detail::two_ints> v = { 42, 23, 66, 11, 24 };
-        const std::vector<int> expected = { 84, 46, 66, 11, 24 };
-        
-        using namespace coveo::linq;
-        auto e_before_60 = from(v)
-                         | take_while([](const detail::two_ints& ti) { return ti.first < 60; });
-        for (auto&& ti : e_before_60) {
-            ti.second *= 2;
-        }
-        COVEO_ASSERT(detail::seq_second_equal(v, expected));
-    }
-    {
-        const std::vector<int> v_before_66 = { 42, 23 };
-
-        using namespace coveo::linq;
-        auto e_before_60 = from(std::forward_list<int>{ 42, 23, 66, 11, 24 })
-                        | take_while([](int i) { return i < 60; });
-        validate_enumerable(e_before_60, v_before_66, should_have_fast_size::no);
-    }
-
-    // take_while_with_index
-    {
-        const std::vector<int> v = { 42, 23, 66, 11, 24 };
-        const std::vector<int> v_before_66 = { 42, 23 };
-        const std::vector<int> v_before_5th = { 42, 23, 66, 11 };
-
-        using namespace coveo::linq;
-        auto e_before_60 = from(v)
-                        | take_while_with_index([](int i, std::size_t n) { return i < 60 && n < 4; });
-        auto e_before_90 = from(v)
-                        | take_while_with_index([](int i, std::size_t n) { return i < 90 && n < 4; });
-        validate_enumerable(e_before_60, v_before_66, should_have_fast_size::no);
-        validate_enumerable(e_before_90, v_before_5th, should_have_fast_size::no);
-    }
-    {
-        std::vector<detail::two_ints> v = { 42, 23, 66, 11, 24 };
-        const std::vector<int> expected = { 84, 46, 132, 22, 24 };
-
-        using namespace coveo::linq;
-        auto e_before_4th = from(v)
-                          | take_while_with_index([](const detail::two_ints&, std::size_t n) { return n < 4; });
-        for (auto&& ti : e_before_4th) {
-            ti.second *= 2;
-        }
-        COVEO_ASSERT(detail::seq_second_equal(v, expected));
-    }
-    {
-        const std::vector<int> v_before_66 = { 42, 23 };
-
-        using namespace coveo::linq;
-        auto e_before_60 = from(std::forward_list<int>{ 42, 23, 66, 11, 24 })
-                        | take_while_with_index([](int i, std::size_t n) { return i < 60 && n < 4; });
-        validate_enumerable(e_before_60, v_before_66, should_have_fast_size::no);
-    }
-
-    // to/to_vector/to_associative/to_map
-    {
-        const std::vector<int> v = { 42, 23, 66, 11, 24 };
-        const std::forward_list<int> fl = { 42, 23, 66, 11, 24 };
-
-        using namespace coveo::linq;
-        auto linq_fl = from(v)
-                     | to<std::forward_list<int>>();
-        COVEO_ASSERT(linq_fl == fl);
-    }
-    {
-        const std::forward_list<int> fl = { 42, 23, 66, 11, 24 };
-
-        using namespace coveo::linq;
-        auto linq_fl = from(std::vector<int>{ 42, 23, 66, 11, 24 })
-                     | to<std::forward_list<int>>();
-        COVEO_ASSERT(linq_fl == fl);
-    }
-    {
-        const std::forward_list<int> fl = { 42, 23, 66, 11, 24 };
-        const std::vector<int> v = { 42, 23, 66, 11, 24 };
-
-        using namespace coveo::linq;
-        auto linq_v = from(fl)
-                    | to_vector();
-        COVEO_ASSERT(linq_v == v);
-    }
-    {
-        const std::vector<int> v = { 42, 23, 66, 11, 24 };
-
-        using namespace coveo::linq;
-        auto linq_v = from(std::forward_list<int>{ 42, 23, 66, 11, 24 })
-                    | to_vector();
-        COVEO_ASSERT(linq_v == v);
-    }
-    {
-        const std::vector<std::pair<int, std::string>> v = { { 42, "Life" }, { 23, "Hangar" } };
-        auto pair_first = [](std::pair<int, std::string> p) { return p.first; };
-
-        using namespace coveo::linq;
-        auto linq_m = from(v)
-                    | to_associative<std::map<int, std::pair<int, std::string>>>(pair_first);
-        auto it = std::begin(linq_m);
-        COVEO_ASSERT(it->first == 23);
-        COVEO_ASSERT(it->second.first == 23);
-        COVEO_ASSERT(it->second.second == "Hangar");
-        ++it;
-        COVEO_ASSERT(it->first == 42);
-        COVEO_ASSERT(it->second.first == 42);
-        COVEO_ASSERT(it->second.second == "Life");
-        COVEO_ASSERT(++it == std::end(linq_m));
-    }
-    {
-        const std::vector<std::pair<int, std::string>> v = { { 42, "Life" }, { 23, "Hangar" } };
-        auto pair_first = [](std::pair<int, std::string> p) { return p.first; };
-        auto pair_second = [](std::pair<int, std::string> p) { return p.second; };
-
-        using namespace coveo::linq;
-        auto linq_m = from(v)
-                    | to_associative<std::map<int, std::string>>(pair_first, pair_second);
-        auto it = std::begin(linq_m);
-        COVEO_ASSERT(it->first == 23);
-        COVEO_ASSERT(it->second == "Hangar");
-        ++it;
-        COVEO_ASSERT(it->first == 42);
-        COVEO_ASSERT(it->second == "Life");
-        COVEO_ASSERT(++it == std::end(linq_m));
-    }
-    {
-        auto pair_first = [](std::pair<int, std::string> p) { return p.first; };
-
-        using namespace coveo::linq;
-        auto linq_m = from(std::vector<std::pair<int, std::string>>{ { 42, "Life" }, { 23, "Hangar" } })
-                    | to_associative<std::map<int, std::pair<int, std::string>>>(pair_first);
-        auto it = std::begin(linq_m);
-        COVEO_ASSERT(it->first == 23);
-        COVEO_ASSERT(it->second.first == 23);
-        COVEO_ASSERT(it->second.second == "Hangar");
-        ++it;
-        COVEO_ASSERT(it->first == 42);
-        COVEO_ASSERT(it->second.first == 42);
-        COVEO_ASSERT(it->second.second == "Life");
-        COVEO_ASSERT(++it == std::end(linq_m));
-    }
-    {
-        const std::vector<std::pair<int, std::string>> v = { { 42, "Life" }, { 23, "Hangar" } };
-        auto pair_first = [](std::pair<int, std::string> p) { return p.first; };
-
-        using namespace coveo::linq;
-        auto linq_m = from(v)
-                    | to_map(pair_first);
-        auto it = std::begin(linq_m);
-        COVEO_ASSERT(it->first == 23);
-        COVEO_ASSERT(it->second.first == 23);
-        COVEO_ASSERT(it->second.second == "Hangar");
-        ++it;
-        COVEO_ASSERT(it->first == 42);
-        COVEO_ASSERT(it->second.first == 42);
-        COVEO_ASSERT(it->second.second == "Life");
-        COVEO_ASSERT(++it == std::end(linq_m));
-    }
-    {
-        const std::vector<std::pair<int, std::string>> v = { { 42, "Life" }, { 23, "Hangar" } };
-        auto pair_first = [](std::pair<int, std::string> p) { return p.first; };
-        auto pair_second = [](std::pair<int, std::string> p) { return p.second; };
-
-        using namespace coveo::linq;
-        auto linq_m = from(v)
-                    | to_map(pair_first, pair_second);
-        auto it = std::begin(linq_m);
-        COVEO_ASSERT(it->first == 23);
-        COVEO_ASSERT(it->second == "Hangar");
-        ++it;
-        COVEO_ASSERT(it->first == 42);
-        COVEO_ASSERT(it->second == "Life");
-        COVEO_ASSERT(++it == std::end(linq_m));
-    }
-    {
-        auto pair_first = [](std::pair<int, std::string> p) { return p.first; };
-
-        using namespace coveo::linq;
-        auto linq_m = from(std::vector<std::pair<int, std::string>>{ { 42, "Life" }, { 23, "Hangar" } })
-                    | to_map(pair_first);
-        auto it = std::begin(linq_m);
-        COVEO_ASSERT(it->first == 23);
-        COVEO_ASSERT(it->second.first == 23);
-        COVEO_ASSERT(it->second.second == "Hangar");
-        ++it;
-        COVEO_ASSERT(it->first == 42);
-        COVEO_ASSERT(it->second.first == 42);
-        COVEO_ASSERT(it->second.second == "Life");
-        COVEO_ASSERT(++it == std::end(linq_m));
-    }
-
-    // union_with
-    {
-        const std::vector<int> v1 = { 42, 23, 66, 42, 67, 66, 23, 11 };
-        const std::vector<int> v2 = { 11, 7, 67, 24, 44, 42, 44 };
-        const std::vector<int> v_union = { 42, 23, 66, 67, 11, 7, 24, 44 };
-
-        using namespace coveo::linq;
-        auto union1 = from(v1)
-                    | union_with(v2);
-        validate_enumerable(union1, v_union, should_have_fast_size::no);
-
-        auto union2 = from(v1)
-                    | union_with(v2, [](int i, int j) { return i > j; });
-        validate_enumerable(union2, v_union, should_have_fast_size::no);
-    }
-    {
-        std::vector<detail::two_ints> v1 = { 42, 23, 66 };
-        std::vector<detail::two_ints> v2 = { 11, 7, 23, 42, 67 };
-        const std::vector<int> expected1 = { 84, 46, 132 };
-        const std::vector<int> expected2 = { 22, 14, 23, 42, 134 };
-
-        using namespace coveo::linq;
-        auto union1 = from(v1)
-                    | union_with(v2);
-        for (auto&& ti : union1) {
-            ti.second *= 2;
-        }
-        COVEO_ASSERT(detail::seq_second_equal(v1, expected1));
-        COVEO_ASSERT(detail::seq_second_equal(v2, expected2));
-    }
-    {
-        const std::vector<int> v_union = { 42, 23, 66, 67, 11, 7, 24, 44 };
-
-        using namespace coveo::linq;
-        auto union1 = from(std::forward_list<int>{ 42, 23, 66, 42, 67, 66, 23, 11 })
-                    | union_with(std::forward_list<int>{ 11, 7, 67, 24, 44, 42, 44 });
-        validate_enumerable(union1, v_union, should_have_fast_size::no);
-    }
-
-    // where
-    {
-        const std::vector<int> v = { 42, 23, 66, 11, 7, 24 };
-        const std::vector<int> expected_odd = { 23, 11, 7 };
-        const std::vector<int> expected_div_3 = { 42, 66, 24 };
-        auto is_odd = [](int i) { return i % 2 != 0; };
-        auto is_div_3 = [](int i) { return i % 3 == 0; };
-
-        using namespace coveo::linq;
-        auto e1 = from(v)
-                | where(is_odd);
-        validate_enumerable(e1, expected_odd, should_have_fast_size::no);
-
-        auto e2 = from(v)
-                | where(is_div_3);
-        validate_enumerable(e2, expected_div_3, should_have_fast_size::no);
-    }
-    {
-        std::vector<detail::two_ints> v = { 42, 23, 66, 11, 7, 24 };
-        const std::vector<int> expected = { 42, 46, 66, 22, 14, 24 };
-        auto is_odd = [](const detail::two_ints& ti) { return ti.first % 2 != 0; };
-
-        using namespace coveo::linq;
-        auto e = from(v)
-               | where(is_odd);
-        for (auto&& ti : e) {
-            ti.second *= 2;
-        }
-        COVEO_ASSERT(detail::seq_second_equal(v, expected));
-    }
-    {
-        const std::vector<int> expected_odd = { 23, 11, 7 };
-        auto is_odd = [](int i) { return i % 2 != 0; };
-
-        using namespace coveo::linq;
-        auto e1 = from(std::forward_list<int>{ 42, 23, 66, 11, 7, 24 })
-                | where(is_odd);
-        validate_enumerable(e1, expected_odd, should_have_fast_size::no);
-    }
-
-    // where_with_index
-    {
-        const std::vector<int> v = { 42, 23, 66, 11, 7, 24 };
-        const std::vector<int> expected_odd_idx = { 23, 11, 24 };
-        auto is_odd_idx = [](int, std::size_t idx) { return idx % 2 != 0; };
-
-        using namespace coveo::linq;
-        auto e = from(v)
-               | where_with_index(is_odd_idx);
-        validate_enumerable(e, expected_odd_idx, should_have_fast_size::no);
-    }
-    {
-        std::vector<detail::two_ints> v = { 42, 23, 66, 11, 7, 24 };
-        const std::vector<int> expected = { 42, 46, 66, 22, 7, 48 };
-        auto is_odd_idx = [](const detail::two_ints&, std::size_t idx) { return idx % 2 != 0; };
-
-        using namespace coveo::linq;
-        auto e = from(v)
-               | where_with_index(is_odd_idx);
-        for (auto&& ti : e) {
-            ti.second *= 2;
-        }
-        COVEO_ASSERT(detail::seq_second_equal(v, expected));
-    }
-    {
-        const std::vector<int> expected_odd_idx = { 23, 11, 24 };
-        auto is_odd_idx = [](int, std::size_t idx) { return idx % 2 != 0; };
-
-        using namespace coveo::linq;
-        auto e = from(std::forward_list<int>{ 42, 23, 66, 11, 7, 24 })
-               | where_with_index(is_odd_idx);
-        validate_enumerable(e, expected_odd_idx, should_have_fast_size::no);
-    }
-
-    // zip
-    {
-        const std::vector<int> v1 = { 42, 23, 66 };
-        const std::vector<int> v2 = { 11, 7, 24, 67 };
-        const std::vector<int> expected = { 53, 30, 90 };
-        auto add = [](int i, int j) { return i + j; };
-
-        using namespace coveo::linq;
-        auto zipped = from(v1)
-                    | zip(v2, add);
-        validate_enumerable(zipped, expected, should_have_fast_size::yes);
-    }
-    {
-        const std::vector<int> expected = { 53, 30, 90 };
-        auto add = [](int i, int j) { return i + j; };
-
-        using namespace coveo::linq;
-        auto zipped = from(std::forward_list<int>{ 42, 23, 66 })
-                    | zip(std::forward_list<int>{ 11, 7, 24, 67 },
-                          add);
-        validate_enumerable(zipped, expected, should_have_fast_size::no);
-    }
+    test_sequence_equal();
+    test_single();
+    test_single_or_default();
+    test_skip();
+    test_sum();
+    test_take();
+    test_to();
+    test_union_with();
+    test_where();
+    test_zip();
 }
 
 // Run tests of chaining LINQ operators.
@@ -2526,7 +2729,8 @@ void bugs_tests()
     }
 }
 
-// Runs all benchmarks for coveo::linq operators
+// all benchmarks for coveo::linq operators
+
 void linq_benchmarks()
 {
     // Generate random identifiers
