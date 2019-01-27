@@ -2512,81 +2512,100 @@ void operator_tests()
     test_zip();
 }
 
-// Runs tests for specific bugs
-void bugs_tests()
+// tests for specific bugs
+
+void test_sequence_equal_with_order_by()
 {
-    using namespace coveo::linq;
-
     // sequence_equal used not to work with the product of order_by
-    {
-        const std::vector<int> v = { 42, 23, 66 };
-        auto e1 = from(v)
-                | order_by([](int i) { return i; });
-        auto e2 = from(v)
-                | order_by([](int i) { return i; });
-        COVEO_ASSERT(from(e1)
-                   | sequence_equal(e2));
-    }
+    const std::vector<int> v = { 42, 23, 66 };
 
-    // Some operators used to invalidate their references when iterating,
+    using namespace coveo::linq;
+    auto e1 = from(v)
+            | order_by([](int i) { return i; });
+    auto e2 = from(v)
+            | order_by([](int i) { return i; });
+    COVEO_ASSERT(from(e1) | sequence_equal(e2));
+}
+
+void test_chaining_select_with_order_by()
+{
+    // select used to invalidate its references when iterating,
     // breaking chaining and other stuff.
-    {
-        const std::forward_list<std::string> v = { "42", "23", "66" };
-        auto to_int = [](const std::string& s) {
-            std::istringstream iss(s);
-            int i = 0;
-            iss >> i;
-            return i;
-        };
+    const std::forward_list<std::string> v = { "42", "23", "66" };
+    auto to_int = [](const std::string& s) {
+        std::istringstream iss(s);
+        int i = 0;
+        iss >> i;
+        return i;
+    };
 
-        auto seq = from(v)
-                 | select(to_int)
-                 | order_by([](int i) { return i; });
+    using namespace coveo::linq;
+    auto seq = from(v)
+             | select(to_int)
+             | order_by([](int i) { return i; });
 
-        const std::vector<int> expected = { 23, 42, 66 };
-        COVEO_ASSERT(detail::equal(std::begin(seq), std::end(seq),
-                                   std::begin(expected), std::end(expected)));
-    }
-    {
-        const std::forward_list<std::string> v = { "42 23", "66 67", "11 7" };
-        auto to_ints = [](const std::string& s) {
-            std::istringstream iss(s);
-            int i = 0, j = 0;
-            iss >> i >> j;
-            return std::vector<int> { i, j };
-        };
+    const std::vector<int> expected = { 23, 42, 66 };
+    validate_enumerable(seq, expected, should_have_fast_size::yes);
+}
 
-        auto seq = from(v)
-                 | select_many(to_ints)
-                 | order_by([](int i) { return i; });
+void test_chaining_select_many_with_order_by()
+{
+    // select_many used to invalidate its references when iterating,
+    // breaking chaining and other stuff.
+    const std::forward_list<std::string> v = { "42 23", "66 67", "11 7" };
+    auto to_ints = [](const std::string& s) {
+        std::istringstream iss(s);
+        int i = 0, j = 0;
+        iss >> i >> j;
+        return std::vector<int> { i, j };
+    };
 
-        const std::vector<int> expected = { 7, 11, 23, 42, 66 , 67 };
-        COVEO_ASSERT(detail::equal(std::begin(seq), std::end(seq),
-                                   std::begin(expected), std::end(expected)));
-    }
-    {
-        const std::forward_list<int> v1 = { 42, 23, 66 };
-        const std::forward_list<int> v2 = { 67, 11, 7 };
+    using namespace coveo::linq;
+    auto seq = from(v)
+             | select_many(to_ints)
+             | order_by([](int i) { return i; });
 
-        auto seq = from(v1)
-                 | zip(v2, [](int i, int j) { return std::make_pair(i, j); })
-                 | order_by([](const std::pair<int, int>& p) { return p.first; });
+    const std::vector<int> expected = { 7, 11, 23, 42, 66 , 67 };
+    validate_enumerable(seq, expected, should_have_fast_size::yes);
+}
 
-        const std::vector<std::pair<int, int>> expected = { { 23, 11 }, { 42, 67 }, { 66, 7 } };
-        COVEO_ASSERT(detail::equal(std::begin(seq), std::end(seq),
-                                   std::begin(expected), std::end(expected)));
-    }
+void test_chaining_zip_with_order_by()
+{
+    // zip used to invalidate its references when iterating,
+    // breaking chaining and other stuff.
+    const std::forward_list<int> v1 = { 42, 23, 66 };
+    const std::forward_list<int> v2 = { 67, 11, 7 };
 
+    using namespace coveo::linq;
+    auto seq = from(v1)
+             | zip(v2, [](int i, int j) { return std::make_pair(i, j); })
+             | order_by([](const std::pair<int, int>& p) { return p.first; });
+
+    const std::vector<std::pair<int, int>> expected = { { 23, 11 }, { 42, 67 }, { 66, 7 } };
+    COVEO_ASSERT(detail::equal(std::begin(seq), std::end(seq),
+                               std::begin(expected), std::end(expected)));
+}
+
+void test_reverse_with_temporary_sequence()
+{
     // reverse used to not keep a copy of the sequence if moved,
     // resulting in an invalid sequence afterwards.
-    {
-        auto seq = from(std::vector<int>{ 42, 23, 66 })
-                 | reverse();
 
-        const std::vector<int> expected = { 66, 23, 42 };
-        COVEO_ASSERT(detail::equal(std::begin(seq), std::end(seq),
-                                   std::begin(expected), std::end(expected)));
-    }
+    using namespace coveo::linq;
+    auto seq = from(std::vector<int>{ 42, 23, 66 })
+             | reverse();
+
+    const std::vector<int> expected = { 66, 23, 42 };
+    validate_enumerable(seq, expected, should_have_fast_size::yes);
+}
+
+void bugs_tests()
+{
+    test_sequence_equal_with_order_by();
+    test_chaining_select_with_order_by();
+    test_chaining_select_many_with_order_by();
+    test_chaining_zip_with_order_by();
+    test_reverse_with_temporary_sequence();
 }
 
 // all benchmarks for coveo::linq operators
@@ -2603,36 +2622,36 @@ void linq_benchmarks()
 
     {
         std::cout << "Benchmarking reverse: LINQ version" << std::endl;
-        auto start_marker = std::chrono::steady_clock::now();
+        const auto start_marker = std::chrono::steady_clock::now();
 
         using namespace coveo::linq;
         auto seq = from(coveo::enumerate_container(ids))
                  | reverse();
 
-        auto end_marker = std::chrono::steady_clock::now();
-        std::chrono::duration<double> elapsed_s = end_marker - start_marker;
+        const auto end_marker = std::chrono::steady_clock::now();
+        const std::chrono::duration<double> elapsed_s = end_marker - start_marker;
         std::cout << "Benchmark completed in " << elapsed_s.count() << "s" << std::endl;
 
         auto it = seq.begin();
-        for (size_t i = 0; i < 2; ++i) {
+        for (std::size_t i = 0; i < 2; ++i) {
             std::cout << *it++ << " ";
         }
         std::cout << "..." << std::endl;
     }
     {
         std::cout << "Benchmarking reverse: std version" << std::endl;
-        auto start_marker = std::chrono::steady_clock::now();
+        const auto start_marker = std::chrono::steady_clock::now();
 
         auto seq = coveo::enumerate_container(ids);
         std::vector<size_t> ids2(seq.begin(), seq.end());
         std::reverse(ids2.begin(), ids2.end());
 
-        auto end_marker = std::chrono::steady_clock::now();
-        std::chrono::duration<double> elapsed_s = end_marker - start_marker;
+        const auto end_marker = std::chrono::steady_clock::now();
+        const std::chrono::duration<double> elapsed_s = end_marker - start_marker;
         std::cout << "Benchmark completed in " << elapsed_s.count() << "s" << std::endl;
 
         auto it = ids2.begin();
-        for (size_t i = 0; i < 2; ++i) {
+        for (std::size_t i = 0; i < 2; ++i) {
             std::cout << *it++ << " ";
         }
         std::cout << "..." << std::endl;
