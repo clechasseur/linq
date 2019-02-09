@@ -1,7 +1,93 @@
-// Copyright (c) 2016, Coveo Solutions Inc.
-// Distributed under the MIT license (see LICENSE).
+/**
+ * @file
+ * @brief C++ LINQ operators.
+ *
+ * This file contains the definition of all LINQ operators, as well
+ * as the entry points (e.g., <tt>coveo::linq::from</tt>, etc.) and
+ * the chaining operator (e.g. <tt>coveo::linq::operator|</tt>).
+ * This is the only file that needs to be included to use the library.
+ *
+ * @copyright 2016-2019, Coveo Solutions Inc.
+ *            Distributed under the Apache License, Version 2.0 (see <a href="https://github.com/coveo/linq/blob/master/LICENSE">LICENSE</a>).
+ */
 
-// C++ implementation of .NET's LINQ operators.
+/**
+ * @mainpage <tt>coveo::linq</tt> (<a href="https://github.com/coveo/linq">GitHub</a>)
+ * @tableofcontents
+ * @section intro Introduction
+ *
+ * Welcome to the documentation of the <tt>coveo::linq</tt> library. This library implements
+ * .NET-like <a href="https://en.wikipedia.org/wiki/Language_Integrated_Query">LINQ</a> operators in C++.
+ * These can be chained to build powerful expressions to query, filter and transform data in any
+ * type of sequence, like arrays, containers, etc. (anything that supports <tt>std::begin</tt>
+ * and <tt>std::end</tt> should work).
+ *
+ * @section example Example
+ *
+ * Here is an example that chains many operators to produce a filtered, ordered sequence:
+ *
+ * @code
+ *   #include <coveo/linq.h>
+ *   #include <iostream>
+ *
+ *   int main()
+ *   {
+ *       const int FIRST[] = { 42, 23, 66, 13, 11, 7, 24, 10 };
+ *       const int SECOND[] = { 67, 22, 13, 23, 41, 66, 6, 7, 10 };
+ *
+ *       using namespace coveo::linq;
+ *
+ *       auto is_even = [](int i) { return i % 2 == 0; };
+ *
+ *       auto seq = from(FIRST)
+ *                | intersect(SECOND)                    // Intersect both arrays
+ *                | where([](int i) { return i != 13; }) // I'm supersticious, remove 13
+ *                | order_by_descending(is_even)         // Place even numbers first
+ *                | then_by([](int i) { return i; });    // Then sort numbers ascending
+ *
+ *       std::cout << std::endl;
+ *       for (auto&& elem : seq) {
+ *           std::cout << elem << " ";
+ *       }
+ *       std::cout << std::endl;
+ *       // Prints "10 66 7 23"
+ *
+ *       return 0;
+ *   }
+ * @endcode
+ *
+ * The <tt>|</tt> operator is used to chain together the various operators,
+ * and <tt>from</tt> is used as the "entry point" of the expression, providing
+ * the initial sequence on which operators will be applied. The sequence is
+ * then transformed by each operator, and the result is passed to the next operator.
+ *
+ * @section install Installing / requirements
+ *
+ * The <tt>coveo::linq</tt> library is header-only. Therefore, it is not
+ * necessary to "build" it to use. Simply copy the @c lib directory with all
+ * its files to a suitable place and add it to your project's include path.
+ *
+ * The library requires C++11 support. Several compilers meet
+ * that requirements, including the following (as tested by
+ * <a href="https://travis-ci.org/coveo/linq">Continuous</a>
+ * <a href="https://ci.appveyor.com/project/clechasseur/linq/branch/master">Integration</a>):
+ *
+ * - GCC 5.4.1
+ * - Clang 3.4
+ * - Visual Studio 2015 Update 3
+ *
+ * @section help Help / bugs / etc.
+ *
+ * Need help with the library? Found a bug? Please visit the <tt>coveo::linq</tt>
+ * GitHub project page at:
+ *
+ * &nbsp;&nbsp;&nbsp;&nbsp;https://github.com/coveo/linq
+ *
+ * There, you can file issues with questions or problems.
+ *
+ * @copyright 2016-2019, Coveo Solutions Inc.
+ *            Distributed under the Apache License, Version 2.0 (see <a href="https://github.com/coveo/linq/blob/master/LICENSE">LICENSE</a>).
+ */
 
 #ifndef COVEO_LINQ_H
 #define COVEO_LINQ_H
@@ -21,16 +107,27 @@
 namespace coveo {
 namespace linq {
 
-// Entry point for the LINQ library. Use like this:
-//
-//   using namespace coveo::linq;
-//   auto result = from(some_sequence)
-//               | linq_operator(...)
-//               | ...;
-//
+/**
+ * @brief Entry point for a LINQ expression.
+ * @headerfile linq.h <coveo/linq/linq.h>
+ *
+ * Entry point for the LINQ library. Specifies the initial sequence
+ * on which the first operator will be applied. After this, use
+ * <tt>coveo::linq::operator|</tt> to chain LINQ operators and apply
+ * them in a specific order.
+ *
+ * Use like this:
+ *
+ * @code
+ *   using namespace coveo::linq;
+ *   auto result = from(some_sequence)
+ *               | linq_operator(...)
+ *               | ...;
+ * @endcode
+ */
 template<typename Seq>
-auto from(Seq&& seq_) -> decltype(std::forward<Seq>(seq_)) {
-    return std::forward<Seq>(seq_);
+auto from(Seq&& seq) -> decltype(std::forward<Seq>(seq)) {
+    return std::forward<Seq>(seq);
 }
 
 // Entry point for the LINQ library for a range
@@ -88,15 +185,22 @@ auto from_repeated(const T& value, std::size_t count)
     return enumerate_container(std::move(vvalues));
 }
 
-// Applies a LINQ operator to a sequence.
-// Designed to allow chaining of LINQ operators as well as
-// easy development of custom LINQ operators. Use like this:
-//
-//   using namespace coveo::linq;
-//   auto result = from(some_sequence)
-//               | linq_op_1(...)
-//               | linq_op_2(...);
-//
+/**
+ * @brief Applies LINQ operators and allows chaining.
+ * @headerfile linq.h <coveo/linq/linq.h>
+ *
+ * Applies a given LINQ operator to the current sequence.
+ * Can be used multiple times to chain many operators in a specific order.
+ *
+ * Use like this:
+ *
+ * @code
+ *   using namespace coveo::linq;
+ *   auto result = from(some_sequence)
+ *               | linq_op_1(...)
+ *               | linq_op_2(...);
+ * @endcode
+ */
 template<typename Seq, typename Op>
 auto operator|(Seq&& seq, Op&& op) -> decltype(std::forward<Op>(op)(std::forward<Seq>(seq))) {
     return std::forward<Op>(op)(std::forward<Seq>(seq));
