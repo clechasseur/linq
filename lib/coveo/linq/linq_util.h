@@ -1,7 +1,14 @@
-// Copyright (c) 2019, Coveo Solutions Inc.
-// Distributed under the MIT license (see LICENSE).
-
-// Utilities used to implement linq operators.
+/**
+ * @file
+ * @brief Utilities used to implement LINQ operators.
+ *
+ * This file contains utility functions useful when implementing LINQ operators.
+ * This file is not necessary when using the builtin LINQ operators; only when
+ * implementing new ones.
+ *
+ * @copyright 2016-2019, Coveo Solutions Inc.
+ *            Distributed under the Apache License, Version 2.0 (see <a href="https://github.com/coveo/linq/blob/master/LICENSE">LICENSE</a>).
+ */
 
 #ifndef COVEO_LINQ_UTIL_H
 #define COVEO_LINQ_UTIL_H
@@ -19,18 +26,57 @@
 namespace coveo {
 namespace linq {
 
-// Utility methods to throw LINQ-specific exceptions.
+/**
+ * @brief Helper function to throw a <tt>coveo::linq::empty_sequence</tt> exception.
+ * @headerfile linq_util.h <coveo/linq/linq_util.h>
+ *
+ * Throws an instance of <tt>coveo::linq::empty_sequence</tt> to indicate
+ * that a LINQ operator does not work on the provided empty sequence.
+ * Does not return.
+ *
+ * @see coveo::linq::empty_sequence
+ */
 template<typename = void>
 [[noreturn]] void throw_linq_empty_sequence() {
     throw empty_sequence("empty_sequence");
 }
+
+/**
+ * @brief Helper function to throw a <tt>coveo::linq::out_of_range</tt> exception.
+ * @headerfile linq_util.h <coveo/linq/linq_util.h>
+ *
+ * Throws an instance of <tt>coveo::linq::out_of_range</tt> to indicate
+ * that a LINQ operator has gone outside the range of the provided sequence.
+ * Does not return.
+ *
+ * @see coveo::linq::out_of_range
+ */
 template<typename = void>
 [[noreturn]] void throw_linq_out_of_range() {
     throw out_of_range("out_of_range");
 }
 
-// Helper that reserves space in a container based on the number of elements in a sequence
-// if it's possible to do so quickly (e.g. with random-access iterators or size())
+/**
+ * @brief Helper function to quickly reserve space in a container if possible.
+ * @headerfile linq_util.h <coveo/linq/linq_util.h>
+ *
+ * Attempts to @c reserve space in container @c cnt to hold as many
+ * elements as found in sequence @c seq. This is performed only if
+ * it's possible to do so "quickly".
+ *
+ * - If @c seq is a <tt>coveo::enumerable</tt>, space is reserved
+ *   by using its <tt>coveo::enumerable::size()</tt> method if
+ *   <tt>coveo::enumerable::has_fast_size()</tt> returns @c true.
+ * - If @c seq is a container with a @c size method, space is
+ *   reserved by using that method.
+ * - If @c seq is a sequence that uses random-access iterators,
+ *   space is reserved by using <tt>std::distance</tt>.
+ * - Otherwise, space is not reserved.
+ *
+ * @param cnt Container in which to reserve space.
+ * @param seq Sequence to use to try to reserve space for.
+ * @return @c true if space has actually been reserved in @c cnt.
+ */
 template<typename C, typename Seq>
 auto try_reserve(C& cnt, const Seq& seq) -> typename std::enable_if<is_enumerable<Seq>::value, bool>::type
 {
@@ -66,8 +112,32 @@ auto try_reserve(C&, const Seq&) -> typename std::enable_if<!coveo::detail::has_
     return false;
 }
 
-// Helper that returns a size_delegate for a sequence if it's possible to quickly calculate
-// its size (e.g. with random-access iterators or size())
+/**
+ * @brief Helper function to get a fast size delegate if possible.
+ * @headerfile linq_util.h <coveo/linq/linq_util.h>
+ *
+ * Attempts to create a <tt>coveo::enumerable::size_delegate</tt>
+ * that can quickly calculate the number of elements found in
+ * sequence @c seq. A size delegate is returned only if it's
+ * possible to calculate the number of elements "quickly".
+ *
+ * - If @c seq is a <tt>coveo::enumerable</tt>, its
+ *   <tt>coveo::enumerable::size()</tt> method is used to produce
+ *   the size delegate if <tt>coveo::enumerable::has_fast_size()</tt>
+ *   returns @c true.
+ * - If @c seq is a container with a @c size method, a size delegate
+ *   is produced using that method.
+ * - If @c seq is a sequence that uses random-access iterators,
+ *   a size delegate is produced by using <tt>std::distance</tt>.
+ * - Otherwise, no size delegate is produced.
+ *
+ * @param seq Sequence to calculate the number of elements of
+ *            in order to produce the size delegate.
+ * @return <tt>coveo::enumerable::size_delegate</tt> instance,
+ *         or @c nullptr if it's not possible to quickly calculate
+ *         the number of elements in @c seq.
+ * @see coveo::enumerable::size_delegate
+ */
 template<typename Seq>
 auto try_get_size_delegate(const Seq& seq) -> typename std::enable_if<is_enumerable<Seq>::value,
                                                                       std::function<std::size_t()>>::type

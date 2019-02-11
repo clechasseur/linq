@@ -3,8 +3,8 @@
  * @brief C++ LINQ operators.
  *
  * This file contains the definition of all LINQ operators, as well
- * as the entry points (e.g., <tt>coveo::linq::from</tt>, etc.) and
- * the chaining operator (e.g. <tt>coveo::linq::operator|</tt>).
+ * as the entry points (e.g., <tt>coveo::linq::from()</tt>, etc.) and
+ * the chaining operator (e.g. <tt>coveo::linq::operator|()</tt>).
  * This is the only file that needs to be included to use the library.
  *
  * @copyright 2016-2019, Coveo Solutions Inc.
@@ -19,8 +19,8 @@
  * Welcome to the documentation of the <tt>coveo::linq</tt> library. This library implements
  * .NET-like <a href="https://en.wikipedia.org/wiki/Language_Integrated_Query">LINQ</a> operators in C++.
  * These can be chained to build powerful expressions to query, filter and transform data in any
- * type of sequence, like arrays, containers, etc. (anything that supports <tt>std::begin</tt>
- * and <tt>std::end</tt> should work).
+ * type of sequence, like arrays, containers, etc. (anything that supports <tt>std::begin()</tt>
+ * and <tt>std::end()</tt> should work).
  *
  * @section example Example
  *
@@ -56,10 +56,10 @@
  *   }
  * @endcode
  *
- * The <tt>|</tt> operator is used to chain together the various operators,
- * and <tt>from</tt> is used as the "entry point" of the expression, providing
- * the initial sequence on which operators will be applied. The sequence is
- * then transformed by each operator, and the result is passed to the next operator.
+ * <tt>coveo::linq::operator|()</tt> is used to chain together the various LINQ operators,
+ * and <tt>coveo::linq::from()</tt> is used as the "entry point" of the expression, providing
+ * the initial sequence on which operators will be applied. The sequence is then transformed
+ * by each operator, and the result is passed to the next operator.
  *
  * @section install Installing / requirements
  *

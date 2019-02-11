@@ -1,7 +1,15 @@
-// Copyright (c) 2016, Coveo Solutions Inc.
-// Distributed under the MIT license (see LICENSE).
-
-// Implementation details of linq operators.
+/**
+ * @file
+ * @brief Implementation details of LINQ operators.
+ *
+ * This file contains implementation details for built-in LINQ operators.
+ * It should not be necessary to use this file directly when using the library.
+ * Code in the <tt>coveo::linq::detail</tt> namespace is subject to change
+ * in subsequent versions.
+ *
+ * @copyright 2016-2019, Coveo Solutions Inc.
+ *            Distributed under the Apache License, Version 2.0 (see <a href="https://github.com/coveo/linq/blob/master/LICENSE">LICENSE</a>).
+ */
 
 #ifndef COVEO_LINQ_DETAIL_H
 #define COVEO_LINQ_DETAIL_H
