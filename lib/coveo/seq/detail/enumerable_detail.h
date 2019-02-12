@@ -1,7 +1,15 @@
-// Copyright (c) 2016, Coveo Solutions Inc.
-// Distributed under the MIT license (see LICENSE).
-
-// Implementation details of coveo::seq::enumerable.
+/**
+ * @file
+ * @brief Implementation details of coveo::enumerable.
+ *
+ * This file contains implementation details used by coveo::enumerable.
+ * It should not be necessary to use this file directly when using the class.
+ * Code in the <tt>coveo::detail</tt> namespace is subject to change
+ * in-between versions.
+ *
+ * @copyright 2016-2019, Coveo Solutions Inc.
+ *            Distributed under the Apache License, Version 2.0 (see <a href="https://github.com/coveo/linq/blob/master/LICENSE">LICENSE</a>).
+ */
 
 #ifndef COVEO_ENUMERABLE_DETAIL_H
 #define COVEO_ENUMERABLE_DETAIL_H
@@ -15,8 +23,16 @@
 namespace coveo {
 namespace detail {
 
-// Type trait that can be used to know if std::begin(T) is valid.
-// Detects both std::begin specializations and begin methods.
+/**
+ * @internal
+ * @brief Type trait that detects @c begin.
+ * @headerfile enumerable_detail.h <coveo/seq/detail/enumerable_detail.h>
+ *
+ * Type trait that can be used to know if <tt>std::begin(T)</tt> is valid.
+ * Detects both <tt>std::begin()</tt> specializations and <tt>begin()</tt> methods.
+ *
+ * @tparam Type for which we need @c begin.
+ */
 template<typename T>
 class has_begin
 {
@@ -29,8 +45,16 @@ public:
     static constexpr bool value = sizeof(test<T>(nullptr)) == sizeof(std::int_least8_t);
 };
 
-// Type trait that can be used to know if std::end(T) is valid.
-// Detects both std::end specializations and end methods.
+/**
+ * @internal
+ * @brief Type trait that detects @c end.
+ * @headerfile enumerable_detail.h <coveo/seq/detail/enumerable_detail.h>
+ *
+ * Type trait that can be used to know if <tt>std::end(T)</tt> is valid.
+ * Detects both <tt>std::end()</tt> specializations and <tt>end()</tt> methods.
+ *
+ * @tparam Type for which we need @c end.
+ */
 template<typename T>
 class has_end
 {
@@ -43,8 +67,16 @@ public:
     static const bool value = sizeof(test<T>(nullptr)) == sizeof(std::int_least8_t);
 };
 
-// Type trait that can be used to know if a type has a size() const method
-// that returns a non-void result.
+/**
+ * @internal
+ * @brief Type trait that detects @c size.
+ * @headerfile enumerable_detail.h <coveo/seq/detail/enumerable_detail.h>
+ *
+ * Type trait that can be used to know if type @c T has a <tt>size()</tt>
+ * @c const method that returns a non-<tt>void</tt> result.
+ *
+ * @tparam Type for which we need @c size.
+ */
 template<typename T>
 class has_size_const_method
 {
@@ -57,14 +89,36 @@ public:
     static const bool value = sizeof(test<T>(nullptr)) == sizeof(std::int_least8_t);
 };
 
-// Returns a size delegate for a sequence if iterators can provide that information quickly.
+/// @cond
+
+/**
+ * @internal
+ * @brief Helper function to get a fast size delegate from iterators if possible.
+ * @headerfile enumerable_detail.h <coveo/seq/detail/enumerable_detail.h>
+ *
+ * Attempts to create a <tt>coveo::enumerable::size_delegate</tt> that can
+ * quickly calculate the number of elements in range <tt>[beg, end[</tt>.
+ * A size delegate is returned only if it's possible to calculate the number
+ * of elements "quickly".
+ *
+ * - If @c beg and @c end are random-access iterators,
+ *   a size delegate is produced by using <tt>std::distance()</tt>.
+ * - Otherwise, no size delegate is produced.
+ *
+ * @param beg Iterator pointing at beginning of range.
+ * @param end Iterator pointing at end of range.
+ * @return <tt>coveo::enumerable::size_delegate</tt> instance,
+ *         or @c nullptr if it's not possible to quickly calculate
+ *         the number of elements in <tt>[beg, end[</tt>
+ * @see coveo::enumerable::size_delegate
+ */
 template<typename It>
 auto get_size_delegate_for_iterators(const It& beg, const It& end) -> typename std::enable_if<std::is_base_of<std::random_access_iterator_tag,
                                                                                                               typename std::iterator_traits<It>::iterator_category>::value,
                                                                                               std::function<std::size_t()>>::type
 {
     return [beg, end]() -> std::size_t { return std::distance(beg, end); };
-};
+}
 template<typename It>
 auto get_size_delegate_for_iterators(const It&, const It&) -> typename std::enable_if<!std::is_base_of<std::random_access_iterator_tag,
                                                                                                        typename std::iterator_traits<It>::iterator_category>::value,
@@ -72,7 +126,9 @@ auto get_size_delegate_for_iterators(const It&, const It&) -> typename std::enab
 {
     // No way to quickly determine size, don't try
     return nullptr;
-};
+}
+
+/// @endcond
 
 } // detail
 } // coveo

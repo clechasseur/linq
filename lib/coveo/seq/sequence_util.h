@@ -1,5 +1,10 @@
-// Copyright (c) 2016, Coveo Solutions Inc.
-// Distributed under the MIT license (see LICENSE).
+/**
+ * @file
+ * @brief Utilities used by <tt>coveo::enumerable</tt>.
+ *
+ * @copyright 2016-2019, Coveo Solutions Inc.
+ *            Distributed under the Apache License, Version 2.0 (see <a href="https://github.com/coveo/linq/blob/master/LICENSE">LICENSE</a>).
+ */
 
 #ifndef COVEO_SEQUENCE_UTIL_H
 #define COVEO_SEQUENCE_UTIL_H
@@ -11,27 +16,84 @@
 
 namespace coveo {
 
+/// @cond
+
 // Forward declaration of enumerable, for type traits
 template<typename> class enumerable;
 
-// Traits class for elements in a sequence.  For sequences of references or
-// std::reference_wrapper's, provides information about the referred type instead.
+/// @endcond
+
+/**
+ * @brief Traits class for elements in a sequence.
+ * @headerfile sequence_util.h <coveo/seq/sequence_util.h>
+ *
+ * Traits class containing definitions pertaining to the elements of a sequence.
+ * For sequences of references or <tt>std::reference_wrapper</tt>s, provides
+ * information about the referred type instead.
+ *
+ * @tparam T Type of elements in the sequence.
+ */
 template<typename T>
 struct seq_element_traits
 {
-    using value_type        = T;
-    using const_value_type  = const value_type;
-    using raw_value_type    = typename std::remove_cv<value_type>::type;
+    /**
+     * @brief Type of element in the sequence.
+     *
+     * Type of the sequence's elements. Corresponds to @c T.
+     */
+    using value_type = T;
 
-    using pointer           = value_type*;
-    using reference         = value_type&;
+    /**
+     * @brief Type of element in the sequence, but @c const.
+     *
+     * Same as <tt>coveo::seq_element_traits::value_type</tt>, but @c const.
+     */
+    using const_value_type = const value_type;
 
-    using const_pointer     = const_value_type*;
-    using const_reference   = const_value_type&;
+    /**
+     * @brief Raw type of element in the sequence.
+     *
+     * Same as <tt>coveo::seq_element_traits::value_type</tt>, but "raw", e.g. without @c const or @c volatile.
+     */
+    using raw_value_type = typename std::remove_cv<value_type>::type;
+
+    /**
+     * @brief Pointer to a sequence element.
+     *
+     * Pointer to an element in the sequence.
+     * Corresponds to <tt>coveo::seq_element_traits::value_type*</tt>.
+     */
+    using pointer = value_type*;
+    
+    /**
+     * @brief Reference to a sequence element.
+     *
+     * Reference to an element in the sequence.
+     * Corresponds to <tt>coveo::seq_element_traits::value_type&</tt>.
+     */
+    using reference = value_type&;
+
+    /**
+     * @brief Pointer to a @c const sequence element.
+     *
+     * Pointer to a @c const element in the sequence.
+     * Corresponds to <tt>coveo::seq_element_traits::const_value_type*</tt>.
+     */
+    using const_pointer = const_value_type*;
+
+    /**
+     * @brief Reference to a @c const sequence element.
+     *
+     * Reference to a @c const element in the sequence.
+     * Corresponds to <tt>coveo::seq_element_traits::const_value_type&</tt>.
+     */
+    using const_reference = const_value_type&;
 };
+/// @cond
 template<typename T> struct seq_element_traits<T&> : seq_element_traits<T> { };
 template<typename T> struct seq_element_traits<T&&> : seq_element_traits<T> { };
 template<typename T> struct seq_element_traits<std::reference_wrapper<T>> : seq_element_traits<T> { };
+/// @endcond
 
 // Traits class for a sequence. A shorthand for seq_element_traits that infers the
 // sequence's value_type from the return value of its iterators. Also provides the

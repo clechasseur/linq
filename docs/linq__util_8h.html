@@ -175,7 +175,7 @@ template&lt;typename C , typename Seq &gt; </div>
 <ul>
 <li>If <code>seq</code> is a <code>coveo::enumerable</code>, space is reserved by using its <code>coveo::enumerable::size()</code> method if <code>coveo::enumerable::has_fast_size()</code> returns <code>true</code>.</li>
 <li>If <code>seq</code> is a container with a <code>size</code> method, space is reserved by using that method.</li>
-<li>If <code>seq</code> is a sequence that uses random-access iterators, space is reserved by using <code>std::distance</code>.</li>
+<li>If <code>seq</code> is a sequence that uses random-access iterators, space is reserved by using <code>std::distance()</code>.</li>
 <li>Otherwise, space is not reserved.</li>
 </ul>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -212,7 +212,7 @@ template&lt;typename Seq &gt; </div>
 <ul>
 <li>If <code>seq</code> is a <code>coveo::enumerable</code>, its <code>coveo::enumerable::size()</code> method is used to produce the size delegate if <code>coveo::enumerable::has_fast_size()</code> returns <code>true</code>.</li>
 <li>If <code>seq</code> is a container with a <code>size</code> method, a size delegate is produced using that method.</li>
-<li>If <code>seq</code> is a sequence that uses random-access iterators, a size delegate is produced by using <code>std::distance</code>.</li>
+<li>If <code>seq</code> is a sequence that uses random-access iterators, a size delegate is produced by using <code>std::distance()</code>.</li>
 <li>Otherwise, no size delegate is produced.</li>
 </ul>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -229,7 +229,7 @@ template&lt;typename Seq &gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Feb 10 2019 23:35:24 for coveo::linq by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Feb 12 2019 01:18:47 for coveo::linq by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>
