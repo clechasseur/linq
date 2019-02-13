@@ -95,21 +95,48 @@ template<typename T> struct seq_element_traits<T&&> : seq_element_traits<T> { };
 template<typename T> struct seq_element_traits<std::reference_wrapper<T>> : seq_element_traits<T> { };
 /// @endcond
 
-// Traits class for a sequence. A shorthand for seq_element_traits that infers the
-// sequence's value_type from the return value of its iterators. Also provides the
-// type of iterator used by the sequence.
+/**
+ * @brief Traits class for a sequence.
+ * @headerfile sequence_util.h <coveo/seq/sequence_util.h>
+ *
+ * Traits class containing definitions pertaining to a sequence. A shorthand
+ * for <tt>coveo::seq_element_traits</tt> that infers the sequence's @c value_type
+ * from the return value of its iterators. Also provides the type of iterator
+ * used by the sequence.
+ *
+ * @tparam Seq Type of sequence.
+ */
 template<typename Seq>
 struct seq_traits : public seq_element_traits<decltype(*std::begin(std::declval<Seq&>()))>
 {
+    /**
+     * @brief Type of iterator used by the sequence.
+     *
+     * Type of iterator used by the sequence, which is defined as the type
+     * of iterator returned when calling <tt>std::begin()</tt>.
+     */
     using iterator_type = typename std::decay<decltype(std::begin(std::declval<Seq&>()))>::type;
 };
+/// @cond
 template<typename Seq> struct seq_traits<Seq&> : seq_traits<Seq> { };
 template<typename Seq> struct seq_traits<Seq&&> : seq_traits<Seq> { };
 template<typename Seq> struct seq_traits<std::reference_wrapper<Seq>> : seq_traits<Seq> { };
+/// @endcond
 
-// Traits class used to identify enumerable objects.
-template<typename> struct is_enumerable : std::false_type { };
+#ifdef DOXYGEN_INVOKED
+/**
+ * @brief Traits class to identify enumerable objects.
+ * @headerfile sequence_util.h <coveo/seq/sequence_util.h>
+ *
+ * Traits class that can be used to identify enumerable objects.
+ *
+ * @tparam T Type to identify.
+ */
+template<typename T> struct is_enumerable;
+#else
+template<typename T> struct is_enumerable : std::false_type { };
 template<typename T> struct is_enumerable<enumerable<T>> : std::true_type { };
+#endif
 
 } // coveo
 

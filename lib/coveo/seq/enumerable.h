@@ -1,7 +1,15 @@
-// Copyright (c) 2016, Coveo Solutions Inc.
-// Distributed under the MIT license (see LICENSE).
-
-// C++ implementation of .NET's IEnumerable<T>.
+/**
+ * @file
+ * @brief C++ implementation of .NET's IEnumerable-like data structure.
+ *
+ * This file contains the definition of <tt>coveo::enumerable</tt>, which
+ * is a wrapper for a sequence similar to .NET's <tt>IEnumerable&lt;T&gt;</tt>.
+ * Also includes helper methods and functions to create <tt>enumerable</tt>s
+ * from single values, containers, etc.
+ *
+ * @copyright 2016-2019, Coveo Solutions Inc.
+ *            Distributed under the Apache License, Version 2.0 (see <a href="https://github.com/coveo/linq/blob/master/LICENSE">LICENSE</a>).
+ */
 
 #ifndef COVEO_ENUMERABLE_H
 #define COVEO_ENUMERABLE_H

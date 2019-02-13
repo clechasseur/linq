@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['linq_2eh',['linq.h',['../linq_2linq_8h.html',1,'']]],
-  ['linq_5fdetail_2eh',['linq_detail.h',['../linq__detail_8h.html',1,'']]],
-  ['linq_5futil_2eh',['linq_util.h',['../linq__util_8h.html',1,'']]]
+  ['is_5fenumerable',['is_enumerable',['../structcoveo_1_1is__enumerable.html',1,'coveo']]],
+  ['iterator_5ftype',['iterator_type',['../structcoveo_1_1seq__traits.html#ab6b3a5cd4263ae0168e54fbcae3e9776',1,'coveo::seq_traits']]]
 ];

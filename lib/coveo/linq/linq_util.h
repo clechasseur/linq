@@ -67,8 +67,8 @@ template<typename = void>
  * - If @c seq is a <tt>coveo::enumerable</tt>, space is reserved
  *   by using its <tt>coveo::enumerable::size()</tt> method if
  *   <tt>coveo::enumerable::has_fast_size()</tt> returns @c true.
- * - If @c seq is a container with a @c size method, space is
- *   reserved by using that method.
+ * - If @c seq is a container with a <tt>size()</tt> method, space
+ *   is reserved by using that method.
  * - If @c seq is a sequence that uses random-access iterators,
  *   space is reserved by using <tt>std::distance()</tt>.
  * - Otherwise, space is not reserved.
@@ -125,8 +125,8 @@ auto try_reserve(C&, const Seq&) -> typename std::enable_if<!coveo::detail::has_
  *   <tt>coveo::enumerable::size()</tt> method is used to produce
  *   the size delegate if <tt>coveo::enumerable::has_fast_size()</tt>
  *   returns @c true.
- * - If @c seq is a container with a @c size method, a size delegate
- *   is produced using that method.
+ * - If @c seq is a container with a <tt>size()</tt> method, a size
+ *   delegate is produced using that method.
  * - If @c seq is a sequence that uses random-access iterators,
  *   a size delegate is produced by using <tt>std::distance()</tt>.
  * - Otherwise, no size delegate is produced.

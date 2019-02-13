@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['operator_7c',['operator|',['../linq_2linq_8h.html#af38ff23c8bdf9a47b55e516dd378194e',1,'coveo::linq']]],
-  ['out_5fof_5frange',['out_of_range',['../classcoveo_1_1linq_1_1out__of__range.html',1,'coveo::linq']]]
+  ['linq_2eh',['linq.h',['../linq_2linq_8h.html',1,'(Global Namespace)'],['../linq_8h.html',1,'(Global Namespace)']]],
+  ['linq_5fdetail_2eh',['linq_detail.h',['../linq__detail_8h.html',1,'']]],
+  ['linq_5futil_2eh',['linq_util.h',['../linq__util_8h.html',1,'']]]
 ];

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['pointer',['pointer',['../structcoveo_1_1seq__element__traits.html#a39315f40fe94e2998b917ae6ac4fe946',1,'coveo::seq_element_traits']]]
+  ['iterator_5ftype',['iterator_type',['../structcoveo_1_1seq__traits.html#ab6b3a5cd4263ae0168e54fbcae3e9776',1,'coveo::seq_traits']]]
 ];
