@@ -1,7 +1,10 @@
-// Copyright (c) 2015-2016, Coveo Solutions Inc.
-// Distributed under the MIT license (see LICENSE).
-
-// A relatively barebones test framework.
+/**
+ * @file
+ * @brief A relatively barebones test framework.
+ *
+ * @copyright 2016-2019, Coveo Solutions Inc.
+ *            Distributed under the Apache License, Version 2.0 (see <a href="https://github.com/coveo/linq/blob/master/LICENSE">LICENSE</a>).
+ */
 
 #ifndef COVEO_TEST_FRAMEWORK_H
 #define COVEO_TEST_FRAMEWORK_H

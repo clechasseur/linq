@@ -25,33 +25,111 @@
 
 namespace coveo {
 
-// Wrapper for a multipass, forward-only sequence of elements.
-// Uses a delegate to fetch the elements to return.The sequence
-// supports iteration via the standard begin/end methods.
+/**
+ * @brief Type-erased sequence wrapper.
+ * @headerfile enumerable.h <coveo/seq/enumerable.h>
+ *
+ * Inspired by .NET's <tt>IEnumerable&lt;T&gt;</tt>, <tt>coveo::enumerable</tt>
+ * is a type-erased wrapper for a multipass, forward-only sequence of elements.
+ * It is possible to iterate over the elements using <tt>begin()</tt> / <tt>end()</tt>
+ * (or <tt>cbegin()</tt> / <tt>cend()</tt>, which is equivalent since this class is
+ * immutable).
+ *
+ * In order to fetch the elements to return, this class uses a <em>next delegate</em> -
+ * a function that returns a pointer to the next element every time it is called,
+ * finally returning @c nullptr when the enumeration is over. The next delegate
+ * is provided at construction time and cannot change.
+ *
+ * Optionally, it is also possible to specify a <em>size delegeate</em> for the
+ * @c enumerable at construction time. If provided, it will be used to fetch the
+ * number of elements in the sequence when <tt>size()</tt> is called; otherwise,
+ * a slower algorithm is used (iterating over the entire sequence using
+ * <tt>std::distance()</tt>). It is possible to determine if the @c enumerable
+ * has a fast size delegate by using <tt>has_fast_size()</tt>.
+ *
+ * While this class is immutable, the elements it returns are not necessarily so.
+ * In order to wrap a sequence of @c const elements, @c const must also be specified
+ * in this class' template argument:
+ *
+ * @code
+ *   coveo::enumerable<const int> e1; // Iterates over const integers
+ *   coveo::enumerable<int> e2;       // Iterators over non-const integers
+ * @endcode
+ *
+ * @tparam T Type of elements stored in the sequence.
+ */
 template<typename T>
 class enumerable
 {
+/// @cond
+
     // Allows compatible enumerables to be friend with each other
     template<typename> friend class enumerable;
 
+/// @endcond
+
 public:
-    // Types for elements in the sequence.
-    using value_type        = typename seq_element_traits<T>::value_type;
-    using raw_value_type    = typename seq_element_traits<T>::raw_value_type;
-    using pointer           = typename seq_element_traits<T>::pointer;
-    using reference         = typename seq_element_traits<T>::reference;
+    /**
+     * @brief Type of element in the sequence.
+     *
+     * Type of element stored in the sequence.
+     */
+    using value_type = typename seq_element_traits<T>::value_type;
 
-    // Delegate that returns next element in sequence, or nullptr when done.
-    using next_delegate     = std::function<pointer()>;
+    /**
+     * @brief Raw type of element in the sequence.
+     *
+     * Same as <tt>coveo::enumerable::value_type</tt>, but "raw", e.g. without @c const or @c volatile.
+     */
+    using raw_value_type = typename seq_element_traits<T>::raw_value_type;
 
-    // Delegate that returns number of elements in sequence.
-    using size_delegate     = std::function<std::size_t()>;
+    /**
+     * @brief Pointer to a sequence element.
+     *
+     * Pointer to an element in the sequence.
+     * Corresponds to <tt>coveo::enumerable::value_type*</tt>.
+     * This is the type of pointer returned by the <tt>coveo::enumerable::next_delegate</tt>.
+     */
+    using pointer = typename seq_element_traits<T>::pointer;
+
+    /**
+     * @brief Reference to a sequence element.
+     *
+     * Reference to an element in the sequence.
+     * Corresponds to <tt>coveo::enumerable::value_type&</tt>.
+     * This is the type of reference returned by the <tt>coveo::enumerable::iterator</tt>s.
+     */
+    using reference = typename seq_element_traits<T>::reference;
+
+    /**
+     * @brief Delegate to fetch next element.
+     *
+     * Delegate that will be called by the @c enumerable to fetch
+     * the next element in the sequence when needed. The delegate
+     * must return a <tt>coveo::enumerable::pointer</tt> to the next
+     * element if there is one, or @c nullptr when done.
+     */
+    using next_delegate = std::function<pointer()>;
+
+    /**
+     * @brief Delegate to fetch sequence size.
+     *
+     * Delegate that will be called by the @c enumerable to fetch
+     * the number of elements in the sequence when <tt>size()</tt>
+     * is called.
+     */
+    using size_delegate = std::function<std::size_t()>;
 
     // Forward declaration of iterator class.
     class iterator;
 
-    // Even though begin() and end() are already const, some might want
-    // to use const_iterator, to let's create an alias.
+    /**
+     * @brief @c iterator alias.
+     *
+     * Alias for <tt>coveo::enumerable::iterator</tt>. Provided because even though
+     * <tt>begin()</tt> and <tt>end()</tt> are already @c const, some generic code
+     * might want to use @c const_iterator.
+     */
     using const_iterator    = iterator;
 
 private:
@@ -132,7 +210,9 @@ public:
     }
 
 public:
-    // Iterator for the elements in an enumerable's sequence.
+    /**
+     * @brief Iterator for elements in the sequence.
+     */
     class iterator
     {
     public:

@@ -1,10 +1,11 @@
 var indexSectionsWithContent =
 {
-  0: "cefiloprstv",
+  0: "cefilnoprstv",
   1: "eios",
   2: "els",
   3: "fot",
-  4: "ciprv"
+  4: "cinprsv",
+  5: "n"
 };
 
 var indexSectionNames =
@@ -13,7 +14,8 @@ var indexSectionNames =
   1: "classes",
   2: "files",
   3: "functions",
-  4: "typedefs"
+  4: "typedefs",
+  5: "pages"
 };
 
 var indexSectionLabels =
@@ -22,6 +24,7 @@ var indexSectionLabels =
   1: "Classes",
   2: "Files",
   3: "Functions",
-  4: "Typedefs"
+  4: "Typedefs",
+  5: "Pages"
 };
 

@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['operator_7c',['operator|',['../linq_2linq_8h.html#af38ff23c8bdf9a47b55e516dd378194e',1,'coveo::linq']]],
-  ['out_5fof_5frange',['out_of_range',['../classcoveo_1_1linq_1_1out__of__range.html',1,'coveo::linq']]]
+  ['notitle',['notitle',['../index.html',1,'']]],
+  ['next_5fdelegate',['next_delegate',['../classcoveo_1_1enumerable.html#aeac0c2d2f62ae2d15313f960af7f6ef1',1,'coveo::enumerable']]]
 ];

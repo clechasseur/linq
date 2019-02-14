@@ -1,5 +1,8 @@
-// Copyright (c) 2019, Coveo Solutions Inc.
-// Distributed under the MIT license (see LICENSE).
+/**
+ * @file
+ * @copyright 2016-2019, Coveo Solutions Inc.
+ *            Distributed under the Apache License, Version 2.0 (see <a href="https://github.com/coveo/linq/blob/master/LICENSE">LICENSE</a>).
+ */
 
 #ifndef COVEO_ENUMERABLE_TEST_UTIL_H
 #define COVEO_ENUMERABLE_TEST_UTIL_H

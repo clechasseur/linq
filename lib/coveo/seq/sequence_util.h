@@ -134,7 +134,7 @@ template<typename Seq> struct seq_traits<std::reference_wrapper<Seq>> : seq_trai
  */
 template<typename T> struct is_enumerable;
 #else
-template<typename T> struct is_enumerable : std::false_type { };
+template<typename> struct is_enumerable : std::false_type { };
 template<typename T> struct is_enumerable<enumerable<T>> : std::true_type { };
 #endif
 

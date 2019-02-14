@@ -1,7 +1,12 @@
 var searchData=
 [
-  ['throw_5flinq_5fempty_5fsequence',['throw_linq_empty_sequence',['../linq__util_8h.html#a165eac6c80ba18c52c2b43b70de4d810',1,'coveo::linq']]],
-  ['throw_5flinq_5fout_5fof_5frange',['throw_linq_out_of_range',['../linq__util_8h.html#a7cdb1dc43a6925148e98027fab96a97e',1,'coveo::linq']]],
-  ['try_5fget_5fsize_5fdelegate',['try_get_size_delegate',['../linq__util_8h.html#a68919880003f627b21eff117e8eaedcd',1,'coveo::linq']]],
-  ['try_5freserve',['try_reserve',['../linq__util_8h.html#aad1476cdadbd95f63ecbd09c583e1d8c',1,'coveo::linq']]]
+  ['seq_5felement_5ftraits',['seq_element_traits',['../structcoveo_1_1seq__element__traits.html',1,'coveo']]],
+  ['seq_5felement_5ftraits_3c_20decltype_28_2astd_3a_3abegin_28std_3a_3adeclval_3c_20seq_20_26_20_3e_28_29_29_29_3e',['seq_element_traits&lt; decltype(*std::begin(std::declval&lt; Seq &amp; &gt;()))&gt;',['../structcoveo_1_1seq__element__traits.html',1,'coveo']]],
+  ['seq_5felement_5ftraits_3c_20decltype_28_2astd_3a_3abegin_28std_3a_3adeclval_3c_20seq1_20_26_20_3e_28_29_29_29_3e',['seq_element_traits&lt; decltype(*std::begin(std::declval&lt; Seq1 &amp; &gt;()))&gt;',['../structcoveo_1_1seq__element__traits.html',1,'coveo']]],
+  ['seq_5felement_5ftraits_3c_20decltype_28_2astd_3a_3abegin_28std_3a_3adeclval_3c_20seq2_20_26_20_3e_28_29_29_29_3e',['seq_element_traits&lt; decltype(*std::begin(std::declval&lt; Seq2 &amp; &gt;()))&gt;',['../structcoveo_1_1seq__element__traits.html',1,'coveo']]],
+  ['seq_5ftraits',['seq_traits',['../structcoveo_1_1seq__traits.html',1,'coveo']]],
+  ['seq_5ftraits_3c_20seq1_20_3e',['seq_traits&lt; Seq1 &gt;',['../structcoveo_1_1seq__traits.html',1,'coveo']]],
+  ['seq_5ftraits_3c_20seq2_20_3e',['seq_traits&lt; Seq2 &gt;',['../structcoveo_1_1seq__traits.html',1,'coveo']]],
+  ['sequence_5futil_2eh',['sequence_util.h',['../sequence__util_8h.html',1,'']]],
+  ['size_5fdelegate',['size_delegate',['../classcoveo_1_1enumerable.html#a5a46440b2627e28f2530e9f529703ba8',1,'coveo::enumerable']]]
 ];

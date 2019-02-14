@@ -12,7 +12,7 @@
  */
 
 /**
- * @mainpage <tt>coveo::linq</tt> (<a href="https://github.com/coveo/linq">GitHub</a>)
+ * @mainpage notitle
  * @tableofcontents
  * @section intro Introduction
  *
