@@ -44,7 +44,7 @@ namespace detail {
  * to implement <tt>operator()()</tt>. Allows instances of lambdas to be
  * used as predicates for <tt>set</tt>s, for instance.
  *
- * @tparam Pred Type of predicate to proxy.
+ * @tparam Pred Predicate to proxy.
  */
 template<typename Pred>
 class proxy_cmp
@@ -70,7 +70,7 @@ public:
  * Comparator that receives pointers to elements to compare,
  * dereferences them and calls another predicate.
  *
- * @tparam Type of predicate to call with dereferenced pointers.
+ * @tparam Pred Predicate to call with dereferenced pointers.
  */
 template<typename Pred>
 class deref_cmp
@@ -97,7 +97,7 @@ public:
  * and its index, when the index is not needed. Will simply drop
  * the index and call another selector with the element.
  *
- * @tparam Type of selector to call with element only.
+ * @tparam Selector Selector to call with element only.
  */
 template<typename Selector>
 class indexless_selector_proxy
@@ -125,7 +125,7 @@ public:
  * dereferencing said pointers. Meant to be used to construct
  * <tt>coveo::enumerable</tt>s.
  *
- * @tparam Seq Type of sequence containing pointers to wrap.
+ * @tparam Seq Sequence containing pointers to wrap.
  * @see coveo::linq::detail::make_deref_next_impl()
  */
 template<typename Seq>
@@ -178,7 +178,7 @@ public:
  * Helper function to create instances of <tt>coveo::linq::detail::deref_next_impl</tt>.
  * Allows easier creation by deducing the sequence type.
  *
- * @tparam Seq Type of sequence containing pointers to wrap.
+ * @tparam Seq Sequence containing pointers to wrap.
  * @see coveo::linq::detail::deref_next_impl
  */
 template<typename Seq>
@@ -260,7 +260,7 @@ struct greater {
  * Creates an object and stores it in a <tt>std::unique_ptr</tt>.
  * Like <tt>std::make_unique()</tt> from C++14.
  *
- * @tparam T Type of object to store in the @c unique_ptr.
+ * @tparam T Object to store in the @c unique_ptr.
  * @tparam Args Arguments to forward to the constructor of @c T.
  */
 template<typename T, typename... Args>
@@ -278,14 +278,14 @@ auto make_unique(Args&&... args) -> std::unique_ptr<T> {
  * Implementation of the <tt>coveo::linq::aggregate()</tt> LINQ operator.
  * Version with a single argument (aggregate function).
  *
- * @tparam F Type of function to aggregate the values.
+ * @tparam F Function to aggregate the values.
  * @see coveo::linq::aggregate()
  */
 template<typename F>
 class aggregate_impl_1
 {
 private:
-    const F& agg_f_;    // Aggregate function.
+    const F& agg_f_;
 
 public:
     explicit aggregate_impl_1(const F& agg_f)
@@ -315,15 +315,15 @@ public:
  * Version with two arguments (initial value and aggregate function).
  *
  * @tparam Acc Type of aggregate value.
- * @tparam F Type of function to aggregate the values.
+ * @tparam F Function to aggregate the values.
  * @see coveo::linq::aggregate()
  */
 template<typename Acc, typename F>
 class aggregate_impl_2
 {
 private:
-    const Acc& seed_;   // Initial aggregate value.
-    const F& agg_f_;    // Aggregate function.
+    const Acc& seed_;
+    const F& agg_f_;
 
 public:
     aggregate_impl_2(const Acc& seed, const F& agg_f)
@@ -349,15 +349,15 @@ public:
  * result function).
  *
  * @tparam Acc Type of aggregate value.
- * @tparam F Type of function to aggregate the values.
- * @tparam RF Type of function called to produce final result from aggregate.
+ * @tparam F Function to aggregate the values.
+ * @tparam RF Function called to produce final result from aggregate.
  * @see coveo::linq::aggregate()
  */
 template<typename Acc, typename F, typename RF>
 class aggregate_impl_3 : public aggregate_impl_2<Acc, F>
 {
 private:
-    const RF& result_f_;    // Function to convert aggregate into final result.
+    const RF& result_f_;
 
 public:
     aggregate_impl_3(const Acc& seed, const F& agg_f, const RF& result_f)
@@ -383,7 +383,7 @@ template<typename Pred>
 class all_impl
 {
 private:
-    const Pred& pred_;  // Predicate to satisfy.
+    const Pred& pred_;
 
 public:
     explicit all_impl(const Pred& pred)
@@ -395,7 +395,16 @@ public:
     }
 };
 
-// Implementation of any operator (version without parameter).
+/**
+ * @internal
+ * @brief <tt>coveo::linq::any()</tt> implementation (0).
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Implementation of the <tt>coveo::linq::any()</tt> LINQ operator.
+ * Version without argument.
+ *
+ * @see coveo::linq::any()
+ */
 template<typename = void>
 class any_impl_0
 {
@@ -406,12 +415,22 @@ public:
     }
 };
 
-// Implementation of any operator (version with predicate).
+/**
+ * @internal
+ * @brief <tt>coveo::linq::any()</tt> implementation (1).
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Implementation of the <tt>coveo::linq::any()</tt> LINQ operator.
+ * Version with predicate.
+ *
+ * @tparam Pred Predicate used on sequence elements.
+ * @see coveo::linq::any()
+ */
 template<typename Pred>
 class any_impl_1
 {
 private:
-    const Pred& pred_;  // Predicate to satisfy.
+    const Pred& pred_;
 
 public:
     explicit any_impl_1(const Pred& pred)
@@ -423,12 +442,21 @@ public:
     }
 };
 
-// Implementation of average operator.
+/**
+ * @internal
+ * @brief <tt>coveo::linq::average()</tt> implementation.
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Implementation of the <tt>coveo::linq::average()</tt> LINQ operator.
+ *
+ * @tparam F Function to get numeric value for each element.
+ * @see coveo::linq::average()
+ */
 template<typename F>
 class average_impl
 {
 private:
-    const F& num_f_;    // Function to get numeric value for each element.
+    const F& num_f_;
 
 public:
     explicit average_impl(const F& num_f)
@@ -453,7 +481,17 @@ public:
     }
 };
 
-// Selector implementation used by cast operator.
+/**
+ * @internal
+ * @brief Selector for <tt>coveo::linq::cast()</tt>.
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Selector used to implement the <tt>coveo::linq::cast()</tt>
+ * LINQ operator through <tt>coveo::linq::select()</tt>.
+ *
+ * @tparam U Type to cast the elements to.
+ * @see coveo::linq::cast()
+ */
 template<typename U>
 class cast_selector
 {
@@ -464,7 +502,17 @@ public:
     }
 };
 
-// Implementation of concat operator.
+/**
+ * @internal
+ * @brief <tt>coveo::linq::concat()</tt> implementation.
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Implementation of the <tt>coveo::linq::concat()</tt> LINQ operator.
+ *
+ * @tparam Seq2 Second sequence to concatenate (the first one was passed
+ *              via the call to <tt>coveo::linq::from()</tt>).
+ * @see coveo::linq::concat()
+ */
 template<typename Seq2>
 class concat_impl
 {
@@ -576,7 +624,17 @@ public:
     }
 };
 
-// Implementation of contains operator (version with object only).
+/**
+ * @internal
+ * @brief <tt>coveo::linq::contains()</tt> implementation (1).
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Implementation of the <tt>coveo::linq::contains()</tt> LINQ operator.
+ * Version with one argument (object to look for).
+ *
+ * @tparam T Type of object to look for.
+ * @see coveo::linq::contains()
+ */
 template<typename T>
 class contains_impl_1
 {
@@ -600,7 +658,18 @@ public:
     }
 };
 
-// Implementation of contains operator (version with object and predicate).
+/**
+ * @internal
+ * @brief <tt>coveo::linq::contains()</tt> implementation (2).
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Implementation of the <tt>coveo::linq::contains()</tt> LINQ operator.
+ * Version with two arguments (object to look for and predicate).
+ *
+ * @tparam T Type of object to look for.
+ * @tparam Pred Predicate used to compare elements.
+ * @see coveo::linq::contains()
+ */
 template<typename T, typename Pred>
 class contains_impl_2
 {
@@ -625,7 +694,16 @@ public:
     }
 };
 
-// Implementation of count operator (version without parameters).
+/**
+ * @internal
+ * @brief <tt>coveo::linq::count()</tt> implementation (0).
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Implementation of the <tt>coveo::linq::count()</tt> LINQ operator.
+ * Version without argument.
+ *
+ * @see coveo::linq::count()
+ */
 template<typename = void>
 class count_impl_0
 {
@@ -651,7 +729,17 @@ public:
     }
 };
 
-// Implementation of count operator (version with predicate).
+/**
+ * @internal
+ * @brief <tt>coveo::linq::count()</tt> implementation (1).
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Implementation of the <tt>coveo::linq::count()</tt> LINQ operator.
+ * Version with predicate.
+ *
+ * @tparam Pred Predicate used on elements.
+ * @see coveo::linq::count()
+ */
 template<typename Pred>
 class count_impl_1
 {
@@ -668,7 +756,16 @@ public:
     }
 };
 
-// Implementation of default_if_empty operator (version without parameters).
+/**
+ * @internal
+ * @brief <tt>coveo::linq::default_if_empty()</tt> implementation (0).
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Implementation of the <tt>coveo::linq::default_if_empty()</tt> LINQ operator.
+ * Version without argument.
+ *
+ * @see coveo::linq::default_if_empty()
+ */
 template<typename = void>
 class default_if_empty_impl_0
 {
@@ -687,7 +784,17 @@ public:
     }
 };
 
-// Implementation of default_if_empty operator (version with default value).
+/**
+ * @internal
+ * @brief <tt>coveo::linq::default_if_empty()</tt> implementation (1).
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Implementation of the <tt>coveo::linq::default_if_empty()</tt> LINQ operator.
+ * Version with one argument (default value).
+ *
+ * @tparam T Type of default value.
+ * @see coveo::linq::default_if_empty()
+ */
 template<typename T>
 class default_if_empty_impl_1
 {
@@ -712,7 +819,16 @@ public:
     }
 };
 
-// Implementation of distinct operator.
+/**
+ * @internal
+ * @brief <tt>coveo::linq::distinct()</tt> implementation.
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Implementation of the <tt>coveo::linq::distinct()</tt> LINQ operator.
+ *
+ * @tparam Pred Predicate used to compare elements.
+ * @see coveo::linq::distinct()
+ */
 template<typename Pred>
 class distinct_impl
 {
@@ -806,7 +922,15 @@ public:
     }
 };
 
-// Implementation of element_at operator.
+/**
+ * @internal
+ * @brief <tt>coveo::linq::element_at()</tt> implementation.
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Implementation of the <tt>coveo::linq::element_at()</tt> LINQ operator.
+ *
+ * @see coveo::linq::element_at()
+ */
 template<typename = void>
 class element_at_impl
 {
@@ -850,7 +974,15 @@ public:
     }
 };
 
-// Implementation of element_at_or_default operator.
+/**
+ * @internal
+ * @brief <tt>coveo::linq::element_at_or_default()</tt> implementation.
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Implementation of the <tt>coveo::linq::element_at_or_default()</tt> LINQ operator.
+ *
+ * @see coveo::linq::element_at_or_default()
+ */
 template<typename = void>
 class element_at_or_default_impl
 {
@@ -889,7 +1021,17 @@ public:
     }
 };
 
-// Implementation of except operator.
+/**
+ * @internal
+ * @brief <tt>coveo::linq::except()</tt> implementation.
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Implementation of the <tt>coveo::linq::except()</tt> LINQ operator.
+ *
+ * @tparam Seq2 Sequence to except (e.g. substract) from the first.
+ * @tparam Pred Predicate used to compare elements.
+ * @see coveo::linq::except()
+ */
 template<typename Seq2, typename Pred>
 class except_impl
 {
@@ -1003,7 +1145,16 @@ public:
     }
 };
 
-// Implementation of first operator (version without parameters).
+/**
+ * @internal
+ * @brief <tt>coveo::linq::first()</tt> implementation (0).
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Implementation of the <tt>coveo::linq::first()</tt> LINQ operator.
+ * Version without argument.
+ *
+ * @see coveo::linq::first()
+ */
 template<typename = void>
 class first_impl_0
 {
@@ -1018,7 +1169,17 @@ public:
     }
 };
 
-// Implementation of first operator (version with predicate).
+/**
+ * @internal
+ * @brief <tt>coveo::linq::first()</tt> implementation (1).
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Implementation of the <tt>coveo::linq::first()</tt> LINQ operator.
+ * Version with predicate.
+ *
+ * @tparam Pred Predicate used to locate element.
+ * @see coveo::linq::contains()
+ */
 template<typename Pred>
 class first_impl_1
 {
@@ -1044,7 +1205,16 @@ public:
     }
 };
 
-// Implementation of first_or_default operator (version without parameters).
+/**
+ * @internal
+ * @brief <tt>coveo::linq::first_or_default()</tt> implementation (0).
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Implementation of the <tt>coveo::linq::first_or_default()</tt> LINQ operator.
+ * Version without argument.
+ *
+ * @see coveo::linq::first_or_default()
+ */
 template<typename = void>
 class first_or_default_impl_0
 {
@@ -1057,7 +1227,17 @@ public:
     }
 };
 
-// Implementation of first_or_default operator (version with predicate).
+/**
+ * @internal
+ * @brief <tt>coveo::linq::first_or_default()</tt> implementation (1).
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Implementation of the <tt>coveo::linq::first_or_default()</tt> LINQ operator.
+ * Version with predicate.
+ *
+ * @tparam Pred Predicate used to locate element.
+ * @see coveo::linq::first_or_default()
+ */
 template<typename Pred>
 class first_or_default_impl_1
 {
@@ -1077,7 +1257,25 @@ public:
     }
 };
 
-// Implementation of group_by operator
+/**
+ * @internal
+ * @brief <tt>coveo::linq::group_by()</tt> et al implementation.
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Implementation of the <tt>coveo::linq::group_by()</tt>,
+ * <tt>coveo::linq::group_values_by()</tt>, <tt>coveo::linq::group_by_and_fold()</tt>
+ * and <tt>coveo::linq::group_values_by_and_fold</tt> LINQ operators.
+ *
+ * @tparam KeySelector Selector used to obtain keys for each element.
+ * @tparam ValueSelector Selector used to obtain values for each element.
+ * @tparam ResultSelector Selector used to produce the final results from
+ *                        elements' keys and corresponding values.
+ * @tparam Pred Predicate used to compare keys.
+ * @see coveo::linq::group_by()
+ * @see coveo::linq::group_values_by()
+ * @see coveo::linq::group_by_and_fold()
+ * @see coveo::linq::group_values_by_and_fold()
+ */
 template<typename KeySelector,
          typename ValueSelector,
          typename ResultSelector,
@@ -1229,7 +1427,25 @@ public:
     }
 };
 
-// Implementation of group_join operator
+/**
+ * @internal
+ * @brief <tt>coveo::linq::group_join()</tt> implementation.
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Implementation of the <tt>coveo::linq::group_join()</tt> LINQ operator.
+ *
+ * @tparam InnerSeq Inner sequence to join (the outer sequence will have
+ *                  been provided via the call to <tt>coveo::linq::from()</tt>).
+ * @tparam OuterKeySelector Selector used to fetch keys from elements
+ *                          in the outer sequence.
+ * @tparam InnerKeySelector Selector used to fetch keys from elements
+ *                          in the inner sequence.
+ * @tparam ResultSelector Selector used to produce final results from
+ *                        elements in outer sequence and corresponding
+ *                        group of elements in inner sequence.
+ * @tparam Pred Predicate used to compare keys.
+ * @see coveo::linq::group_join()
+ */
 template<typename InnerSeq,
          typename OuterKeySelector,
          typename InnerKeySelector,
@@ -1399,7 +1615,18 @@ public:
     }
 };
 
-// Implementation of intersect operator
+/**
+ * @internal
+ * @brief <tt>coveo::linq::intersect()</tt> implementation.
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Implementation of the <tt>coveo::linq::intersect()</tt> LINQ operator.
+ *
+ * @tparam Seq2 Second sequence to intersect (the first one will have been
+ *              provided via the call to <tt>coveo::linq::from()</tt>).
+ * @tparam Pred Predicate used to compare elements.
+ * @see coveo::linq::intersect()
+ */
 template<typename Seq2, typename Pred>
 class intersect_impl
 {
@@ -1516,7 +1743,25 @@ public:
     }
 };
 
-// Implementation of join operator
+/**
+ * @internal
+ * @brief <tt>coveo::linq::join()</tt> implementation.
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Implementation of the <tt>coveo::linq::join()</tt> LINQ operator.
+ *
+ * @tparam InnerSeq Inner sequence to join (the outer sequence will have been
+ *                  provided by the call to <tt>coveo::linq::from()</tt>).
+ * @tparam OuterKeySelector Selector used to fetch keys from elements
+ *                          in the outer sequence.
+ * @tparam InnerKeySelector Selector used to fetch keys from elements
+ *                          in the inner sequence.
+ * @tparam ResultSelector Selector used to produce final results from
+ *                        elements from outer and inner sequence with
+ *                        matching keys.
+ * @tparam Pred Predicate used to compare keys.
+ * @see coveo::linq::join()
+ */
 template<typename InnerSeq,
          typename OuterKeySelector,
          typename InnerKeySelector,
