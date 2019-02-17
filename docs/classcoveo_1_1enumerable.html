@@ -112,79 +112,82 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a669ab7040d1c462659fdb6e72e2a71cf"><td class="memTemplParams" colspan="2"><a id="a669ab7040d1c462659fdb6e72e2a71cf"></a>
-template&lt;typename F , typename _S  = std::nullptr_t, typename  = typename std::enable_if&lt;!is_enumerable&lt;typename std::decay&lt;F&gt;::type&gt;::value &amp;&amp;                                                (!detail::has_begin&lt;typename std::decay&lt;F&gt;::type&gt;::value ||                                                 !detail::has_end&lt;typename std::decay&lt;F&gt;::type&gt;::value ||                                                 !detail::has_size_const_method&lt;typename std::decay&lt;F&gt;::type&gt;::value), void&gt;::type&gt; </td></tr>
-<tr class="memitem:a669ab7040d1c462659fdb6e72e2a71cf"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>enumerable</b> (F &amp;&amp;next, _S &amp;&amp;siz=nullptr)</td></tr>
+<tr class="memitem:ae475f4103c11ec845cdbd6a9ce724ab0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcoveo_1_1enumerable.html#ae475f4103c11ec845cdbd6a9ce724ab0">enumerable</a> ()</td></tr>
+<tr class="memdesc:ae475f4103c11ec845cdbd6a9ce724ab0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor.  <a href="#ae475f4103c11ec845cdbd6a9ce724ab0">More...</a><br /></td></tr>
+<tr class="separator:ae475f4103c11ec845cdbd6a9ce724ab0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a669ab7040d1c462659fdb6e72e2a71cf"><td class="memTemplParams" colspan="2">template&lt;typename F , typename _S  = std::nullptr_t, typename  = typename std::enable_if&lt;!is_enumerable&lt;typename std::decay&lt;F&gt;::type&gt;::value &amp;&amp;                                                (!detail::has_begin&lt;typename std::decay&lt;F&gt;::type&gt;::value ||                                                 !detail::has_end&lt;typename std::decay&lt;F&gt;::type&gt;::value ||                                                 !detail::has_size_const_method&lt;typename std::decay&lt;F&gt;::type&gt;::value), void&gt;::type&gt; </td></tr>
+<tr class="memitem:a669ab7040d1c462659fdb6e72e2a71cf"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classcoveo_1_1enumerable.html#a669ab7040d1c462659fdb6e72e2a71cf">enumerable</a> (F &amp;&amp;next, _S &amp;&amp;siz=nullptr)</td></tr>
+<tr class="memdesc:a669ab7040d1c462659fdb6e72e2a71cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor with delegates.  <a href="#a669ab7040d1c462659fdb6e72e2a71cf">More...</a><br /></td></tr>
 <tr class="separator:a669ab7040d1c462659fdb6e72e2a71cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a95b52309d076198f09578bb8411073d8"><td class="memTemplParams" colspan="2"><a id="a95b52309d076198f09578bb8411073d8"></a>
-template&lt;typename C , typename  = typename std::enable_if&lt;!is_enumerable&lt;typename std::decay&lt;C&gt;::type&gt;::value &amp;&amp;                                                detail::has_begin&lt;typename std::decay&lt;C&gt;::type&gt;::value &amp;&amp;                                                detail::has_end&lt;typename std::decay&lt;C&gt;::type&gt;::value &amp;&amp;                                                detail::has_size_const_method&lt;typename std::decay&lt;C&gt;::type&gt;::value, void&gt;::type&gt; </td></tr>
-<tr class="memitem:a95b52309d076198f09578bb8411073d8"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>enumerable</b> (C &amp;&amp;cnt)</td></tr>
+<tr class="memitem:a95b52309d076198f09578bb8411073d8"><td class="memTemplParams" colspan="2">template&lt;typename C , typename  = typename std::enable_if&lt;!is_enumerable&lt;typename std::decay&lt;C&gt;::type&gt;::value &amp;&amp;                                                detail::has_begin&lt;typename std::decay&lt;C&gt;::type&gt;::value &amp;&amp;                                                detail::has_end&lt;typename std::decay&lt;C&gt;::type&gt;::value &amp;&amp;                                                detail::has_size_const_method&lt;typename std::decay&lt;C&gt;::type&gt;::value, void&gt;::type&gt; </td></tr>
+<tr class="memitem:a95b52309d076198f09578bb8411073d8"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classcoveo_1_1enumerable.html#a95b52309d076198f09578bb8411073d8">enumerable</a> (C &amp;&amp;cnt)</td></tr>
+<tr class="memdesc:a95b52309d076198f09578bb8411073d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor with container.  <a href="#a95b52309d076198f09578bb8411073d8">More...</a><br /></td></tr>
 <tr class="separator:a95b52309d076198f09578bb8411073d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af9deb0a07ab56866b8f88c902f048098"><td class="memTemplParams" colspan="2"><a id="af9deb0a07ab56866b8f88c902f048098"></a>
-template&lt;typename U , typename  = typename std::enable_if&lt;!std::is_const&lt;U&gt;::value &amp;&amp;                                                std::is_same&lt;T, typename std::add_const&lt;U&gt;::type&gt;::value, void&gt;::type&gt; </td></tr>
-<tr class="memitem:af9deb0a07ab56866b8f88c902f048098"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>enumerable</b> (<a class="el" href="classcoveo_1_1enumerable.html">enumerable</a>&lt; U &gt; e)</td></tr>
+<tr class="memitem:af9deb0a07ab56866b8f88c902f048098"><td class="memTemplParams" colspan="2">template&lt;typename U , typename  = typename std::enable_if&lt;!std::is_const&lt;U&gt;::value &amp;&amp;                                                std::is_same&lt;T, typename std::add_const&lt;U&gt;::type&gt;::value, void&gt;::type&gt; </td></tr>
+<tr class="memitem:af9deb0a07ab56866b8f88c902f048098"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classcoveo_1_1enumerable.html#af9deb0a07ab56866b8f88c902f048098">enumerable</a> (<a class="el" href="classcoveo_1_1enumerable.html">enumerable</a>&lt; U &gt; e)</td></tr>
+<tr class="memdesc:af9deb0a07ab56866b8f88c902f048098"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for non-<code>const</code> to <code>const</code> conversion.  <a href="#af9deb0a07ab56866b8f88c902f048098">More...</a><br /></td></tr>
 <tr class="separator:af9deb0a07ab56866b8f88c902f048098"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a34919be6e82b09b8e5eb805fc02817a8"><td class="memTemplParams" colspan="2"><a id="a34919be6e82b09b8e5eb805fc02817a8"></a>
-template&lt;typename U , typename  = typename std::enable_if&lt;!std::is_const&lt;U&gt;::value &amp;&amp;                                                std::is_same&lt;T, typename std::add_const&lt;U&gt;::type&gt;::value, void&gt;::type&gt; </td></tr>
-<tr class="memitem:a34919be6e82b09b8e5eb805fc02817a8"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classcoveo_1_1enumerable.html">enumerable</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="classcoveo_1_1enumerable.html">enumerable</a>&lt; U &gt; e)</td></tr>
+<tr class="memitem:a34919be6e82b09b8e5eb805fc02817a8"><td class="memTemplParams" colspan="2">template&lt;typename U , typename  = typename std::enable_if&lt;!std::is_const&lt;U&gt;::value &amp;&amp;                                                std::is_same&lt;T, typename std::add_const&lt;U&gt;::type&gt;::value, void&gt;::type&gt; </td></tr>
+<tr class="memitem:a34919be6e82b09b8e5eb805fc02817a8"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classcoveo_1_1enumerable.html">enumerable</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classcoveo_1_1enumerable.html#a34919be6e82b09b8e5eb805fc02817a8">operator=</a> (<a class="el" href="classcoveo_1_1enumerable.html">enumerable</a>&lt; U &gt; e)</td></tr>
+<tr class="memdesc:a34919be6e82b09b8e5eb805fc02817a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assignment operator for non-<code>const</code> to <code>const</code> conversion.  <a href="#a34919be6e82b09b8e5eb805fc02817a8">More...</a><br /></td></tr>
 <tr class="separator:a34919be6e82b09b8e5eb805fc02817a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5d865e016012ce7f793e14205911be92"><td class="memItemLeft" align="right" valign="top"><a id="a5d865e016012ce7f793e14205911be92"></a>
-<a class="el" href="classcoveo_1_1enumerable_1_1iterator.html">iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>begin</b> () const</td></tr>
+<tr class="memitem:a5d865e016012ce7f793e14205911be92"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcoveo_1_1enumerable_1_1iterator.html">iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcoveo_1_1enumerable.html#a5d865e016012ce7f793e14205911be92">begin</a> () const</td></tr>
+<tr class="memdesc:a5d865e016012ce7f793e14205911be92"><td class="mdescLeft">&#160;</td><td class="mdescRight">Iterator to beginning of sequence.  <a href="#a5d865e016012ce7f793e14205911be92">More...</a><br /></td></tr>
 <tr class="separator:a5d865e016012ce7f793e14205911be92"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2ed36907a2d22c9494e66003145115a3"><td class="memItemLeft" align="right" valign="top"><a id="a2ed36907a2d22c9494e66003145115a3"></a>
-<a class="el" href="classcoveo_1_1enumerable_1_1iterator.html">iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>cbegin</b> () const</td></tr>
+<tr class="memitem:a2ed36907a2d22c9494e66003145115a3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcoveo_1_1enumerable_1_1iterator.html">iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcoveo_1_1enumerable.html#a2ed36907a2d22c9494e66003145115a3">cbegin</a> () const</td></tr>
+<tr class="memdesc:a2ed36907a2d22c9494e66003145115a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Alias for <code><a class="el" href="classcoveo_1_1enumerable.html#a5d865e016012ce7f793e14205911be92" title="Iterator to beginning of sequence.">begin()</a></code>.  <a href="#a2ed36907a2d22c9494e66003145115a3">More...</a><br /></td></tr>
 <tr class="separator:a2ed36907a2d22c9494e66003145115a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab1270f19e893477e2176a567be787308"><td class="memItemLeft" align="right" valign="top"><a id="ab1270f19e893477e2176a567be787308"></a>
-<a class="el" href="classcoveo_1_1enumerable_1_1iterator.html">iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>end</b> () const</td></tr>
+<tr class="memitem:ab1270f19e893477e2176a567be787308"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcoveo_1_1enumerable_1_1iterator.html">iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcoveo_1_1enumerable.html#ab1270f19e893477e2176a567be787308">end</a> () const</td></tr>
+<tr class="memdesc:ab1270f19e893477e2176a567be787308"><td class="mdescLeft">&#160;</td><td class="mdescRight">Iterator to end of sequence.  <a href="#ab1270f19e893477e2176a567be787308">More...</a><br /></td></tr>
 <tr class="separator:ab1270f19e893477e2176a567be787308"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad9880db5138a06364ca4db87b034304f"><td class="memItemLeft" align="right" valign="top"><a id="ad9880db5138a06364ca4db87b034304f"></a>
-<a class="el" href="classcoveo_1_1enumerable_1_1iterator.html">iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>cend</b> () const</td></tr>
+<tr class="memitem:ad9880db5138a06364ca4db87b034304f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcoveo_1_1enumerable_1_1iterator.html">iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcoveo_1_1enumerable.html#ad9880db5138a06364ca4db87b034304f">cend</a> () const</td></tr>
+<tr class="memdesc:ad9880db5138a06364ca4db87b034304f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Alias for <code><a class="el" href="classcoveo_1_1enumerable.html#ab1270f19e893477e2176a567be787308" title="Iterator to end of sequence.">end()</a></code>.  <a href="#ad9880db5138a06364ca4db87b034304f">More...</a><br /></td></tr>
 <tr class="separator:ad9880db5138a06364ca4db87b034304f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af28795993b2e73129d2a87213a566b45"><td class="memItemLeft" align="right" valign="top"><a id="af28795993b2e73129d2a87213a566b45"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>has_fast_size</b> () const</td></tr>
+<tr class="memitem:af28795993b2e73129d2a87213a566b45"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcoveo_1_1enumerable.html#af28795993b2e73129d2a87213a566b45">has_fast_size</a> () const</td></tr>
+<tr class="memdesc:af28795993b2e73129d2a87213a566b45"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines if <code><a class="el" href="classcoveo_1_1enumerable.html#a027835aabbfafd8b4362b9a7dd3690b5" title="Size of sequence.">size()</a></code> is fast.  <a href="#af28795993b2e73129d2a87213a566b45">More...</a><br /></td></tr>
 <tr class="separator:af28795993b2e73129d2a87213a566b45"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a027835aabbfafd8b4362b9a7dd3690b5"><td class="memItemLeft" align="right" valign="top"><a id="a027835aabbfafd8b4362b9a7dd3690b5"></a>
-std::size_t&#160;</td><td class="memItemRight" valign="bottom"><b>size</b> () const</td></tr>
+<tr class="memitem:a027835aabbfafd8b4362b9a7dd3690b5"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcoveo_1_1enumerable.html#a027835aabbfafd8b4362b9a7dd3690b5">size</a> () const</td></tr>
+<tr class="memdesc:a027835aabbfafd8b4362b9a7dd3690b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Size of sequence.  <a href="#a027835aabbfafd8b4362b9a7dd3690b5">More...</a><br /></td></tr>
 <tr class="separator:a027835aabbfafd8b4362b9a7dd3690b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aae2fbc9dbb48b5ae1e5d15fca4a2e065"><td class="memItemLeft" align="right" valign="top"><a id="aae2fbc9dbb48b5ae1e5d15fca4a2e065"></a>
-auto&#160;</td><td class="memItemRight" valign="bottom"><b>as_const</b> () const -&gt; <a class="el" href="classcoveo_1_1enumerable.html">enumerable</a>&lt; typename std::add_const&lt; T &gt;::type &gt;</td></tr>
+<tr class="memitem:aae2fbc9dbb48b5ae1e5d15fca4a2e065"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcoveo_1_1enumerable.html#aae2fbc9dbb48b5ae1e5d15fca4a2e065">as_const</a> () const -&gt; <a class="el" href="classcoveo_1_1enumerable.html">enumerable</a>&lt; typename std::add_const&lt; T &gt;::type &gt;</td></tr>
+<tr class="memdesc:aae2fbc9dbb48b5ae1e5d15fca4a2e065"><td class="mdescLeft">&#160;</td><td class="mdescRight">Non-<code>const</code> to <code>const</code> explicit conversion.  <a href="#aae2fbc9dbb48b5ae1e5d15fca4a2e065">More...</a><br /></td></tr>
 <tr class="separator:aae2fbc9dbb48b5ae1e5d15fca4a2e065"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:acb57adb225af6d3fe21b7cc780290b75"><td class="memItemLeft" align="right" valign="top"><a id="acb57adb225af6d3fe21b7cc780290b75"></a>
-static <a class="el" href="classcoveo_1_1enumerable.html">enumerable</a>&lt; T &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>empty</b> ()</td></tr>
+<tr class="memitem:acb57adb225af6d3fe21b7cc780290b75"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classcoveo_1_1enumerable.html">enumerable</a>&lt; T &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcoveo_1_1enumerable.html#acb57adb225af6d3fe21b7cc780290b75">empty</a> ()</td></tr>
+<tr class="memdesc:acb57adb225af6d3fe21b7cc780290b75"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns <code>enumerable</code> over empty sequence.  <a href="#acb57adb225af6d3fe21b7cc780290b75">More...</a><br /></td></tr>
 <tr class="separator:acb57adb225af6d3fe21b7cc780290b75"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac501a83d63fd5bed1a2e72df4a2ce589"><td class="memTemplParams" colspan="2"><a id="ac501a83d63fd5bed1a2e72df4a2ce589"></a>
-template&lt;typename U &gt; </td></tr>
-<tr class="memitem:ac501a83d63fd5bed1a2e72df4a2ce589"><td class="memTemplItemLeft" align="right" valign="top">static <a class="el" href="classcoveo_1_1enumerable.html">enumerable</a>&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>for_one</b> (U &amp;&amp;obj)</td></tr>
+<tr class="memitem:ac501a83d63fd5bed1a2e72df4a2ce589"><td class="memTemplParams" colspan="2">template&lt;typename U &gt; </td></tr>
+<tr class="memitem:ac501a83d63fd5bed1a2e72df4a2ce589"><td class="memTemplItemLeft" align="right" valign="top">static <a class="el" href="classcoveo_1_1enumerable.html">enumerable</a>&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classcoveo_1_1enumerable.html#ac501a83d63fd5bed1a2e72df4a2ce589">for_one</a> (U &amp;&amp;obj)</td></tr>
+<tr class="memdesc:ac501a83d63fd5bed1a2e72df4a2ce589"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns <code>enumerable</code> over sequence of one element (stored internally).  <a href="#ac501a83d63fd5bed1a2e72df4a2ce589">More...</a><br /></td></tr>
 <tr class="separator:ac501a83d63fd5bed1a2e72df4a2ce589"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ace414a483a7f5cef42f436a281f2c004"><td class="memItemLeft" align="right" valign="top"><a id="ace414a483a7f5cef42f436a281f2c004"></a>
-static <a class="el" href="classcoveo_1_1enumerable.html">enumerable</a>&lt; T &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>for_one_ref</b> (<a class="el" href="classcoveo_1_1enumerable.html#ab0e11b8ab1b63b938f2ebd6ed26858de">reference</a> obj)</td></tr>
+<tr class="memitem:ace414a483a7f5cef42f436a281f2c004"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classcoveo_1_1enumerable.html">enumerable</a>&lt; T &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcoveo_1_1enumerable.html#ace414a483a7f5cef42f436a281f2c004">for_one_ref</a> (<a class="el" href="classcoveo_1_1enumerable.html#ab0e11b8ab1b63b938f2ebd6ed26858de">reference</a> obj)</td></tr>
+<tr class="memdesc:ace414a483a7f5cef42f436a281f2c004"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns <code>enumerable</code> over sequence of one element (stored externally).  <a href="#ace414a483a7f5cef42f436a281f2c004">More...</a><br /></td></tr>
 <tr class="separator:ace414a483a7f5cef42f436a281f2c004"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a87cdf23538a5ac57711f2eb0e5f8639f"><td class="memTemplParams" colspan="2"><a id="a87cdf23538a5ac57711f2eb0e5f8639f"></a>
-template&lt;typename It &gt; </td></tr>
-<tr class="memitem:a87cdf23538a5ac57711f2eb0e5f8639f"><td class="memTemplItemLeft" align="right" valign="top">static <a class="el" href="classcoveo_1_1enumerable.html">enumerable</a>&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>for_range</b> (It ibeg, It iend)</td></tr>
+<tr class="memitem:a87cdf23538a5ac57711f2eb0e5f8639f"><td class="memTemplParams" colspan="2">template&lt;typename It &gt; </td></tr>
+<tr class="memitem:a87cdf23538a5ac57711f2eb0e5f8639f"><td class="memTemplItemLeft" align="right" valign="top">static <a class="el" href="classcoveo_1_1enumerable.html">enumerable</a>&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classcoveo_1_1enumerable.html#a87cdf23538a5ac57711f2eb0e5f8639f">for_range</a> (It ibeg, It iend)</td></tr>
+<tr class="memdesc:a87cdf23538a5ac57711f2eb0e5f8639f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns <code>enumerable</code> over sequence bound by iterators.  <a href="#a87cdf23538a5ac57711f2eb0e5f8639f">More...</a><br /></td></tr>
 <tr class="separator:a87cdf23538a5ac57711f2eb0e5f8639f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a57b61f22a746f8224ad328c70672eaec"><td class="memTemplParams" colspan="2"><a id="a57b61f22a746f8224ad328c70672eaec"></a>
-template&lt;typename C &gt; </td></tr>
-<tr class="memitem:a57b61f22a746f8224ad328c70672eaec"><td class="memTemplItemLeft" align="right" valign="top">static <a class="el" href="classcoveo_1_1enumerable.html">enumerable</a>&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>for_container</b> (C &amp;cnt)</td></tr>
+<tr class="memitem:a57b61f22a746f8224ad328c70672eaec"><td class="memTemplParams" colspan="2">template&lt;typename C &gt; </td></tr>
+<tr class="memitem:a57b61f22a746f8224ad328c70672eaec"><td class="memTemplItemLeft" align="right" valign="top">static <a class="el" href="classcoveo_1_1enumerable.html">enumerable</a>&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classcoveo_1_1enumerable.html#a57b61f22a746f8224ad328c70672eaec">for_container</a> (C &amp;cnt)</td></tr>
+<tr class="memdesc:a57b61f22a746f8224ad328c70672eaec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns <code>enumerable</code> over container's sequence (stored externally).  <a href="#a57b61f22a746f8224ad328c70672eaec">More...</a><br /></td></tr>
 <tr class="separator:a57b61f22a746f8224ad328c70672eaec"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3ffab0fb0535c2a60d8f23acdc13f7b2"><td class="memTemplParams" colspan="2"><a id="a3ffab0fb0535c2a60d8f23acdc13f7b2"></a>
-template&lt;typename C , typename  = typename std::enable_if&lt;!std::is_reference&lt;C&gt;::value, void&gt;::type&gt; </td></tr>
-<tr class="memitem:a3ffab0fb0535c2a60d8f23acdc13f7b2"><td class="memTemplItemLeft" align="right" valign="top">static <a class="el" href="classcoveo_1_1enumerable.html">enumerable</a>&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>for_container</b> (C &amp;&amp;cnt)</td></tr>
+<tr class="memitem:a3ffab0fb0535c2a60d8f23acdc13f7b2"><td class="memTemplParams" colspan="2">template&lt;typename C , typename  = typename std::enable_if&lt;!std::is_reference&lt;C&gt;::value, void&gt;::type&gt; </td></tr>
+<tr class="memitem:a3ffab0fb0535c2a60d8f23acdc13f7b2"><td class="memTemplItemLeft" align="right" valign="top">static <a class="el" href="classcoveo_1_1enumerable.html">enumerable</a>&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classcoveo_1_1enumerable.html#a3ffab0fb0535c2a60d8f23acdc13f7b2">for_container</a> (C &amp;&amp;cnt)</td></tr>
+<tr class="memdesc:a3ffab0fb0535c2a60d8f23acdc13f7b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns <code>enumerable</code> over container's sequence (stored internally).  <a href="#a3ffab0fb0535c2a60d8f23acdc13f7b2">More...</a><br /></td></tr>
 <tr class="separator:a3ffab0fb0535c2a60d8f23acdc13f7b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a833fbf04b9718d8882d9408a664a8865"><td class="memItemLeft" align="right" valign="top"><a id="a833fbf04b9718d8882d9408a664a8865"></a>
-static <a class="el" href="classcoveo_1_1enumerable.html">enumerable</a>&lt; T &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>for_array</b> (<a class="el" href="classcoveo_1_1enumerable.html#adbdeafed8fcaff6d4d90677f356afd99">pointer</a> parr, size_t siz)</td></tr>
+<tr class="memitem:a833fbf04b9718d8882d9408a664a8865"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classcoveo_1_1enumerable.html">enumerable</a>&lt; T &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcoveo_1_1enumerable.html#a833fbf04b9718d8882d9408a664a8865">for_array</a> (<a class="el" href="classcoveo_1_1enumerable.html#adbdeafed8fcaff6d4d90677f356afd99">pointer</a> parr, size_t siz)</td></tr>
+<tr class="memdesc:a833fbf04b9718d8882d9408a664a8865"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns <code>enumerable</code> over array's sequence.  <a href="#a833fbf04b9718d8882d9408a664a8865">More...</a><br /></td></tr>
 <tr class="separator:a833fbf04b9718d8882d9408a664a8865"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><h3>template&lt;typename T&gt;<br />
 class coveo::enumerable&lt; T &gt;</h3>
 
-<p>Inspired by .NET's <code>IEnumerable&lt;T&gt;</code>, <code><a class="el" href="classcoveo_1_1enumerable.html" title="Type-erased sequence wrapper.">coveo::enumerable</a></code> is a type-erased wrapper for a multipass, forward-only sequence of elements. It is possible to iterate over the elements using <code>begin()</code> / <code>end()</code> (or <code>cbegin()</code> / <code>cend()</code>, which is equivalent since this class is immutable).</p>
+<p>Inspired by .NET's <code>IEnumerable&lt;T&gt;</code>, <code><a class="el" href="classcoveo_1_1enumerable.html" title="Type-erased sequence wrapper.">coveo::enumerable</a></code> is a type-erased wrapper for a multipass, forward-only sequence of elements. It is possible to iterate over the elements using <code><a class="el" href="classcoveo_1_1enumerable.html#a5d865e016012ce7f793e14205911be92" title="Iterator to beginning of sequence.">begin()</a></code> / <code><a class="el" href="classcoveo_1_1enumerable.html#ab1270f19e893477e2176a567be787308" title="Iterator to end of sequence.">end()</a></code> (or <code><a class="el" href="classcoveo_1_1enumerable.html#a2ed36907a2d22c9494e66003145115a3" title="Alias for begin().">cbegin()</a></code> / <code><a class="el" href="classcoveo_1_1enumerable.html#ad9880db5138a06364ca4db87b034304f" title="Alias for end().">cend()</a></code>, which is equivalent since this class is immutable).</p>
 <p>In order to fetch the elements to return, this class uses a <em>next delegate</em> - a function that returns a pointer to the next element every time it is called, finally returning <code>nullptr</code> when the enumeration is over. The next delegate is provided at construction time and cannot change.</p>
-<p>Optionally, it is also possible to specify a <em>size delegeate</em> for the <code>enumerable</code> at construction time. If provided, it will be used to fetch the number of elements in the sequence when <code>size()</code> is called; otherwise, a slower algorithm is used (iterating over the entire sequence using <code>std::distance()</code>). It is possible to determine if the <code>enumerable</code> has a fast size delegate by using <code>has_fast_size()</code>.</p>
+<p>Optionally, it is also possible to specify a <em>size delegeate</em> for the <code>enumerable</code> at construction time. If provided, it will be used to fetch the number of elements in the sequence when <code><a class="el" href="classcoveo_1_1enumerable.html#a027835aabbfafd8b4362b9a7dd3690b5" title="Size of sequence.">size()</a></code> is called; otherwise, a slower algorithm is used (iterating over the entire sequence using <code>std::distance()</code>). It is possible to determine if the <code>enumerable</code> has a fast size delegate by using <code><a class="el" href="classcoveo_1_1enumerable.html#af28795993b2e73129d2a87213a566b45" title="Determines if size() is fast.">has_fast_size()</a></code>.</p>
 <p>While this class is immutable, the elements it returns are not necessarily so. In order to wrap a sequence of <code>const</code> elements, <code>const</code> must also be specified in this class' template argument:</p>
 <div class="fragment"><div class="line"><a class="code" href="classcoveo_1_1enumerable.html">coveo::enumerable&lt;const int&gt;</a> e1; <span class="comment">// Iterates over const integers</span></div><div class="line"><a class="code" href="classcoveo_1_1enumerable.html">coveo::enumerable&lt;int&gt;</a> e2;       <span class="comment">// Iterators over non-const integers</span></div></div><!-- fragment --><dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
@@ -291,7 +294,7 @@ template&lt;typename T&gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Delegate that will be called by the <code>enumerable</code> to fetch the number of elements in the sequence when <code>size()</code> is called. </p>
+<p>Delegate that will be called by the <code>enumerable</code> to fetch the number of elements in the sequence when <code><a class="el" href="classcoveo_1_1enumerable.html#a027835aabbfafd8b4362b9a7dd3690b5" title="Size of sequence.">size()</a></code> is called. </p>
 
 </div>
 </div>
@@ -308,7 +311,715 @@ template&lt;typename T&gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Alias for <code><a class="el" href="classcoveo_1_1enumerable_1_1iterator.html" title="Iterator for elements in the sequence.">coveo::enumerable::iterator</a></code>. Provided because even though <code>begin()</code> and <code>end()</code> are already <code>const</code>, some generic code might want to use <code>const_iterator</code>. </p>
+<p>Alias for <code><a class="el" href="classcoveo_1_1enumerable_1_1iterator.html" title="Iterator for elements in the sequence.">coveo::enumerable::iterator</a></code>. Provided because even though <code><a class="el" href="classcoveo_1_1enumerable.html#a5d865e016012ce7f793e14205911be92" title="Iterator to beginning of sequence.">begin()</a></code> and <code><a class="el" href="classcoveo_1_1enumerable.html#ab1270f19e893477e2176a567be787308" title="Iterator to end of sequence.">end()</a></code> are already <code>const</code>, some generic code might want to use <code>const_iterator</code>. </p>
+
+</div>
+</div>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="ae475f4103c11ec845cdbd6a9ce724ab0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae475f4103c11ec845cdbd6a9ce724ab0">&#9670;&nbsp;</a></span>enumerable() <span class="overload">[1/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcoveo_1_1enumerable.html">coveo::enumerable</a>&lt; T &gt;::<a class="el" href="classcoveo_1_1enumerable.html">enumerable</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Default constructor. Wraps an empty sequence.</p>
+<p>Using this constructor is equivalent to calling <code><a class="el" href="classcoveo_1_1enumerable.html#acb57adb225af6d3fe21b7cc780290b75" title="Returns enumerable over empty sequence.">empty()</a></code>.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classcoveo_1_1enumerable.html#acb57adb225af6d3fe21b7cc780290b75" title="Returns enumerable over empty sequence.">empty()</a> </dd></dl>
+
+</div>
+</div>
+<a id="a669ab7040d1c462659fdb6e72e2a71cf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a669ab7040d1c462659fdb6e72e2a71cf">&#9670;&nbsp;</a></span>enumerable() <span class="overload">[2/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+<div class="memtemplate">
+template&lt;typename F , typename _S  = std::nullptr_t, typename  = typename std::enable_if&lt;!is_enumerable&lt;typename std::decay&lt;F&gt;::type&gt;::value &amp;&amp;                                                (!detail::has_begin&lt;typename std::decay&lt;F&gt;::type&gt;::value ||                                                 !detail::has_end&lt;typename std::decay&lt;F&gt;::type&gt;::value ||                                                 !detail::has_size_const_method&lt;typename std::decay&lt;F&gt;::type&gt;::value), void&gt;::type&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcoveo_1_1enumerable.html">coveo::enumerable</a>&lt; T &gt;::<a class="el" href="classcoveo_1_1enumerable.html">enumerable</a> </td>
+          <td>(</td>
+          <td class="paramtype">F &amp;&amp;&#160;</td>
+          <td class="paramname"><em>next</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">_S &amp;&amp;&#160;</td>
+          <td class="paramname"><em>siz</em> = <code>nullptr</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Constructor that accepts a <code><a class="el" href="classcoveo_1_1enumerable.html#aeac0c2d2f62ae2d15313f960af7f6ef1" title="Delegate to fetch next element.">coveo::enumerable::next_delegate</a></code> as well as an optional <code><a class="el" href="classcoveo_1_1enumerable.html#a5a46440b2627e28f2530e9f529703ba8" title="Delegate to fetch sequence size.">coveo::enumerable::size_delegate</a></code>. The <em>next delegate</em> is used to fetch the elements to return during iteration. The <em>size delegate</em>, if provided, will be called to know the <code><a class="el" href="classcoveo_1_1enumerable.html#a027835aabbfafd8b4362b9a7dd3690b5" title="Size of sequence.">size()</a></code> of the sequence.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">next</td><td>Function object to use as next delegate. </td></tr>
+    <tr><td class="paramname">siz</td><td>Optional function object to use as size delegate. Defaults to <code>nullptr</code>. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classcoveo_1_1enumerable.html#aeac0c2d2f62ae2d15313f960af7f6ef1" title="Delegate to fetch next element.">coveo::enumerable::next_delegate</a> </dd>
+<dd>
+<a class="el" href="classcoveo_1_1enumerable.html#a5a46440b2627e28f2530e9f529703ba8" title="Delegate to fetch sequence size.">coveo::enumerable::size_delegate</a> </dd>
+<dd>
+<a class="el" href="classcoveo_1_1enumerable.html#a027835aabbfafd8b4362b9a7dd3690b5" title="Size of sequence.">size()</a> </dd>
+<dd>
+<a class="el" href="classcoveo_1_1enumerable.html#af28795993b2e73129d2a87213a566b45" title="Determines if size() is fast.">has_fast_size()</a> </dd></dl>
+
+</div>
+</div>
+<a id="a95b52309d076198f09578bb8411073d8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a95b52309d076198f09578bb8411073d8">&#9670;&nbsp;</a></span>enumerable() <span class="overload">[3/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+<div class="memtemplate">
+template&lt;typename C , typename  = typename std::enable_if&lt;!is_enumerable&lt;typename std::decay&lt;C&gt;::type&gt;::value &amp;&amp;                                                detail::has_begin&lt;typename std::decay&lt;C&gt;::type&gt;::value &amp;&amp;                                                detail::has_end&lt;typename std::decay&lt;C&gt;::type&gt;::value &amp;&amp;                                                detail::has_size_const_method&lt;typename std::decay&lt;C&gt;::type&gt;::value, void&gt;::type&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcoveo_1_1enumerable.html">coveo::enumerable</a>&lt; T &gt;::<a class="el" href="classcoveo_1_1enumerable.html">enumerable</a> </td>
+          <td>(</td>
+          <td class="paramtype">C &amp;&amp;&#160;</td>
+          <td class="paramname"><em>cnt</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Constructor that wraps a container. The container must have the following methods to be accepted by this constructor:</p>
+<ul>
+<li><code>begin</code> (or a specialization of <code>std::begin()</code>)</li>
+<li><code>end</code> (or a specialization of <code>std::end()</code>)</li>
+<li><code>size</code> (must be a <code>const</code> method)</li>
+</ul>
+<p>The container will be wrapped in the enumerable, either by keeping a reference to it or by storing it internally, depending on how the container is passed to the method (if it is <code>move</code>d, it will be stored internally).</p>
+<p>Using this constructor is equivalent to calling <code><a class="el" href="classcoveo_1_1enumerable.html#a57b61f22a746f8224ad328c70672eaec" title="Returns enumerable over container&#39;s sequence (stored externally).">for_container()</a></code>. It is provided implicitely so that it is possible to call a function declared as accepting a <code><a class="el" href="classcoveo_1_1enumerable.html" title="Type-erased sequence wrapper.">coveo::enumerable</a></code> with a container instance directly.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">cnt</td><td>Container to wrap. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classcoveo_1_1enumerable.html#a57b61f22a746f8224ad328c70672eaec" title="Returns enumerable over container&#39;s sequence (stored externally).">for_container()</a> </dd></dl>
+
+</div>
+</div>
+<a id="af9deb0a07ab56866b8f88c902f048098"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af9deb0a07ab56866b8f88c902f048098">&#9670;&nbsp;</a></span>enumerable() <span class="overload">[4/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+<div class="memtemplate">
+template&lt;typename U , typename  = typename std::enable_if&lt;!std::is_const&lt;U&gt;::value &amp;&amp;                                                std::is_same&lt;T, typename std::add_const&lt;U&gt;::type&gt;::value, void&gt;::type&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcoveo_1_1enumerable.html">coveo::enumerable</a>&lt; T &gt;::<a class="el" href="classcoveo_1_1enumerable.html">enumerable</a> </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcoveo_1_1enumerable.html">enumerable</a>&lt; U &gt;&#160;</td>
+          <td class="paramname"><em>e</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Constructor that creates an enumerable over <code>const</code> elements from an enumerable over non-<code>const</code> elements of the same type. Allows implicit non-<code>const</code> to <code>const</code> conversion.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">e</td><td><code><a class="el" href="classcoveo_1_1enumerable.html" title="Type-erased sequence wrapper.">coveo::enumerable</a></code> to convert. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a34919be6e82b09b8e5eb805fc02817a8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a34919be6e82b09b8e5eb805fc02817a8">&#9670;&nbsp;</a></span>operator=()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+<div class="memtemplate">
+template&lt;typename U , typename  = typename std::enable_if&lt;!std::is_const&lt;U&gt;::value &amp;&amp;                                                std::is_same&lt;T, typename std::add_const&lt;U&gt;::type&gt;::value, void&gt;::type&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcoveo_1_1enumerable.html">enumerable</a>&amp; <a class="el" href="classcoveo_1_1enumerable.html">coveo::enumerable</a>&lt; T &gt;::operator= </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcoveo_1_1enumerable.html">enumerable</a>&lt; U &gt;&#160;</td>
+          <td class="paramname"><em>e</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Assignment operator that allows an enumerable over non-<code>const</code> elements to be assigned to an enumerable over <code>const</code> elements of the same type. Allows non-<code>const</code> to <code>const</code> conversion.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">e</td><td><code><a class="el" href="classcoveo_1_1enumerable.html" title="Type-erased sequence wrapper.">coveo::enumerable</a></code> to convert. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Reference to <code>this</code> enumerable. </dd></dl>
+
+</div>
+</div>
+<a id="a5d865e016012ce7f793e14205911be92"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5d865e016012ce7f793e14205911be92">&#9670;&nbsp;</a></span>begin()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcoveo_1_1enumerable_1_1iterator.html">iterator</a> <a class="el" href="classcoveo_1_1enumerable.html">coveo::enumerable</a>&lt; T &gt;::begin </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Returns a <code><a class="el" href="classcoveo_1_1enumerable_1_1iterator.html" title="Iterator for elements in the sequence.">coveo::enumerable::iterator</a></code> pointing at the beginning of the sequence. Together with <code><a class="el" href="classcoveo_1_1enumerable.html#ab1270f19e893477e2176a567be787308" title="Iterator to end of sequence.">end()</a></code>, it can be used to enumerate the elements in the sequence.</p>
+<p>The iterator allows the elements to be modified if the enumerable's type <code>T</code> is not <code>const</code>.</p>
+<dl class="section return"><dt>Returns</dt><dd><code>iterator</code> to beginning of sequence. </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classcoveo_1_1enumerable.html#ab1270f19e893477e2176a567be787308" title="Iterator to end of sequence.">end()</a> </dd></dl>
+
+</div>
+</div>
+<a id="a2ed36907a2d22c9494e66003145115a3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2ed36907a2d22c9494e66003145115a3">&#9670;&nbsp;</a></span>cbegin()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcoveo_1_1enumerable_1_1iterator.html">iterator</a> <a class="el" href="classcoveo_1_1enumerable.html">coveo::enumerable</a>&lt; T &gt;::cbegin </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Since this class is immutable, calling this is equivalent to calling <code><a class="el" href="classcoveo_1_1enumerable.html#a5d865e016012ce7f793e14205911be92" title="Iterator to beginning of sequence.">begin()</a></code>.</p>
+<dl class="section return"><dt>Returns</dt><dd><code>iterator</code> to beginning of sequence. </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classcoveo_1_1enumerable.html#a5d865e016012ce7f793e14205911be92" title="Iterator to beginning of sequence.">begin()</a> </dd>
+<dd>
+<a class="el" href="classcoveo_1_1enumerable.html#ad9880db5138a06364ca4db87b034304f" title="Alias for end().">cend()</a> </dd></dl>
+
+</div>
+</div>
+<a id="ab1270f19e893477e2176a567be787308"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab1270f19e893477e2176a567be787308">&#9670;&nbsp;</a></span>end()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcoveo_1_1enumerable_1_1iterator.html">iterator</a> <a class="el" href="classcoveo_1_1enumerable.html">coveo::enumerable</a>&lt; T &gt;::end </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Returns a <code><a class="el" href="classcoveo_1_1enumerable_1_1iterator.html" title="Iterator for elements in the sequence.">coveo::enumerable::iterator</a></code> pointing at the end of the sequence. Together with <code><a class="el" href="classcoveo_1_1enumerable.html#a5d865e016012ce7f793e14205911be92" title="Iterator to beginning of sequence.">begin()</a></code>, it can be used to enumerable the elements in the sequence.</p>
+<dl class="section return"><dt>Returns</dt><dd><code>iterator</code> to end of sequence. </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classcoveo_1_1enumerable.html#a5d865e016012ce7f793e14205911be92" title="Iterator to beginning of sequence.">begin()</a> </dd></dl>
+
+</div>
+</div>
+<a id="ad9880db5138a06364ca4db87b034304f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad9880db5138a06364ca4db87b034304f">&#9670;&nbsp;</a></span>cend()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcoveo_1_1enumerable_1_1iterator.html">iterator</a> <a class="el" href="classcoveo_1_1enumerable.html">coveo::enumerable</a>&lt; T &gt;::cend </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Since this class is immutable, calling this is equivalent to calling <code><a class="el" href="classcoveo_1_1enumerable.html#ab1270f19e893477e2176a567be787308" title="Iterator to end of sequence.">end()</a></code>.</p>
+<dl class="section return"><dt>Returns</dt><dd><code>iterator</code> to end of sequence. </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classcoveo_1_1enumerable.html#ab1270f19e893477e2176a567be787308" title="Iterator to end of sequence.">end()</a> </dd>
+<dd>
+<a class="el" href="classcoveo_1_1enumerable.html#a2ed36907a2d22c9494e66003145115a3" title="Alias for begin().">cbegin()</a> </dd></dl>
+
+</div>
+</div>
+<a id="af28795993b2e73129d2a87213a566b45"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af28795993b2e73129d2a87213a566b45">&#9670;&nbsp;</a></span>has_fast_size()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classcoveo_1_1enumerable.html">coveo::enumerable</a>&lt; T &gt;::has_fast_size </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Method that can be used to know if this <code>enumerable</code> has a <code><a class="el" href="classcoveo_1_1enumerable.html#a5a46440b2627e28f2530e9f529703ba8" title="Delegate to fetch sequence size.">coveo::enumerable::size_delegate</a></code>. If so, calling <code><a class="el" href="classcoveo_1_1enumerable.html#a027835aabbfafd8b4362b9a7dd3690b5" title="Size of sequence.">size()</a></code> should be reasonably fast; otherwise, <code><a class="el" href="classcoveo_1_1enumerable.html#a027835aabbfafd8b4362b9a7dd3690b5" title="Size of sequence.">size()</a></code> will have to iterate over the entire sequence in order to return a result.</p>
+<dl class="section return"><dt>Returns</dt><dd><code>true</code> if <code><a class="el" href="classcoveo_1_1enumerable.html#a027835aabbfafd8b4362b9a7dd3690b5" title="Size of sequence.">size()</a></code> should be reasonably fast. </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classcoveo_1_1enumerable.html#a027835aabbfafd8b4362b9a7dd3690b5" title="Size of sequence.">size()</a> </dd></dl>
+
+</div>
+</div>
+<a id="a027835aabbfafd8b4362b9a7dd3690b5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a027835aabbfafd8b4362b9a7dd3690b5">&#9670;&nbsp;</a></span>size()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::size_t <a class="el" href="classcoveo_1_1enumerable.html">coveo::enumerable</a>&lt; T &gt;::size </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Returns the number of elements in the sequence. If this <code>enumerable</code> has a <code><a class="el" href="classcoveo_1_1enumerable.html#a5a46440b2627e28f2530e9f529703ba8" title="Delegate to fetch sequence size.">coveo::enumerable::size_delegate</a></code>, it will be used to fetch the information; otherwise, a more lenghty process is used (e.g., using <code>std::distance()</code>, which forces the iteration over the entire sequence).</p>
+<dl class="section return"><dt>Returns</dt><dd>Number of elements in the sequence. </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classcoveo_1_1enumerable.html#af28795993b2e73129d2a87213a566b45" title="Determines if size() is fast.">has_fast_size()</a> </dd></dl>
+
+</div>
+</div>
+<a id="aae2fbc9dbb48b5ae1e5d15fca4a2e065"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aae2fbc9dbb48b5ae1e5d15fca4a2e065">&#9670;&nbsp;</a></span>as_const()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto <a class="el" href="classcoveo_1_1enumerable.html">coveo::enumerable</a>&lt; T &gt;::as_const </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const -&gt; <a class="el" href="classcoveo_1_1enumerable.html">enumerable</a>&lt;typename std::add_const&lt;T&gt;::type&gt; </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Returns a copy of this <code>enumerable</code>, but iterating over <code>const</code> elements. Can be used to explicitely perform a non-<code>const</code> to <code>const</code> conversion.</p>
+<dl class="section return"><dt>Returns</dt><dd><code>enumerable</code> over <code>const</code> elements. </dd></dl>
+
+</div>
+</div>
+<a id="acb57adb225af6d3fe21b7cc780290b75"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acb57adb225af6d3fe21b7cc780290b75">&#9670;&nbsp;</a></span>empty()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="classcoveo_1_1enumerable.html">enumerable</a>&lt;T&gt; <a class="el" href="classcoveo_1_1enumerable.html">coveo::enumerable</a>&lt; T &gt;::empty </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Static method that returns a <code><a class="el" href="classcoveo_1_1enumerable.html" title="Type-erased sequence wrapper.">coveo::enumerable</a></code> over an empty sequence. Equivalent to using the default constructor.</p>
+<dl class="section return"><dt>Returns</dt><dd><code>enumerable</code> over empty sequence. </dd></dl>
+
+</div>
+</div>
+<a id="ac501a83d63fd5bed1a2e72df4a2ce589"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac501a83d63fd5bed1a2e72df4a2ce589">&#9670;&nbsp;</a></span>for_one()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+<div class="memtemplate">
+template&lt;typename U &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="classcoveo_1_1enumerable.html">enumerable</a>&lt;T&gt; <a class="el" href="classcoveo_1_1enumerable.html">coveo::enumerable</a>&lt; T &gt;::for_one </td>
+          <td>(</td>
+          <td class="paramtype">U &amp;&amp;&#160;</td>
+          <td class="paramname"><em>obj</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Static method that returns a <code><a class="el" href="classcoveo_1_1enumerable.html" title="Type-erased sequence wrapper.">coveo::enumerable</a></code> over a sequence of one element. The <code>enumerable</code> will store the element internally, moving it if possible.</p>
+<p>In order to auto-discover the enumerable's type, use <code><a class="el" href="seq_2enumerable_8h.html#a32f6db3c165592bc9ed3b7a249c8edd7" title="Returns enumerable over sequence of one element (stored internally).">coveo::enumerate_one()</a></code>.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">obj</td><td>Object to store as the sequence's only element. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>enumerable</code> over sequence of one element. </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="seq_2enumerable_8h.html#a32f6db3c165592bc9ed3b7a249c8edd7" title="Returns enumerable over sequence of one element (stored internally).">coveo::enumerate_one()</a> </dd></dl>
+
+</div>
+</div>
+<a id="ace414a483a7f5cef42f436a281f2c004"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ace414a483a7f5cef42f436a281f2c004">&#9670;&nbsp;</a></span>for_one_ref()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="classcoveo_1_1enumerable.html">enumerable</a>&lt;T&gt; <a class="el" href="classcoveo_1_1enumerable.html">coveo::enumerable</a>&lt; T &gt;::for_one_ref </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcoveo_1_1enumerable.html#ab0e11b8ab1b63b938f2ebd6ed26858de">reference</a>&#160;</td>
+          <td class="paramname"><em>obj</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Static method that returns a <code><a class="el" href="classcoveo_1_1enumerable.html" title="Type-erased sequence wrapper.">coveo::enumerable</a></code> over a sequence of one element. The <code>enumerable</code> will only store a reference to the element.</p>
+<p>In order to auto-discover the enumerable's type, use <code><a class="el" href="seq_2enumerable_8h.html#aebdbc22341304234156591d5241fdd1d" title="Returns enumerable over sequence of one element (stored externally).">coveo::enumerate_one_ref()</a></code>.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">obj</td><td>Object to use as the sequence's only element. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>enumerable</code> over sequence of one element. </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="seq_2enumerable_8h.html#aebdbc22341304234156591d5241fdd1d" title="Returns enumerable over sequence of one element (stored externally).">coveo::enumerate_one_ref()</a> </dd></dl>
+
+</div>
+</div>
+<a id="a87cdf23538a5ac57711f2eb0e5f8639f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a87cdf23538a5ac57711f2eb0e5f8639f">&#9670;&nbsp;</a></span>for_range()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+<div class="memtemplate">
+template&lt;typename It &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="classcoveo_1_1enumerable.html">enumerable</a>&lt;T&gt; <a class="el" href="classcoveo_1_1enumerable.html">coveo::enumerable</a>&lt; T &gt;::for_range </td>
+          <td>(</td>
+          <td class="paramtype">It&#160;</td>
+          <td class="paramname"><em>ibeg</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">It&#160;</td>
+          <td class="paramname"><em>iend</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Static method that returns a <code><a class="el" href="classcoveo_1_1enumerable.html" title="Type-erased sequence wrapper.">coveo::enumerable</a></code> over a sequence bound by two iterators.</p>
+<p>In order to auto-discover the enumerable's type, use <code><a class="el" href="seq_2enumerable_8h.html#a2abce1019006685858b49bbcf324b033" title="Returns enumerable over sequence bound by iterators.">coveo::enumerate_range()</a></code>.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ibeg</td><td>Iterator pointing at beginning of range. </td></tr>
+    <tr><td class="paramname">iend</td><td>Iterator pointing at end of range. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>enumerable</code> over sequence bound by <code>[ibeg, iend[</code>. </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="seq_2enumerable_8h.html#a2abce1019006685858b49bbcf324b033" title="Returns enumerable over sequence bound by iterators.">coveo::enumerate_range()</a> </dd></dl>
+
+</div>
+</div>
+<a id="a57b61f22a746f8224ad328c70672eaec"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a57b61f22a746f8224ad328c70672eaec">&#9670;&nbsp;</a></span>for_container() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+<div class="memtemplate">
+template&lt;typename C &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="classcoveo_1_1enumerable.html">enumerable</a>&lt;T&gt; <a class="el" href="classcoveo_1_1enumerable.html">coveo::enumerable</a>&lt; T &gt;::for_container </td>
+          <td>(</td>
+          <td class="paramtype">C &amp;&#160;</td>
+          <td class="paramname"><em>cnt</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Static method that returns a <code><a class="el" href="classcoveo_1_1enumerable.html" title="Type-erased sequence wrapper.">coveo::enumerable</a></code> over a sequence stored in a container. Only a reference to the container is kept by the <code>enumerable</code>.</p>
+<p>In order to auto-discover the enumerable's type, use <code><a class="el" href="seq_2enumerable_8h.html#acb7d8f8ae5eee5e176add8f5c58727e5" title="Returns enumerable over container&#39;s sequence (stored internally).">coveo::enumerate_container()</a></code>.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">cnt</td><td>Container whose elements to wrap. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>enumerable</code> over sequence of elements from <code>cnt</code>. </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="seq_2enumerable_8h.html#acb7d8f8ae5eee5e176add8f5c58727e5" title="Returns enumerable over container&#39;s sequence (stored internally).">coveo::enumerate_container()</a> </dd></dl>
+
+</div>
+</div>
+<a id="a3ffab0fb0535c2a60d8f23acdc13f7b2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3ffab0fb0535c2a60d8f23acdc13f7b2">&#9670;&nbsp;</a></span>for_container() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+<div class="memtemplate">
+template&lt;typename C , typename  = typename std::enable_if&lt;!std::is_reference&lt;C&gt;::value, void&gt;::type&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="classcoveo_1_1enumerable.html">enumerable</a>&lt;T&gt; <a class="el" href="classcoveo_1_1enumerable.html">coveo::enumerable</a>&lt; T &gt;::for_container </td>
+          <td>(</td>
+          <td class="paramtype">C &amp;&amp;&#160;</td>
+          <td class="paramname"><em>cnt</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Static method that returns a <code><a class="el" href="classcoveo_1_1enumerable.html" title="Type-erased sequence wrapper.">coveo::enumerable</a></code> over a sequence stored in a container. The container is moved to the <code>enumerable</code> and stored internally.</p>
+<p>In order to auto-discover the enumerable's type, use <code><a class="el" href="seq_2enumerable_8h.html#acb7d8f8ae5eee5e176add8f5c58727e5" title="Returns enumerable over container&#39;s sequence (stored internally).">coveo::enumerate_container()</a></code>.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">cnt</td><td>Container to store in the enumerable. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>enumerable</code> over sequence of elements from <code>cnt</code>. </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="seq_2enumerable_8h.html#acb7d8f8ae5eee5e176add8f5c58727e5" title="Returns enumerable over container&#39;s sequence (stored internally).">coveo::enumerate_container()</a> </dd></dl>
+
+</div>
+</div>
+<a id="a833fbf04b9718d8882d9408a664a8865"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a833fbf04b9718d8882d9408a664a8865">&#9670;&nbsp;</a></span>for_array()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="classcoveo_1_1enumerable.html">enumerable</a>&lt;T&gt; <a class="el" href="classcoveo_1_1enumerable.html">coveo::enumerable</a>&lt; T &gt;::for_array </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcoveo_1_1enumerable.html#adbdeafed8fcaff6d4d90677f356afd99">pointer</a>&#160;</td>
+          <td class="paramname"><em>parr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>siz</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Static method that returns a <code><a class="el" href="classcoveo_1_1enumerable.html" title="Type-erased sequence wrapper.">coveo::enumerable</a></code> over a sequence stored in a dynamic array. Equivalent to using <code><a class="el" href="classcoveo_1_1enumerable.html#a87cdf23538a5ac57711f2eb0e5f8639f" title="Returns enumerable over sequence bound by iterators.">for_range()</a></code> without using pointer arithmetic.</p>
+<p>In order to auto-discover the enumerable's type, use <code><a class="el" href="seq_2enumerable_8h.html#a522ccab091d0c3bf3e1e2af4cb5bd131" title="Returns enumerable over array&#39;s sequence.">coveo::enumerate_array()</a></code>.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">parr</td><td>Pointer to beginning of array. </td></tr>
+    <tr><td class="paramname">siz</td><td>Size of array. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>enumerable</code> over sequence in array. </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="seq_2enumerable_8h.html#a522ccab091d0c3bf3e1e2af4cb5bd131" title="Returns enumerable over array&#39;s sequence.">coveo::enumerate_array()</a> </dd></dl>
 
 </div>
 </div>
@@ -318,7 +1029,7 @@ template&lt;typename T&gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Feb 14 2019 00:45:50 for coveo::linq by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Feb 15 2019 22:43:57 for coveo::linq by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>

@@ -35,8 +35,17 @@ namespace coveo {
 namespace linq {
 namespace detail {
 
-// Proxy comparator that references an external predicate.
-// Allows instances of lambdas to be used as predicates for sets, for instance.
+/**
+ * @internal
+ * @brief Proxy comparator.
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Comparator that keeps a pointer to another comparator and uses it
+ * to implement <tt>operator()()</tt>. Allows instances of lambdas to be
+ * used as predicates for <tt>set</tt>s, for instance.
+ *
+ * @tparam Pred Type of predicate to proxy.
+ */
 template<typename Pred>
 class proxy_cmp
 {
@@ -53,8 +62,16 @@ public:
     }
 };
 
-// Comparator that receives pointers to elements and
-// dereferences them, then calls another predicate.
+/**
+ * @internal
+ * @brief Dereferencing comparator.
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Comparator that receives pointers to elements to compare,
+ * dereferences them and calls another predicate.
+ *
+ * @tparam Type of predicate to call with dereferenced pointers.
+ */
 template<typename Pred>
 class deref_cmp
 {
@@ -71,8 +88,17 @@ public:
     }
 };
 
-// Selector implementation that can be used with some operators
-// that return an element and its index, when the index is not needed.
+/**
+ * @internal
+ * @brief Indexless proxy selector.
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Selector that can be used with operators that pass an element
+ * and its index, when the index is not needed. Will simply drop
+ * the index and call another selector with the element.
+ *
+ * @tparam Type of selector to call with element only.
+ */
 template<typename Selector>
 class indexless_selector_proxy
 {
@@ -89,9 +115,19 @@ public:
     }
 };
 
-// Next delegate implementation that takes a sequence of pointers
-// and fronts a sequence of references by dereferencing said pointers.
-// Meant to be used to construct enumerables.
+/**
+ * @internal
+ * @brief Dereferencing next delegate implementation.
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Implementation of a <tt>coveo::enumerable::next_delegate</tt>
+ * that takes a sequence of pointers and returns references by
+ * dereferencing said pointers. Meant to be used to construct
+ * <tt>coveo::enumerable</tt>s.
+ *
+ * @tparam Seq Type of sequence containing pointers to wrap.
+ * @see coveo::linq::detail::make_deref_next_impl()
+ */
 template<typename Seq>
 class deref_next_impl
 {
@@ -131,12 +167,34 @@ public:
         return pobj;
     }
 };
+
+/// @cond
+
+/**
+ * @internal
+ * @brief Helper to create dereferencing next delegates.
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Helper function to create instances of <tt>coveo::linq::detail::deref_next_impl</tt>.
+ * Allows easier creation by deducing the sequence type.
+ *
+ * @tparam Seq Type of sequence containing pointers to wrap.
+ * @see coveo::linq::detail::deref_next_impl
+ */
 template<typename Seq>
 auto make_deref_next_impl(Seq&& seq) -> deref_next_impl<Seq> {
     return deref_next_impl<Seq>(std::forward<Seq>(seq));
 }
 
-// Transparent predicate that returns values unmodified.
+/// @endcond
+
+/**
+ * @internal
+ * @brief Identity unary predicate.
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Transparent unary predictate that returns values unmodified.
+ */
 template<typename = void>
 struct identity {
     template<typename T>
@@ -145,7 +203,13 @@ struct identity {
     }
 };
 
-// Transparent binary predicate that returns a pair of its two arguments.
+/**
+ * @internal
+ * @brief Pair-creating binary predicate.
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Transparent binary predictate that returns pairs of its two arguments.
+ */
 template<typename = void>
 struct pair_of {
     template<typename T, typename U>
@@ -154,7 +218,14 @@ struct pair_of {
     }
 };
 
-// Transparent implementations of less and greater, like those in C++14.
+/**
+ * @internal
+ * @brief Less-than predicate.
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Transparent less-than binary predicate, like
+ * <tt>std::less</tt> from C++14.
+ */
 template<typename = void>
 struct less {
     template<typename T, typename U>
@@ -162,6 +233,15 @@ struct less {
         return std::forward<T>(left) < std::forward<U>(right);
     }
 };
+
+/**
+ * @internal
+ * @brief Greater-than predicate.
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Transparent greater-than binary predicate, like
+ * <tt>std::greater</tt> from C++14.
+ */
 template<typename = void>
 struct greater {
     template<typename T, typename U>
@@ -170,13 +250,37 @@ struct greater {
     }
 };
 
-// Creates an object and stores it in a unique_ptr, like std::make_unique from C++14.
+/// @cond
+
+/**
+ * @internal
+ * @brief Helper to create <tt>std::unique_ptr</tt>s.
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Creates an object and stores it in a <tt>std::unique_ptr</tt>.
+ * Like <tt>std::make_unique()</tt> from C++14.
+ *
+ * @tparam T Type of object to store in the @c unique_ptr.
+ * @tparam Args Arguments to forward to the constructor of @c T.
+ */
 template<typename T, typename... Args>
 auto make_unique(Args&&... args) -> std::unique_ptr<T> {
     return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
 }
 
-// Implementation of aggregate operator (version with aggregate function only).
+/// @endcond
+
+/**
+ * @internal
+ * @brief <tt>coveo::linq::aggregate()</tt> implementation (1).
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Implementation of the <tt>coveo::linq::aggregate()</tt> LINQ operator.
+ * Version with a single argument (aggregate function).
+ *
+ * @tparam F Type of function to aggregate the values.
+ * @see coveo::linq::aggregate()
+ */
 template<typename F>
 class aggregate_impl_1
 {
@@ -202,7 +306,18 @@ public:
     }
 };
 
-// Implementation of aggregate operator (version with aggregate function and initial value).
+/**
+ * @internal
+ * @brief <tt>coveo::linq::aggregate()</tt> implementation (2).
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Implementation of the <tt>coveo::linq::aggregate()</tt> LINQ operator.
+ * Version with two arguments (initial value and aggregate function).
+ *
+ * @tparam Acc Type of aggregate value.
+ * @tparam F Type of function to aggregate the values.
+ * @see coveo::linq::aggregate()
+ */
 template<typename Acc, typename F>
 class aggregate_impl_2
 {
@@ -224,7 +339,20 @@ public:
     }
 };
 
-// Implementation of aggregate operator (version with result function).
+/**
+ * @internal
+ * @brief <tt>coveo::linq::aggregate()</tt> implementation (3).
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Implementation of the <tt>coveo::linq::aggregate()</tt> LINQ operator.
+ * Version with three arguments (initial value, aggregate function and
+ * result function).
+ *
+ * @tparam Acc Type of aggregate value.
+ * @tparam F Type of function to aggregate the values.
+ * @tparam RF Type of function called to produce final result from aggregate.
+ * @see coveo::linq::aggregate()
+ */
 template<typename Acc, typename F, typename RF>
 class aggregate_impl_3 : public aggregate_impl_2<Acc, F>
 {
@@ -241,7 +369,16 @@ public:
     }
 };
 
-// Implementation of all operator.
+/**
+ * @internal
+ * @brief <tt>coveo::linq::all()</tt> implementation.
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Implementation of the <tt>coveo::linq::all()</tt> LINQ operator.
+ *
+ * @tparam Pred Predicate used on sequence elements.
+ * @see coveo::linq::all()
+ */
 template<typename Pred>
 class all_impl
 {

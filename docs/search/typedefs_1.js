@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['iterator_5ftype',['iterator_type',['../structcoveo_1_1seq__traits.html#ab6b3a5cd4263ae0168e54fbcae3e9776',1,'coveo::seq_traits']]]
+  ['difference_5ftype',['difference_type',['../classcoveo_1_1enumerable_1_1iterator.html#ab7c36fc19595d9a0f11af37a3044cf74',1,'coveo::enumerable::iterator']]]
 ];

@@ -173,7 +173,7 @@ template&lt;typename C , typename Seq &gt; </div>
 </div><div class="memdoc">
 <p>Attempts to <code>reserve</code> space in container <code>cnt</code> to hold as many elements as found in sequence <code>seq</code>. This is performed only if it's possible to do so "quickly".</p>
 <ul>
-<li>If <code>seq</code> is a <code><a class="el" href="classcoveo_1_1enumerable.html" title="Type-erased sequence wrapper.">coveo::enumerable</a></code>, space is reserved by using its <code>coveo::enumerable::size()</code> method if <code>coveo::enumerable::has_fast_size()</code> returns <code>true</code>.</li>
+<li>If <code>seq</code> is a <code><a class="el" href="classcoveo_1_1enumerable.html" title="Type-erased sequence wrapper.">coveo::enumerable</a></code>, space is reserved by using its <code><a class="el" href="classcoveo_1_1enumerable.html#a027835aabbfafd8b4362b9a7dd3690b5" title="Size of sequence.">coveo::enumerable::size()</a></code> method if <code><a class="el" href="classcoveo_1_1enumerable.html#af28795993b2e73129d2a87213a566b45" title="Determines if size() is fast.">coveo::enumerable::has_fast_size()</a></code> returns <code>true</code>.</li>
 <li>If <code>seq</code> is a container with a <code>size()</code> method, space is reserved by using that method.</li>
 <li>If <code>seq</code> is a sequence that uses random-access iterators, space is reserved by using <code>std::distance()</code>.</li>
 <li>Otherwise, space is not reserved.</li>
@@ -210,7 +210,7 @@ template&lt;typename Seq &gt; </div>
 </div><div class="memdoc">
 <p>Attempts to create a <code><a class="el" href="classcoveo_1_1enumerable.html#a5a46440b2627e28f2530e9f529703ba8" title="Delegate to fetch sequence size.">coveo::enumerable::size_delegate</a></code> that can quickly calculate the number of elements found in sequence <code>seq</code>. A size delegate is returned only if it's possible to calculate the number of elements "quickly".</p>
 <ul>
-<li>If <code>seq</code> is a <code><a class="el" href="classcoveo_1_1enumerable.html" title="Type-erased sequence wrapper.">coveo::enumerable</a></code>, its <code>coveo::enumerable::size()</code> method is used to produce the size delegate if <code>coveo::enumerable::has_fast_size()</code> returns <code>true</code>.</li>
+<li>If <code>seq</code> is a <code><a class="el" href="classcoveo_1_1enumerable.html" title="Type-erased sequence wrapper.">coveo::enumerable</a></code>, its <code><a class="el" href="classcoveo_1_1enumerable.html#a027835aabbfafd8b4362b9a7dd3690b5" title="Size of sequence.">coveo::enumerable::size()</a></code> method is used to produce the size delegate if <code><a class="el" href="classcoveo_1_1enumerable.html#af28795993b2e73129d2a87213a566b45" title="Determines if size() is fast.">coveo::enumerable::has_fast_size()</a></code> returns <code>true</code>.</li>
 <li>If <code>seq</code> is a container with a <code>size()</code> method, a size delegate is produced using that method.</li>
 <li>If <code>seq</code> is a sequence that uses random-access iterators, a size delegate is produced by using <code>std::distance()</code>.</li>
 <li>Otherwise, no size delegate is produced.</li>
@@ -229,7 +229,7 @@ template&lt;typename Seq &gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Feb 14 2019 00:45:50 for coveo::linq by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Feb 15 2019 22:43:57 for coveo::linq by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>

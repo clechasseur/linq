@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['value_5ftype',['value_type',['../classcoveo_1_1enumerable.html#ac745849a61dc02e37399d227e2247790',1,'coveo::enumerable::value_type()'],['../structcoveo_1_1seq__element__traits.html#ab63386b3554c084783a8bd6b8f2a744d',1,'coveo::seq_element_traits::value_type()']]]
+  ['pointer',['pointer',['../classcoveo_1_1enumerable.html#adbdeafed8fcaff6d4d90677f356afd99',1,'coveo::enumerable::pointer()'],['../classcoveo_1_1enumerable_1_1iterator.html#a7d92dfbf195ab852052fc041ddbd1693',1,'coveo::enumerable::iterator::pointer()'],['../structcoveo_1_1seq__element__traits.html#a39315f40fe94e2998b917ae6ac4fe946',1,'coveo::seq_element_traits::pointer()']]]
 ];
