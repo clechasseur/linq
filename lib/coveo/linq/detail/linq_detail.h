@@ -1928,7 +1928,16 @@ public:
     }
 };
 
-// Implementation of last operator (version without argument)
+/**
+ * @internal
+ * @brief <tt>coveo::linq::last()</tt> implementation (0).
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Implementation of the <tt>coveo::linq::last()</tt> LINQ operator.
+ * Version without argument.
+ *
+ * @see coveo::linq::last()
+ */
 template<typename = void>
 class last_impl_0
 {
@@ -1967,7 +1976,17 @@ public:
     }
 };
 
-// Implementation of last operator (version with predicate)
+/**
+ * @internal
+ * @brief <tt>coveo::linq::last()</tt> implementation (1).
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Implementation of the <tt>coveo::linq::last()</tt> LINQ operator.
+ * Version with predicate.
+ *
+ * @tparam Pred Predicate to satisfy.
+ * @see coveo::linq::last()
+ */
 template<typename Pred>
 class last_impl_1
 {
@@ -2022,7 +2041,16 @@ public:
     }
 };
 
-// Implementation of last_or_default operator (version without argument)
+/**
+ * @internal
+ * @brief <tt>coveo::linq::last_or_default()</tt> implementation (0).
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Implementation of the <tt>coveo::linq::last_or_default()</tt> LINQ operator.
+ * Version without argument.
+ *
+ * @see coveo::linq::last_or_default()
+ */
 template<typename = void>
 class last_or_default_impl_0
 {
@@ -2057,7 +2085,17 @@ public:
     }
 };
 
-// Implementation of last_or_default operator (version with predicate)
+/**
+ * @internal
+ * @brief <tt>coveo::linq::last_or_default()</tt> implementation (1).
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Implementation of the <tt>coveo::linq::last_or_default()</tt> LINQ operator.
+ * Version with predicate.
+ *
+ * @tparam Pred Predicate to satisfy.
+ * @see coveo::linq::last_or_default()
+ */
 template<typename Pred>
 class last_or_default_impl_1
 {
@@ -2101,7 +2139,16 @@ public:
     }
 };
 
-// Implementation of max operator (version without parameters).
+/**
+ * @internal
+ * @brief <tt>coveo::linq::max()</tt> implementation (0).
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Implementation of the <tt>coveo::linq::max()</tt> LINQ operator.
+ * Version without argument.
+ *
+ * @see coveo::linq::max()
+ */
 template<typename = void>
 class max_impl_0
 {
@@ -2117,12 +2164,22 @@ public:
     }
 };
 
-// Implementation of max operator (version with selector).
+/**
+ * @internal
+ * @brief <tt>coveo::linq::max()</tt> implementation (1).
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Implementation of the <tt>coveo::linq::max()</tt> LINQ operator.
+ * Version with value selector.
+ *
+ * @tparam Selector Selector used to fetch values from sequence elements.
+ * @see coveo::linq::max()
+ */
 template<typename Selector>
 class max_impl_1
 {
 private:
-    const Selector& sel_;   // Selector used to fetch values from sequence elements.
+    const Selector& sel_;
 
 public:
     explicit max_impl_1(const Selector& sel)
@@ -2143,7 +2200,16 @@ public:
     }
 };
 
-// Implementation of min operator (version without parameters).
+/**
+ * @internal
+ * @brief <tt>coveo::linq::min()</tt> implementation (0).
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Implementation of the <tt>coveo::linq::min()</tt> LINQ operator.
+ * Version without argument.
+ *
+ * @see coveo::linq::min()
+ */
 template<typename = void>
 class min_impl_0
 {
@@ -2159,7 +2225,17 @@ public:
     }
 };
 
-// Implementation of min operator (version with selector).
+/**
+ * @internal
+ * @brief <tt>coveo::linq::min()</tt> implementation (1).
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Implementation of the <tt>coveo::linq::min()</tt> LINQ operator.
+ * Version with value selector.
+ *
+ * @tparam Selector Selector used to fetch values from sequence elements.
+ * @see coveo::linq::min()
+ */
 template<typename Selector>
 class min_impl_1
 {
@@ -2185,7 +2261,15 @@ public:
     }
 };
 
-// Implementation of none operator.
+/**
+ * @internal
+ * @brief <tt>coveo::linq::none()</tt> implementation.
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Implementation of the <tt>coveo::linq::none()</tt> LINQ operator.
+ *
+ * @see coveo::linq::none()
+ */
 template<typename Pred>
 class none_impl
 {
@@ -2202,9 +2286,29 @@ public:
     }
 };
 
-// Implementation of a comparator using KeySelector and Pred.
-// Has an operator() that returns an int representing the comparison
-// between two objects (negative values means left is before right, etc.)
+/**
+ * @internal
+ * @brief <tt>coveo::linq::order_by()</tt> internal comparator.
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Comparator of sequence elements used by <tt>coveo::linq::order_by()</tt> et al.
+ * Fetches keys from sequence elements then compares them with a predicate.
+ * Its <tt>operator()()</tt> returns an @c int that represents the relationship
+ * between the elements (negative values mean left is before right, etc.)
+ *
+ * @tparam KeySelector Selector used to fetch keys from sequence elements.
+ * @tparam Pred Predicate used to compare the keys.
+ * @tparam Descending Whether we should order ascending or descending.
+ * @tparam _LessValue Value to use to compute ordering. Set automatically
+ *                    from the value of @c Descending.
+ * @see coveo::linq::order_by()
+ * @see coveo::linq::order_by_descending()
+ * @see coveo::linq::then_by()
+ * @see coveo::linq::then_by_descending()
+ * @see coveo::linq::detail::dual_order_by_comparator
+ * @see coveo::linq::detail::order_by_impl
+ * @see coveo::linq::detail::order_by_impl_with_seq
+ */
 template<typename KeySelector,
          typename Pred,
          bool Descending,
@@ -2241,14 +2345,31 @@ public:
     }
 };
 
-// Implementation of a comparator that calls two comparators in order.
-// If the first comparator returns 0, calls the second comparator.
+/**
+ * @internal
+ * @brief <tt>coveo::linq::order_by()</tt> internal dual comparator.
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Dual comparator used by <tt>coveo::linq::order_by()</tt> et al. Chains
+ * two comparators together: when <tt>operator()()</tt> is called, the
+ * first comparator is used; if it returns 0, the second one is used.
+ *
+ * @tparam Cmp1 First comparator to chain.
+ * @tparam Cmp2 Second comparator to chain.
+ * @see coveo::linq::order_by()
+ * @see coveo::linq::order_by_descending()
+ * @see coveo::linq::then_by()
+ * @see coveo::linq::then_by_descending()
+ * @see coveo::linq::detail::order_by_comparator
+ * @see coveo::linq::detail::order_by_impl
+ * @see coveo::linq::detail::order_by_impl_with_seq
+ */
 template<typename Cmp1, typename Cmp2>
 class dual_order_by_comparator
 {
 private:
-    std::unique_ptr<Cmp1> upcmp1_;  // First comparator called.
-    std::unique_ptr<Cmp2> upcmp2_;  // Second comparator called.
+    std::unique_ptr<Cmp1> upcmp1_;
+    std::unique_ptr<Cmp2> upcmp2_;
 
 public:
     dual_order_by_comparator(std::unique_ptr<Cmp1>&& upcmp1, std::unique_ptr<Cmp2>&& upcmp2)
@@ -2269,11 +2390,37 @@ public:
     }
 };
 
+/// @cond
+
 // Forward declaration to declare friendship
 template<typename Cmp> class order_by_impl;
 
-// Implementation of order_by/then_by operators.
-// This is the operator with a sequence.
+/// @endcond
+
+/**
+ * @internal
+ * @brief <tt>coveo::linq::order_by()</tt> et al implementation.
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * "Second" implementation of the <tt>coveo::linq::order_by()</tt>,
+ * <tt>coveo::linq::order_by_descending()</tt>, <tt>coveo::linq::then_by()</tt>
+ * and <tt>coveo::linq::then_by_descending()</tt> LINQ operators.
+ * This is the implementation that has both a comparator and a sequence.
+ * It is the final form when the operator is fully applied.
+ *
+ * Contrarily to all other LINQ operation implementations, this
+ * implementation cannot return a <tt>coveo::enumerable</tt>, because
+ * we need to keep our identity to allow chaining. Thus, we implement
+ * an @c enumerable "interface" manually by fronting the same methods.
+ *
+ * @tparam Seq Sequence to order.
+ * @tparam Cmp Comparator used to order sequence elements.
+ * @see coveo::linq::order_by()
+ * @see coveo::linq::order_by_descending()
+ * @see coveo::linq::then_by()
+ * @see coveo::linq::then_by_descending()
+ * @see coveo::linq::detail::order_by_impl
+ */
 template<typename Seq, typename Cmp>
 class order_by_impl_with_seq
 {
@@ -2356,8 +2503,30 @@ public:
     }
 };
 
-// Implementation of order_by/then_by operators.
-// This is the "initial" operator without a sequence, as returned by helper methods.
+/**
+ * @internal
+ * @brief <tt>coveo::linq::order_by()</tt> et al implementation.
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * "First" implementation of the <tt>coveo::linq::order_by()</tt>,
+ * <tt>coveo::linq::order_by_descending()</tt>, <tt>coveo::linq::then_by()</tt>
+ * and <tt>coveo::linq::then_by_descending()</tt> LINQ operators.
+ * This is the implementation with a comparator only; it is returned by
+ * the operator helper methods. It supports two operations: either being
+ * applied to a sequence, in which case it produces the "second" implementation
+ * (see <tt>coveo::linq::detail::order_by_impl_with_seq</tt>), or being
+ * applied to an @c order_by_impl_with_seq, in which case we chain the
+ * comparators.
+ *
+ * @tparam Cmp Comparator used to order sequence elements.
+ * @see coveo::linq::order_by()
+ * @see coveo::linq::order_by_descending()
+ * @see coveo::linq::then_by()
+ * @see coveo::linq::then_by_descending()
+ * @see coveo::linq::detail::order_by_impl_with_seq
+ * @see coveo::linq::detail::order_by_comparator
+ * @see coveo::linq::detail::dual_order_by_comparator
+ */
 template<typename Cmp>
 class order_by_impl
 {
@@ -2391,7 +2560,15 @@ public:
     }
 };
 
-// Implementation of reverse operator
+/**
+ * @internal
+ * @brief <tt>coveo::linq::reverse()</tt> implementation.
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Implementation of the <tt>coveo::linq::reverse()</tt> LINQ operator.
+ *
+ * @see coveo::linq::reverse()
+ */
 template<typename = void>
 class reverse_impl
 {
@@ -2528,7 +2705,18 @@ public:
     }
 };
 
-// Implementation of select and select_with_index operators
+/**
+ * @internal
+ * @brief <tt>coveo::linq::select()</tt> et al implementation.
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Implementation of the <tt>coveo::linq::select()</tt> and
+ * <tt>coveo::linq::select_with_index()</tt> LINQ operators.
+ *
+ * @tparam Selector Selector to transform sequence elements.
+ * @see coveo::linq::select()
+ * @see coveo::linq::select_with_index()
+ */
 template<typename Selector>
 class select_impl
 {
@@ -2539,7 +2727,7 @@ public:
     {
     private:
         // Iterator used by the sequence.
-        using iterator_type     = typename seq_traits<Seq>::iterator_type;
+        using iterator_type             = typename seq_traits<Seq>::iterator_type;
 
         // Containers storing transformed elements.
         using transformed_v             = std::vector<RU>;
@@ -2632,7 +2820,18 @@ public:
     }
 };
 
-// Implementation of select_many and select_many_with_index operators
+/**
+ * @internal
+ * @brief <tt>coveo::linq::select_many()</tt> et al implementation.
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Implementation of the <tt>coveo::linq::select_many()</tt> and
+ * <tt>coveo::linq::select_many_with_index</tt> LINQ operators.
+ *
+ * @tparam Selector Selector used to transform sequence elements.
+ * @see coveo::linq::select_many()
+ * @see coveo::linq::select_many_with_index()
+ */
 template<typename Selector>
 class select_many_impl
 {
@@ -2714,7 +2913,18 @@ public:
     }
 };
 
-// Implementation of sequence_equal operator (version with sequence only).
+/**
+ * @internal
+ * @brief <tt>coveo::linq::sequence_equal()</tt> implementation (1).
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Implementation of the <tt>coveo::linq::sequence_equal()</tt> LINQ operator.
+ * Version with one argument (second sequence).
+ *
+ * @tparam Seq2 Second sequence to compare. The first one will have been
+ *              provided in the call to <tt>coveo::linq::from()</tt>.
+ * @see coveo::linq::sequence_equal()
+ */
 template<typename Seq2>
 class sequence_equal_impl_1
 {
@@ -2739,7 +2949,19 @@ public:
     }
 };
 
-// Implementation of sequence_equal operator (version with predicate).
+/**
+ * @internal
+ * @brief <tt>coveo::linq::sequence_equal()</tt> implementation (2).
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Implementation of the <tt>coveo::linq::sequence_equal()</tt> LINQ operator.
+ * Version with two arguments (second sequence and predicate).
+ *
+ * @tparam Seq2 Second sequence to compare. The first one will have been
+ *              provided in the call to <tt>coveo::linq::from()</tt>.
+ * @tparam Pred Predicate used to compare sequence elements.
+ * @see coveo::linq::sequence_equal()
+ */
 template<typename Seq2, typename Pred>
 class sequence_equal_impl_2
 {
@@ -2765,7 +2987,16 @@ public:
     }
 };
 
-// Implementation of single operator (version without parameters).
+/**
+ * @internal
+ * @brief <tt>coveo::linq::single()</tt> implementation (0).
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Implementation of the <tt>coveo::linq::single()</tt> LINQ operator.
+ * Version without argument.
+ *
+ * @see coveo::linq::single()
+ */
 template<typename = void>
 class single_impl_0
 {
@@ -2786,7 +3017,17 @@ public:
     }
 };
 
-// Implementation of single operator (version with predicate).
+/**
+ * @internal
+ * @brief <tt>coveo::linq::single()</tt> implementation (1).
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Implementation of the <tt>coveo::linq::single()</tt> LINQ operator.
+ * Version with predicate.
+ *
+ * @tparam Predicate to satisfy.
+ * @see coveo::linq::single()
+ */
 template<typename Pred>
 class single_impl_1
 {
@@ -2818,7 +3059,16 @@ public:
     }
 };
 
-// Implementation of single_or_default operator (version without parameters).
+/**
+ * @internal
+ * @brief <tt>coveo::linq::single_or_default()</tt> implementation (0).
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Implementation of the <tt>coveo::linq::single_or_default()</tt> LINQ operator.
+ * Version without argument.
+ *
+ * @see coveo::linq::single_or_default()
+ */
 template<typename = void>
 class single_or_default_impl_0
 {
@@ -2839,7 +3089,17 @@ public:
     }
 };
 
-// Implementation of single_or_default operator (version with predicate).
+/**
+ * @internal
+ * @brief <tt>coveo::linq::single_or_default()</tt> implementation (1).
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Implementation of the <tt>coveo::linq::single_or_default()</tt> LINQ operator.
+ * Version with predicate.
+ *
+ * @tparam Pred Predicate to satisfy.
+ * @see coveo::linq::single_or_default()
+ */
 template<typename Pred>
 class single_or_default_impl_1
 {
@@ -2867,7 +3127,17 @@ public:
     }
 };
 
-// Predicate implementation used by skip operator
+/**
+ * @internal
+ * @brief <tt>coveo::linq::skip()</tt> internal predicate.
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Predicate used by the implementation of the <tt>coveo::linq::skip()</tt>
+ * LINQ operator. Simply skips N elements.
+ *
+ * @see coveo::linq::skip()
+ * @see coveo::linq::detail::skip_impl
+ */
 template<typename = void>
 class skip_n_pred
 {
@@ -2884,7 +3154,20 @@ public:
     }
 };
 
-// Implementation of skip/skip_while/skip_while_with_index operators
+/**
+ * @internal
+ * @brief <tt>coveo::linq::skip()</tt> et al implementation.
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Implementation of the <tt>coveo::linq::skip()</tt>,
+ * <tt>coveo::linq::skip_while()</tt> and
+ * <tt>coveo::linq::skip_while_with_index()</tt> LINQ operators.
+ *
+ * @tparam Pred Predicate used to skip elements.
+ * @see coveo::linq::skip()
+ * @see coveo::linq::skip_while()
+ * @see coveo::linq::skip_while_with_index()
+ */
 template<typename Pred>
 class skip_impl
 {
@@ -2975,12 +3258,21 @@ public:
     }
 };
 
-// Implementation of sum operator.
+/**
+ * @internal
+ * @brief <tt>coveo::linq::sum()</tt> implementation.
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Implementation of the <tt>coveo::linq::sum()</tt> LINQ operator.
+ *
+ * @tparam F Function to fetch values from sequence elements.
+ * @see coveo::linq::sum()
+ */
 template<typename F>
 class sum_impl
 {
 private:
-    const F& num_f_;    // Function to fetch values from sequence elements.
+    const F& num_f_;
 
 public:
     explicit sum_impl(const F& num_f)
@@ -3001,7 +3293,20 @@ public:
     }
 };
 
-// Implementation of take/take_while/take_while_with_index operators
+/**
+ * @internal
+ * @brief <tt>coveo::linq::take()</tt> et al implementation.
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Implementation of the <tt>coveo::linq::take()</tt>,
+ * <tt>coveo::linq::take_while()</tt> and
+ * <tt>coveo::linq::take_while_with_index()</tt> LINQ operators.
+ *
+ * @tparam Pred Predicate used to take elements.
+ * @see coveo::linq::take()
+ * @see coveo::linq::take_while()
+ * @see coveo::linq::take_while_with_index()
+ */
 template<typename Pred>
 class take_impl
 {
@@ -3084,7 +3389,16 @@ public:
     }
 };
 
-// Implementation of to operator.
+/**
+ * @internal
+ * @brief <tt>coveo::linq::to()</tt> implementation.
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Implementation of the <tt>coveo::linq::to()</tt> LINQ operator.
+ *
+ * @tparam Container Type of container to return.
+ * @see coveo::linq::to()
+ */
 template<typename Container>
 class to_impl
 {
@@ -3095,7 +3409,15 @@ public:
     }
 };
 
-// Implementation of to_vector operator.
+/**
+ * @internal
+ * @brief <tt>coveo::linq::to_vector()</tt> implementation.
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Implementation of the <tt>coveo::linq::to_vector()</tt> LINQ operator.
+ *
+ * @see coveo::linq::to_vector()
+ */
 template<typename = void>
 class to_vector_impl
 {
@@ -3109,7 +3431,18 @@ public:
     }
 };
 
-// Implementation of to_associative operator (version with key selector only).
+/**
+ * @internal
+ * @brief <tt>coveo::linq::to_associative()</tt> implementation (1).
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Implementation of the <tt>coveo::linq::to_associative()</tt> LINQ operator.
+ * Version with one argument (key selector).
+ *
+ * @tparam Container Type of container to return.
+ * @tparam KeySelector Selector used to fetch keys from sequence elements.
+ * @see coveo::linq::to_associative()
+ */
 template<typename Container, typename KeySelector>
 class to_associative_impl_1
 {
@@ -3134,7 +3467,19 @@ public:
     }
 };
 
-// Implementation of to_associative operator (version with key and element selectors).
+/**
+ * @internal
+ * @brief <tt>coveo::linq::to_associative()</tt> implementation (2).
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Implementation of the <tt>coveo::linq::to_associative()</tt> LINQ operator.
+ * Version with two arguments (key and element selectors).
+ *
+ * @tparam Container Type of container to return.
+ * @tparam KeySelector Selector used to fetch keys from sequence elements.
+ * @tparam ElementSelector Selector used to fetch values from sequence elements.
+ * @see coveo::linq::to_associative()
+ */
 template<typename Container, typename KeySelector, typename ElementSelector>
 class to_associative_impl_2
 {
@@ -3161,7 +3506,17 @@ public:
     }
 };
 
-// Implementation of to_map operator (version with key selector only).
+/**
+ * @internal
+ * @brief <tt>coveo::linq::to_map()</tt> implementation (1).
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Implementation of the <tt>coveo::linq::to_map()</tt> LINQ operator.
+ * Version with one argument (key selector).
+ *
+ * @tparam KeySelector Selector used to fetch keys from sequence elements.
+ * @see coveo::linq::to_map()
+ */
 template<typename KeySelector>
 class to_map_impl_1
 {
@@ -3190,7 +3545,18 @@ public:
     }
 };
 
-// Implementation of to_map operator (version with key and element selectors).
+/**
+ * @internal
+ * @brief <tt>coveo::linq::to_map()</tt> implementation (2).
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Implementation of the <tt>coveo::linq::to_map()</tt> LINQ operator.
+ * Version with two arguments (key and element selectors).
+ *
+ * @tparam KeySelector Selector used to fetch keys from sequence elements.
+ * @tparam ElementSelector Selector used to fetch values from sequence elements.
+ * @see coveo::linq::to_map()
+ */
 template<typename KeySelector, typename ElementSelector>
 class to_map_impl_2
 {
@@ -3221,7 +3587,17 @@ public:
     }
 };
 
-// Implementation of union_with operator.
+/**
+ * @internal
+ * @brief <tt>coveo::linq::union_with()</tt> implementation.
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Implementation of the <tt>coveo::linq::union_with()</tt> LINQ operator.
+ *
+ * @tparam Seq2 Second sequence to union. The first sequence will have been
+ *              provided by the call to <tt>coveo::linq::from()</tt>.
+ * @see coveo::linq::union_with()
+ */
 template<typename Seq2, typename Pred>
 class union_impl
 {
@@ -3353,7 +3729,18 @@ public:
     }
 };
 
-// Implementation of where/where_with_index operators.
+/**
+ * @internal
+ * @brief <tt>coveo::linq::where()</tt> et al implementation.
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Implementation of the <tt>coveo::linq::where()</tt> and
+ * <tt>coveo::linq::where_with_index()</tt> LINQ operators.
+ *
+ * @tparam Pred Predicate used to filter elements.
+ * @see coveo::linq::where()
+ * @see coveo::linq::where_with_index()
+ */
 template<typename Pred>
 class where_impl
 {
@@ -3428,7 +3815,18 @@ public:
     }
 };
 
-// Implementation of zip operator.
+/**
+ * @internal
+ * @brief <tt>coveo::linq::zip()</tt> implementation.
+ * @headerfile linq_detail.h <coveo/linq/detail/linq_detail.h>
+ *
+ * Implementation of the <tt>coveo::linq::zip()</tt> LINQ operator.
+ *
+ * @tparam Seq2 Second sequence to zip together. The first sequence will
+ *              have been provided by the call to <tt>coveo::linq::from()</tt>.
+ * @tparam ResultSelector Selector used to "zip" two sequence elements.
+ * @see coveo::linq::zip()
+ */
 template<typename Seq2, typename ResultSelector>
 class zip_impl
 {
