@@ -22,6 +22,8 @@
  * type of sequence, like arrays, containers, etc. (anything that supports <tt>std::begin()</tt>
  * and <tt>std::end()</tt> should work).
  *
+ * If this is your first time with the library, start at @ref linq "LINQ expressions".
+ *
  * @section example Example
  *
  * Here is an example that chains many operators to produce a filtered, ordered sequence:
@@ -56,10 +58,11 @@
  *   }
  * @endcode
  *
- * <tt>coveo::linq::operator|()</tt> is used to chain together the various LINQ operators,
- * and <tt>coveo::linq::from()</tt> is used as the "entry point" of the expression, providing
- * the initial sequence on which operators will be applied. The sequence is then transformed
- * by each operator, and the result is passed to the next operator.
+ * <tt>coveo::linq::operator|()</tt> is used to @ref linq_chaining "chain together" the various
+ * @ref linq_operators "LINQ operators", and <tt>coveo::linq::from()</tt> is used as the
+ * @ref linq_entry_points "entry point" of the expression, providing the initial sequence on
+ * which operators will be applied. The sequence is then transformed by each operator, and
+ * the result is passed to the next operator.
  *
  * @section install Installing / requirements
  *
@@ -89,6 +92,71 @@
  *            Distributed under the Apache License, Version 2.0 (see <a href="https://github.com/coveo/linq/blob/master/LICENSE">LICENSE</a>).
  */
 
+/**
+ * @defgroup linq LINQ expressions
+ *
+ * LINQ expressions are comprised of three distinct parts: an @ref linq_entry_points "entry point",
+ * one or more @ref linq_operators "operators" and a glue operator to @ref linq_chaining "chain"
+ * those elements together. The entry point provides the initial sequence on which to operate and
+ * each LINQ operator in turn applies a change to that sequence - be it sorting, filtering, etc.
+ *
+ * Here is an example with all elements. Here, we filter a sequence of numbers to only keep those
+ * above 20, then we order them by numerical value.
+ *
+ * @code
+ *   const int NUMBERS[] = { 42, 23, 11, 66, 7 };
+ *
+ *   using namespace coveo::linq;
+ *   auto seq = from(NUMBERS)
+ *            | where([](int i) { return i >= 20; })
+ *            | order_by([](int i) { return i; });
+ *   // seq contains 23, 42, 66
+ * @endcode
+ *
+ * <tt>coveo::linq::from()</tt> is the usual entry point for a LINQ expression, but there are a
+ * few others. <tt>coveo::linq::operator|()</tt> is used to chain the LINQ operators together.
+ * As for LINQ operators, there are too many of them to list them here. For more information, see:
+ *
+ * - @ref linq_entry_points "LINQ expression entry points"
+ * - @ref linq_chaining "LINQ operator chaining"
+ * - @ref linq_operators "LINQ operators"
+ */
+
+/**
+ * @ingroup linq
+ * @defgroup linq_entry_points LINQ expression entry points
+ *
+ * An "entry point" is a function that provides the initial sequence on which to apply LINQ operators.
+ * It also provides a nice look to the expression, a bit like a database query.
+ *
+ * The usual entry point for a LINQ expression is <tt>coveo::linq::from()</tt>, which simply returns
+ * the sequence passed in. Other entry points generate a sequence for use in the expression.
+ */
+
+/**
+ * @ingroup linq
+ * @defgroup linq_chaining LINQ operator chaining
+ *
+ * In order to create powerful LINQ expressions, operators need to be chained together so as to be
+ * applied in a specific order. To do this, <tt>coveo::linq::operator|()</tt> has been overloaded.
+ * Every @ref linq_operators "LINQ operator" returns a function object that is applied on the
+ * current sequence by <tt>coveo::linq::operator|()</tt>. By aligning the instances of @c | in the
+ * code, LINQ expressions are easy to read:
+ *
+ * @code
+ *   using namespace coveo::linq;
+ *   auto seq = from(some_sequence)
+ *            | linq_op_1(...)
+ *            | linq_op_2(...)
+ *            | ...;
+ * @endcode
+ */
+
+/**
+ * @ingroup linq
+ * @defgroup linq_operators LINQ operators
+ */
+
 #ifndef COVEO_LINQ_H
 #define COVEO_LINQ_H
 
@@ -108,13 +176,14 @@ namespace coveo {
 namespace linq {
 
 /**
- * @brief Entry point for a LINQ expression.
+ * @ingroup linq_entry_points
+ * @brief Standard LINQ expression entry point.
  * @headerfile linq.h <coveo/linq/linq.h>
  *
- * Entry point for the LINQ library. Specifies the initial sequence
- * on which the first operator will be applied. After this, use
- * <tt>coveo::linq::operator|</tt> to chain LINQ operators and apply
- * them in a specific order.
+ * Standard entry point for a LINQ expression. Specifies the initial
+ * sequence on which the first operator will be applied. After this,
+ * use <tt>coveo::linq::operator|()</tt> to chain LINQ operators and apply
+ * them in a specific order (see @ref linq_chaining "chaining").
  *
  * Use like this:
  *
@@ -130,14 +199,27 @@ auto from(Seq&& seq) -> decltype(std::forward<Seq>(seq)) {
     return std::forward<Seq>(seq);
 }
 
-// Entry point for the LINQ library for a range
-// delimited by two iterators. Use like this:
-//
-//   using namespace coveo::linq;
-//   auto result = from_range(something.begin(), something.end())
-//               | linq_operator(...)
-//               | ...;
-//
+/**
+ * @ingroup linq_entry_points
+ * @brief LINQ expression entry point from iterators.
+ * @headerfile linq.h <coveo/linq/linq.h>
+ *
+ * Entry point for a LINQ expression that produces a sequence
+ * of elements delimited by two iterators. After this, use
+ * <tt>coveo::linq::operator|()</tt> to chain LINQ operators and apply
+ * them in a specific order (see @ref linq_chaining "chaining").
+ *
+ * Use like this:
+ *
+ * @code
+ *   using namespace coveo::linq;
+ *   auto result = from_range(something.begin(), something.end())
+ *               | linq_operator(...)
+ *               | ...;
+ * @endcode
+ *
+ * @see coveo::enumerate_range()
+ */
 template<typename It>
 auto from_range(It ibeg, It iend)
     -> decltype(enumerate_range(std::move(ibeg), std::move(iend)))
@@ -145,14 +227,25 @@ auto from_range(It ibeg, It iend)
     return enumerate_range(std::move(ibeg), std::move(iend));
 }
 
-// Entry point for the LINQ library for a range
-// of integer values. Use like this:
-//
-//   using namespace coveo::linq;
-//   auto result = from_int_range(1, 10)    // 1, 2, 3...
-//               | linq_operator(...)
-//               | ...;
-//
+/**
+ * @ingroup linq_entry_points
+ * @brief LINQ expression entry point from range of numbers.
+ * @headerfile linq.h <coveo/linq/linq.h>
+ *
+ * Entry point for a LINQ expression that produces a sequence
+ * of incrementing numbers from a starting point. After this, use
+ * <tt>coveo::linq::operator|()</tt> to chain LINQ operators and apply
+ * them in a specific order (see @ref linq_chaining "chaining").
+ *
+ * Use like this:
+ *
+ * @code
+ *   using namespace coveo::linq;
+ *   auto result = from_int_range(1, 10)    // 1, 2, 3...
+ *               | linq_operator(...)
+ *               | ...;
+ * @endcode
+ */
 template<typename IntT>
 auto from_int_range(IntT first, std::size_t count)
     -> coveo::enumerable<const typename std::decay<IntT>::type>
@@ -165,14 +258,25 @@ auto from_int_range(IntT first, std::size_t count)
     return enumerate_container(std::move(vvalues));
 }
 
-// Entry point for the LINQ library for a range
-// of repeated values. Use like this:
-//
-//   using namespace coveo::linq;
-//   auto result = from_repeated(std::string("Life"), 7)    // "Life", "Life", "Life"...
-//               | linq_operator(...)
-//               | ...;
-//
+/**
+ * @ingroup linq_entry_points
+ * @brief LINQ expression entry point from a repeated value.
+ * @headerfile linq.h <coveo/linq/linq.h>
+ *
+ * Entry point for a LINQ expression that produces a sequence
+ * created by repeating a given value multiple times.. After this, use
+ * <tt>coveo::linq::operator|()</tt> to chain LINQ operators and apply
+ * them in a specific order (see @ref linq_chaining "chaining").
+ *
+ * Use like this:
+ *
+ * @code
+ *   using namespace coveo::linq;
+ *   auto result = from_repeated(std::string("Life"), 7)    // "Life", "Life", "Life"...
+ *               | linq_operator(...)
+ *               | ...;
+ * @endcode
+ */
 template<typename T>
 auto from_repeated(const T& value, std::size_t count)
     -> coveo::enumerable<const typename std::decay<T>::type>
@@ -186,6 +290,7 @@ auto from_repeated(const T& value, std::size_t count)
 }
 
 /**
+ * @ingroup linq_chaining
  * @brief Applies LINQ operators and allows chaining.
  * @headerfile linq.h <coveo/linq/linq.h>
  *
