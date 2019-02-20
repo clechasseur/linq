@@ -170,8 +170,7 @@ public:
              typename _S = std::nullptr_t,
              typename = typename std::enable_if<!is_enumerable<typename std::decay<F>::type>::value &&
                                                 (!detail::has_begin<typename std::decay<F>::type>::value ||
-                                                 !detail::has_end<typename std::decay<F>::type>::value ||
-                                                 !detail::has_size_const_method<typename std::decay<F>::type>::value), void>::type>
+                                                 !detail::has_end<typename std::decay<F>::type>::value), void>::type>
     enumerable(F&& next, _S&& siz = nullptr)
         : zero_(std::forward<F>(next)), size_(std::forward<_S>(siz)) { }
 
@@ -183,7 +182,6 @@ public:
      *
      * - @c begin (or a specialization of <tt>std::begin()</tt>)
      * - @c end (or a specialization of <tt>std::end()</tt>)
-     * - @c size (must be a @c const method)
      *
      * The container will be wrapped in the enumerable, either by
      * keeping a reference to it or by storing it internally, depending
@@ -201,8 +199,7 @@ public:
     template<typename C,
              typename = typename std::enable_if<!is_enumerable<typename std::decay<C>::type>::value &&
                                                 detail::has_begin<typename std::decay<C>::type>::value &&
-                                                detail::has_end<typename std::decay<C>::type>::value &&
-                                                detail::has_size_const_method<typename std::decay<C>::type>::value, void>::type>
+                                                detail::has_end<typename std::decay<C>::type>::value, void>::type>
     enumerable(C&& cnt)
         : zero_(), size_() { *this = for_container(std::forward<C>(cnt)); }
 
@@ -715,7 +712,7 @@ public:
                 ++it;
             }
             return pobj;
-        }, detail::get_size_delegate_for_iterators(it, iend));
+        }, try_get_size_delegate_for_iterators(it, iend));
     }
 
     /**
@@ -744,9 +741,7 @@ public:
                 ++it;
             }
             return pobj;
-        }, [&cnt]() -> std::size_t {
-            return cnt.size();
-        });
+        }, try_get_size_delegate(cnt));
     }
 
     /**
@@ -777,9 +772,7 @@ public:
                 ++it;
             }
             return pobj;
-        }, [spcnt]() -> std::size_t {
-            return spcnt->size();
-        });
+        }, try_get_size_delegate(*spcnt));
     }
 
     /**

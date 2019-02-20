@@ -16,7 +16,6 @@
 
 #include <coveo/seq/detail/enumerable_detail.h>
 #include <coveo/seq/sequence_util.h>
-#include <coveo/linq/linq_util.h>
 
 #include <algorithm>
 #include <cstddef>

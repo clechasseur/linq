@@ -115,11 +115,11 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ae475f4103c11ec845cdbd6a9ce724ab0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcoveo_1_1enumerable.html#ae475f4103c11ec845cdbd6a9ce724ab0">enumerable</a> ()</td></tr>
 <tr class="memdesc:ae475f4103c11ec845cdbd6a9ce724ab0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor.  <a href="#ae475f4103c11ec845cdbd6a9ce724ab0">More...</a><br /></td></tr>
 <tr class="separator:ae475f4103c11ec845cdbd6a9ce724ab0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a669ab7040d1c462659fdb6e72e2a71cf"><td class="memTemplParams" colspan="2">template&lt;typename F , typename _S  = std::nullptr_t, typename  = typename std::enable_if&lt;!is_enumerable&lt;typename std::decay&lt;F&gt;::type&gt;::value &amp;&amp;                                                (!detail::has_begin&lt;typename std::decay&lt;F&gt;::type&gt;::value ||                                                 !detail::has_end&lt;typename std::decay&lt;F&gt;::type&gt;::value ||                                                 !detail::has_size_const_method&lt;typename std::decay&lt;F&gt;::type&gt;::value), void&gt;::type&gt; </td></tr>
+<tr class="memitem:a669ab7040d1c462659fdb6e72e2a71cf"><td class="memTemplParams" colspan="2">template&lt;typename F , typename _S  = std::nullptr_t, typename  = typename std::enable_if&lt;!is_enumerable&lt;typename std::decay&lt;F&gt;::type&gt;::value &amp;&amp;                                                (!detail::has_begin&lt;typename std::decay&lt;F&gt;::type&gt;::value ||                                                 !detail::has_end&lt;typename std::decay&lt;F&gt;::type&gt;::value), void&gt;::type&gt; </td></tr>
 <tr class="memitem:a669ab7040d1c462659fdb6e72e2a71cf"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classcoveo_1_1enumerable.html#a669ab7040d1c462659fdb6e72e2a71cf">enumerable</a> (F &amp;&amp;next, _S &amp;&amp;siz=nullptr)</td></tr>
 <tr class="memdesc:a669ab7040d1c462659fdb6e72e2a71cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor with delegates.  <a href="#a669ab7040d1c462659fdb6e72e2a71cf">More...</a><br /></td></tr>
 <tr class="separator:a669ab7040d1c462659fdb6e72e2a71cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a95b52309d076198f09578bb8411073d8"><td class="memTemplParams" colspan="2">template&lt;typename C , typename  = typename std::enable_if&lt;!is_enumerable&lt;typename std::decay&lt;C&gt;::type&gt;::value &amp;&amp;                                                detail::has_begin&lt;typename std::decay&lt;C&gt;::type&gt;::value &amp;&amp;                                                detail::has_end&lt;typename std::decay&lt;C&gt;::type&gt;::value &amp;&amp;                                                detail::has_size_const_method&lt;typename std::decay&lt;C&gt;::type&gt;::value, void&gt;::type&gt; </td></tr>
+<tr class="memitem:a95b52309d076198f09578bb8411073d8"><td class="memTemplParams" colspan="2">template&lt;typename C , typename  = typename std::enable_if&lt;!is_enumerable&lt;typename std::decay&lt;C&gt;::type&gt;::value &amp;&amp;                                                detail::has_begin&lt;typename std::decay&lt;C&gt;::type&gt;::value &amp;&amp;                                                detail::has_end&lt;typename std::decay&lt;C&gt;::type&gt;::value, void&gt;::type&gt; </td></tr>
 <tr class="memitem:a95b52309d076198f09578bb8411073d8"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classcoveo_1_1enumerable.html#a95b52309d076198f09578bb8411073d8">enumerable</a> (C &amp;&amp;cnt)</td></tr>
 <tr class="memdesc:a95b52309d076198f09578bb8411073d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor with container.  <a href="#a95b52309d076198f09578bb8411073d8">More...</a><br /></td></tr>
 <tr class="separator:a95b52309d076198f09578bb8411073d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -354,7 +354,7 @@ template&lt;typename T&gt; </div>
 <div class="memtemplate">
 template&lt;typename T&gt; </div>
 <div class="memtemplate">
-template&lt;typename F , typename _S  = std::nullptr_t, typename  = typename std::enable_if&lt;!is_enumerable&lt;typename std::decay&lt;F&gt;::type&gt;::value &amp;&amp;                                                (!detail::has_begin&lt;typename std::decay&lt;F&gt;::type&gt;::value ||                                                 !detail::has_end&lt;typename std::decay&lt;F&gt;::type&gt;::value ||                                                 !detail::has_size_const_method&lt;typename std::decay&lt;F&gt;::type&gt;::value), void&gt;::type&gt; </div>
+template&lt;typename F , typename _S  = std::nullptr_t, typename  = typename std::enable_if&lt;!is_enumerable&lt;typename std::decay&lt;F&gt;::type&gt;::value &amp;&amp;                                                (!detail::has_begin&lt;typename std::decay&lt;F&gt;::type&gt;::value ||                                                 !detail::has_end&lt;typename std::decay&lt;F&gt;::type&gt;::value), void&gt;::type&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -409,7 +409,7 @@ template&lt;typename F , typename _S  = std::nullptr_t, typename  = typename std
 <div class="memtemplate">
 template&lt;typename T&gt; </div>
 <div class="memtemplate">
-template&lt;typename C , typename  = typename std::enable_if&lt;!is_enumerable&lt;typename std::decay&lt;C&gt;::type&gt;::value &amp;&amp;                                                detail::has_begin&lt;typename std::decay&lt;C&gt;::type&gt;::value &amp;&amp;                                                detail::has_end&lt;typename std::decay&lt;C&gt;::type&gt;::value &amp;&amp;                                                detail::has_size_const_method&lt;typename std::decay&lt;C&gt;::type&gt;::value, void&gt;::type&gt; </div>
+template&lt;typename C , typename  = typename std::enable_if&lt;!is_enumerable&lt;typename std::decay&lt;C&gt;::type&gt;::value &amp;&amp;                                                detail::has_begin&lt;typename std::decay&lt;C&gt;::type&gt;::value &amp;&amp;                                                detail::has_end&lt;typename std::decay&lt;C&gt;::type&gt;::value, void&gt;::type&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -432,7 +432,6 @@ template&lt;typename C , typename  = typename std::enable_if&lt;!is_enumerable&l
 <ul>
 <li><code>begin</code> (or a specialization of <code>std::begin()</code>)</li>
 <li><code>end</code> (or a specialization of <code>std::end()</code>)</li>
-<li><code>size</code> (must be a <code>const</code> method)</li>
 </ul>
 <p>The container will be wrapped in the enumerable, either by keeping a reference to it or by storing it internally, depending on how the container is passed to the method (if it is <code>move</code>d, it will be stored internally).</p>
 <p>Using this constructor is equivalent to calling <code><a class="el" href="classcoveo_1_1enumerable.html#a57b61f22a746f8224ad328c70672eaec" title="Returns enumerable over container&#39;s sequence (stored externally).">for_container()</a></code>. It is provided implicitely so that it is possible to call a function declared as accepting a <code><a class="el" href="classcoveo_1_1enumerable.html" title="Type-erased sequence wrapper.">coveo::enumerable</a></code> with a container instance directly.</p>
@@ -1029,7 +1028,7 @@ template&lt;typename T&gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Feb 15 2019 22:43:57 for coveo::linq by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Feb 18 2019 23:03:26 for coveo::linq by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>

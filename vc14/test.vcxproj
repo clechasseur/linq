@@ -369,7 +369,6 @@ copy /Y "$(TargetPath)" "$(SolutionDir)out\"</Command>
     <ClInclude Include="..\lib\coveo\linq\detail\linq_detail.h" />
     <ClInclude Include="..\lib\coveo\linq\exception.h" />
     <ClInclude Include="..\lib\coveo\linq\linq.h" />
-    <ClInclude Include="..\lib\coveo\linq\linq_util.h" />
     <ClInclude Include="..\lib\coveo\seq\detail\enumerable_detail.h" />
     <ClInclude Include="..\lib\coveo\seq\enumerable.h" />
     <ClInclude Include="..\lib\coveo\seq\sequence_util.h" />

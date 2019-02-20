@@ -63,9 +63,6 @@
     <ClInclude Include="..\tests\coveo\seq\enumerable_tests.h">
       <Filter>tests\coveo\seq</Filter>
     </ClInclude>
-    <ClInclude Include="..\lib\coveo\linq\linq_util.h">
-      <Filter>lib\coveo\linq</Filter>
-    </ClInclude>
     <ClInclude Include="..\lib\coveo\seq\sequence_util.h">
       <Filter>lib\coveo\seq</Filter>
     </ClInclude>

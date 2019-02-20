@@ -46,6 +46,36 @@ public:
     using std::out_of_range::out_of_range;
 };
 
+/**
+ * @brief Helper function to throw a <tt>coveo::linq::empty_sequence</tt> exception.
+ * @headerfile exception.h <coveo/linq/exception.h>
+ *
+ * Throws an instance of <tt>coveo::linq::empty_sequence</tt> to indicate
+ * that a LINQ operator does not work on the provided empty sequence.
+ * Does not return.
+ *
+ * @see coveo::linq::empty_sequence
+ */
+template<typename = void>
+[[noreturn]] void throw_linq_empty_sequence() {
+    throw empty_sequence("empty_sequence");
+}
+
+/**
+ * @brief Helper function to throw a <tt>coveo::linq::out_of_range</tt> exception.
+ * @headerfile exception.h <coveo/linq/exception.h>
+ *
+ * Throws an instance of <tt>coveo::linq::out_of_range</tt> to indicate
+ * that a LINQ operator has gone outside the range of the provided sequence.
+ * Does not return.
+ *
+ * @see coveo::linq::out_of_range
+ */
+template<typename = void>
+[[noreturn]] void throw_linq_out_of_range() {
+    throw out_of_range("out_of_range");
+}
+
 } // linq
 } // coveo
 

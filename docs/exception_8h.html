@@ -67,7 +67,8 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a>  </div>
+<a href="#nested-classes">Classes</a> &#124;
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">exception.h File Reference</div>  </div>
 </div><!--header-->
@@ -86,13 +87,67 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcoveo_1_1linq_1_1out__of__range.html">coveo::linq::out_of_range</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Out-of-range exception.  <a href="classcoveo_1_1linq_1_1out__of__range.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:a165eac6c80ba18c52c2b43b70de4d810"><td class="memTemplParams" colspan="2">template&lt;typename  = void&gt; </td></tr>
+<tr class="memitem:a165eac6c80ba18c52c2b43b70de4d810"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="exception_8h.html#a165eac6c80ba18c52c2b43b70de4d810">coveo::linq::throw_linq_empty_sequence</a> ()</td></tr>
+<tr class="memdesc:a165eac6c80ba18c52c2b43b70de4d810"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper function to throw a <code><a class="el" href="classcoveo_1_1linq_1_1empty__sequence.html" title="Empty sequence exception.">coveo::linq::empty_sequence</a></code> exception.  <a href="exception_8h.html#a165eac6c80ba18c52c2b43b70de4d810">More...</a><br /></td></tr>
+<tr class="separator:a165eac6c80ba18c52c2b43b70de4d810"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7cdb1dc43a6925148e98027fab96a97e"><td class="memTemplParams" colspan="2">template&lt;typename  = void&gt; </td></tr>
+<tr class="memitem:a7cdb1dc43a6925148e98027fab96a97e"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="exception_8h.html#a7cdb1dc43a6925148e98027fab96a97e">coveo::linq::throw_linq_out_of_range</a> ()</td></tr>
+<tr class="memdesc:a7cdb1dc43a6925148e98027fab96a97e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper function to throw a <code><a class="el" href="classcoveo_1_1linq_1_1out__of__range.html" title="Out-of-range exception.">coveo::linq::out_of_range</a></code> exception.  <a href="exception_8h.html#a7cdb1dc43a6925148e98027fab96a97e">More...</a><br /></td></tr>
+<tr class="separator:a7cdb1dc43a6925148e98027fab96a97e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><dl class="section copyright"><dt>Copyright</dt><dd>2016-2019, Coveo Solutions Inc. Distributed under the Apache License, Version 2.0 (see <a href="https://github.com/coveo/linq/blob/master/LICENSE">LICENSE</a>). </dd></dl>
-</div></div><!-- contents -->
+</div><h2 class="groupheader">Function Documentation</h2>
+<a id="file_a165eac6c80ba18c52c2b43b70de4d810"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#file_a165eac6c80ba18c52c2b43b70de4d810">&#9670;&nbsp;</a></span>throw_linq_empty_sequence()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename  = void&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void coveo::linq::throw_linq_empty_sequence </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Throws an instance of <code><a class="el" href="classcoveo_1_1linq_1_1empty__sequence.html" title="Empty sequence exception.">coveo::linq::empty_sequence</a></code> to indicate that a LINQ operator does not work on the provided empty sequence. Does not return.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classcoveo_1_1linq_1_1empty__sequence.html" title="Empty sequence exception.">coveo::linq::empty_sequence</a> </dd></dl>
+
+</div>
+</div>
+<a id="file_a7cdb1dc43a6925148e98027fab96a97e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#file_a7cdb1dc43a6925148e98027fab96a97e">&#9670;&nbsp;</a></span>throw_linq_out_of_range()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename  = void&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void coveo::linq::throw_linq_out_of_range </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Throws an instance of <code><a class="el" href="classcoveo_1_1linq_1_1out__of__range.html" title="Out-of-range exception.">coveo::linq::out_of_range</a></code> to indicate that a LINQ operator has gone outside the range of the provided sequence. Does not return.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classcoveo_1_1linq_1_1out__of__range.html" title="Out-of-range exception.">coveo::linq::out_of_range</a> </dd></dl>
+
+</div>
+</div>
+</div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Feb 15 2019 22:43:57 for coveo::linq by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Feb 18 2019 23:03:26 for coveo::linq by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>

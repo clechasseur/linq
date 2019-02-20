@@ -89,47 +89,6 @@ public:
     static const bool value = sizeof(test<T>(nullptr)) == sizeof(std::int_least8_t);
 };
 
-/// @cond
-
-/**
- * @internal
- * @brief Helper function to get a fast size delegate from iterators if possible.
- * @headerfile enumerable_detail.h <coveo/seq/detail/enumerable_detail.h>
- *
- * Attempts to create a <tt>coveo::enumerable::size_delegate</tt> that can
- * quickly calculate the number of elements in range <tt>[beg, end[</tt>.
- * A size delegate is returned only if it's possible to calculate the number
- * of elements "quickly".
- *
- * - If @c beg and @c end are random-access iterators,
- *   a size delegate is produced by using <tt>std::distance()</tt>.
- * - Otherwise, no size delegate is produced.
- *
- * @param beg Iterator pointing at beginning of range.
- * @param end Iterator pointing at end of range.
- * @return <tt>coveo::enumerable::size_delegate</tt> instance,
- *         or @c nullptr if it's not possible to quickly calculate
- *         the number of elements in <tt>[beg, end[</tt>
- * @see coveo::enumerable::size_delegate
- */
-template<typename It>
-auto get_size_delegate_for_iterators(const It& beg, const It& end) -> typename std::enable_if<std::is_base_of<std::random_access_iterator_tag,
-                                                                                                              typename std::iterator_traits<It>::iterator_category>::value,
-                                                                                              std::function<std::size_t()>>::type
-{
-    return [beg, end]() -> std::size_t { return std::distance(beg, end); };
-}
-template<typename It>
-auto get_size_delegate_for_iterators(const It&, const It&) -> typename std::enable_if<!std::is_base_of<std::random_access_iterator_tag,
-                                                                                                       typename std::iterator_traits<It>::iterator_category>::value,
-                                                                                      std::function<std::size_t()>>::type
-{
-    // No way to quickly determine size, don't try
-    return nullptr;
-}
-
-/// @endcond
-
 } // detail
 } // coveo
 

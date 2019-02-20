@@ -2602,6 +2602,23 @@ void test_reverse_with_temporary_sequence()
     validate_enumerable(seq, expected, should_have_fast_size::yes);
 }
 
+void test_default_if_empty_with_forward_list()
+{
+    // default_if_empty used to require sequence to have a size() method,
+    // which made it not work with some sequence types like forward_list.
+
+    using namespace coveo::linq;
+    auto seq1 = from(std::forward_list<int>{})
+              | default_if_empty();
+    auto seq2 = from(std::forward_list<int>{})
+              | default_if_empty(42);
+
+    const std::vector<int> expected1 = { 0 };
+    const std::vector<int> expected2 = { 42 };
+    validate_enumerable(seq1, expected1, should_have_fast_size::yes);
+    validate_enumerable(seq2, expected2, should_have_fast_size::yes);
+}
+
 void bugs_tests()
 {
     test_sequence_equal_with_order_by();
@@ -2609,6 +2626,7 @@ void bugs_tests()
     test_chaining_select_many_with_order_by();
     test_chaining_zip_with_order_by();
     test_reverse_with_temporary_sequence();
+    test_default_if_empty_with_forward_list();
 }
 
 // all benchmarks for coveo::linq operators
