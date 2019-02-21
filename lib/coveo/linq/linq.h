@@ -117,14 +117,15 @@
  * few others. <tt>coveo::linq::operator|()</tt> is used to chain the LINQ operators together.
  * As for LINQ operators, there are too many of them to list them here. For more information, see:
  *
- * - @ref linq_entry_points "LINQ expression entry points"
- * - @ref linq_chaining "LINQ operator chaining"
- * - @ref linq_operators "LINQ operators"
+ * - @ref linq_entry_points
+ * - @ref linq_chaining
+ * - @ref linq_operators
  */
 
 /**
  * @ingroup linq
  * @defgroup linq_entry_points LINQ expression entry points
+ * @brief Functions to start a LINQ expression.
  *
  * An "entry point" is a function that provides the initial sequence on which to apply LINQ operators.
  * It also provides a nice look to the expression, a bit like a database query.
@@ -136,6 +137,7 @@
 /**
  * @ingroup linq
  * @defgroup linq_chaining LINQ operator chaining
+ * @brief How to chain LINQ operators into an expression.
  *
  * In order to create powerful LINQ expressions, operators need to be chained together so as to be
  * applied in a specific order. To do this, <tt>coveo::linq::operator|()</tt> has been overloaded.
@@ -155,6 +157,43 @@
 /**
  * @ingroup linq
  * @defgroup linq_operators LINQ operators
+ * @brief Information and reference of LINQ operators.
+ *
+ * A <em>LINQ operator</em> is designed to accept a sequence as input, perform some specific task with it
+ * and return a result, which is usually (but not necessarily) another sequence. For example, a LINQ operator
+ * might filter the elements of a sequence to remove unwanted ones, or it could concatenate the sequence with
+ * another. Some LINQ operators are inspired by database operations, like <tt>coveo::linq::join()</tt>, but
+ * not all of them have an equivalent in the database world.
+ *
+ * Some LINQ operators are identified as @b terminal. This means that they return a result that is not a sequence,
+ * but a single value. Because of this, they can only appear at the end of a LINQ expression, since no other
+ * operator can be chained after them.
+ *
+ * In the <tt>coveo::linq</tt> library, LINQ operators are implemented as functions that return a
+ * <em>function object</em> implementing the operator logic. The function object is then @e applied
+ * to the sequence by <tt>coveo::linq::operator|()</tt>. For more information on this and on how to
+ * develop custom LINQ operators, see @ref linq_custom_operators.
+ *
+ * The <tt>coveo::linq</tt> library includes many different operators for various needs. Most of them
+ * are inspired by a corresponding operator in the .NET library, although usage is often different.
+ * For a list of operators, see @ref linq_operators_list.
+ */
+
+/**
+ * @ingroup linq_operators
+ * @defgroup linq_operators_list List of built-in LINQ operators
+ * @brief Reference for all built-in LINQ operators.
+ *
+ * This page lists all LINQ operators implemented in the <tt>coveo::linq</tt> library.
+ * They are listed alphabetically and grouped by purpose.
+ */
+
+/**
+ * @ingroup linq_operators
+ * @defgroup linq_custom_operators Implementing custom LINQ operators
+ * @brief How to design and implement your own LINQ operators.
+ *
+ * TODO
  */
 
 #ifndef COVEO_LINQ_H
@@ -311,12 +350,35 @@ auto operator|(Seq&& seq, Op&& op) -> decltype(std::forward<Op>(op)(std::forward
     return std::forward<Op>(op)(std::forward<Seq>(seq));
 }
 
-// C++ LINQ operator: aggregate
-// .NET equivalent: Aggregate
+/**
+ * @ingroup linq_operators_list
+ * @defgroup linq_op_aggregate aggregate
+ * @brief Aggregates values in a sequence to produce a single value.
+ *
+ * The @c aggregate operator, as its name implies, can be used to @e aggregate all values
+ * in a sequence into a single value. To achieve this, it needs an <em>aggregation function</em>
+ * that will be called repeatedly to add each element in the sequence to the aggregate.
+ *
+ * This is a @b terminal operator.
+ *
+ * <b>.NET equivalent:</b> Aggregate
+ */
 
-// Operator that aggregates all elements in a sequence using an aggregation function.
-// Function receives previous aggregate and new element, must return new aggregate.
-// Does not work on empty sequences.
+/**
+ * @ingroup linq_op_aggregate
+ * @brief Aggregates values using an aggregation function.
+ *
+ * Aggregates all elements in a sequence by repeatedly calling an <em>aggregation function</em>.
+ * The function receives two parameters: the current aggregate value, and the sequence element
+ * to add. The function must then add the element to the aggregate and return a new aggregate
+ * value. On the first call, the aggregate value is the first sequence element.
+ *
+ * Does not work on empty sequences.
+ *
+ * @param agg_f Aggregation function.
+ * @return (Once applied) Final aggregate value.
+ * @exception coveo::linq::empty_sequence The sequence contains no elements.
+ */
 template<typename F>
 auto aggregate(const F& agg_f)
     -> detail::aggregate_impl_1<F>
@@ -324,8 +386,19 @@ auto aggregate(const F& agg_f)
     return detail::aggregate_impl_1<F>(agg_f);
 }
 
-// Same thing with an initial value for the aggregate.
-// Works with empty sequences because of this.
+/**
+ * @ingroup linq_op_aggregate
+ * @brief Aggregates values using an aggregation function, starting with a seed.
+ *
+ * Aggregates all elements in a sequence by repeatedly calling an <em>aggregation function</em>.
+ * The function receives two parameters: the current aggregate value, and the sequence element
+ * to add. The function must then add the element to the aggregate and return a new aggregate
+ * value. On the first call, the aggregate value is equal to the provided @c seed.
+ *
+ * @param seed Initial aggregate value.
+ * @param agg_f Aggregation function.
+ * @return (Once applied) Final aggregate value.
+ */
 template<typename Acc, typename F>
 auto aggregate(const Acc& seed, const F& agg_f)
     -> detail::aggregate_impl_2<Acc, F>
@@ -333,8 +406,22 @@ auto aggregate(const Acc& seed, const F& agg_f)
     return detail::aggregate_impl_2<Acc, F>(seed, agg_f);
 }
 
-// Same thing with a result selector function that
-// converts the final aggregate.
+/**
+ * @ingroup linq_op_aggregate
+ * @brief Aggregates values using aggregation function, seed and result selector.
+ *
+ * Aggregates all elements in a sequence by repeatedly calling an <em>aggregation function</em>.
+ * The function receives two parameters: the current aggregate value, and the sequence element
+ * to add. The function must then add the element to the aggregate and return a new aggregate
+ * value. On the first call, the aggregate value is equal to the provided @c seed. Once the
+ * final aggregate value is computed, it is passed to a <em>result selector</em> to produce
+ * a final value to return.
+ *
+ * @param seed Initial aggregate value.
+ * @param agg_f Aggregation function.
+ * @param result_f Function used to produce final result from aggregate.
+ * @return (Once applied) Result returned by @c result_f.
+ */
 template<typename Acc, typename F, typename RF>
 auto aggregate(const Acc& seed, const F& agg_f, const RF& result_f)
     -> detail::aggregate_impl_3<Acc, F, RF>

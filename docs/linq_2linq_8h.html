@@ -100,18 +100,18 @@ Functions</h2></td></tr>
 <tr class="memitem:gaf38ff23c8bdf9a47b55e516dd378194e"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__linq__chaining.html#gaf38ff23c8bdf9a47b55e516dd378194e">coveo::linq::operator|</a> (Seq &amp;&amp;seq, Op &amp;&amp;op) -&gt; decltype(std::forward&lt; Op &gt;(op)(std::forward&lt; Seq &gt;(seq)))</td></tr>
 <tr class="memdesc:gaf38ff23c8bdf9a47b55e516dd378194e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Applies LINQ operators and allows chaining.  <a href="group__linq__chaining.html#gaf38ff23c8bdf9a47b55e516dd378194e">More...</a><br /></td></tr>
 <tr class="separator:gaf38ff23c8bdf9a47b55e516dd378194e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad45124e03053ced6f5b58c683dd73fee"><td class="memTemplParams" colspan="2"><a id="ad45124e03053ced6f5b58c683dd73fee"></a>
-template&lt;typename F &gt; </td></tr>
-<tr class="memitem:ad45124e03053ced6f5b58c683dd73fee"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>coveo::linq::aggregate</b> (const F &amp;agg_f) -&gt; detail::aggregate_impl_1&lt; F &gt;</td></tr>
-<tr class="separator:ad45124e03053ced6f5b58c683dd73fee"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8a7efe3eaa295147551d23f6343170aa"><td class="memTemplParams" colspan="2"><a id="a8a7efe3eaa295147551d23f6343170aa"></a>
-template&lt;typename Acc , typename F &gt; </td></tr>
-<tr class="memitem:a8a7efe3eaa295147551d23f6343170aa"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>coveo::linq::aggregate</b> (const Acc &amp;seed, const F &amp;agg_f) -&gt; detail::aggregate_impl_2&lt; Acc, F &gt;</td></tr>
-<tr class="separator:a8a7efe3eaa295147551d23f6343170aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7e4fcafe0c42d1a58042e8be3b2c87cf"><td class="memTemplParams" colspan="2"><a id="a7e4fcafe0c42d1a58042e8be3b2c87cf"></a>
-template&lt;typename Acc , typename F , typename RF &gt; </td></tr>
-<tr class="memitem:a7e4fcafe0c42d1a58042e8be3b2c87cf"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>coveo::linq::aggregate</b> (const Acc &amp;seed, const F &amp;agg_f, const RF &amp;result_f) -&gt; detail::aggregate_impl_3&lt; Acc, F, RF &gt;</td></tr>
-<tr class="separator:a7e4fcafe0c42d1a58042e8be3b2c87cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad45124e03053ced6f5b58c683dd73fee"><td class="memTemplParams" colspan="2">template&lt;typename F &gt; </td></tr>
+<tr class="memitem:gad45124e03053ced6f5b58c683dd73fee"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__linq__op__aggregate.html#gad45124e03053ced6f5b58c683dd73fee">coveo::linq::aggregate</a> (const F &amp;agg_f) -&gt; detail::aggregate_impl_1&lt; F &gt;</td></tr>
+<tr class="memdesc:gad45124e03053ced6f5b58c683dd73fee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Aggregates values using an aggregation function.  <a href="group__linq__op__aggregate.html#gad45124e03053ced6f5b58c683dd73fee">More...</a><br /></td></tr>
+<tr class="separator:gad45124e03053ced6f5b58c683dd73fee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8a7efe3eaa295147551d23f6343170aa"><td class="memTemplParams" colspan="2">template&lt;typename Acc , typename F &gt; </td></tr>
+<tr class="memitem:ga8a7efe3eaa295147551d23f6343170aa"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__linq__op__aggregate.html#ga8a7efe3eaa295147551d23f6343170aa">coveo::linq::aggregate</a> (const Acc &amp;seed, const F &amp;agg_f) -&gt; detail::aggregate_impl_2&lt; Acc, F &gt;</td></tr>
+<tr class="memdesc:ga8a7efe3eaa295147551d23f6343170aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Aggregates values using an aggregation function, starting with a seed.  <a href="group__linq__op__aggregate.html#ga8a7efe3eaa295147551d23f6343170aa">More...</a><br /></td></tr>
+<tr class="separator:ga8a7efe3eaa295147551d23f6343170aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7e4fcafe0c42d1a58042e8be3b2c87cf"><td class="memTemplParams" colspan="2">template&lt;typename Acc , typename F , typename RF &gt; </td></tr>
+<tr class="memitem:ga7e4fcafe0c42d1a58042e8be3b2c87cf"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__linq__op__aggregate.html#ga7e4fcafe0c42d1a58042e8be3b2c87cf">coveo::linq::aggregate</a> (const Acc &amp;seed, const F &amp;agg_f, const RF &amp;result_f) -&gt; detail::aggregate_impl_3&lt; Acc, F, RF &gt;</td></tr>
+<tr class="memdesc:ga7e4fcafe0c42d1a58042e8be3b2c87cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Aggregates values using aggregation function, seed and result selector.  <a href="group__linq__op__aggregate.html#ga7e4fcafe0c42d1a58042e8be3b2c87cf">More...</a><br /></td></tr>
+<tr class="separator:ga7e4fcafe0c42d1a58042e8be3b2c87cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abc1d99809845fa430a5c2fc4e83d1c7c"><td class="memTemplParams" colspan="2"><a id="abc1d99809845fa430a5c2fc4e83d1c7c"></a>
 template&lt;typename Pred &gt; </td></tr>
 <tr class="memitem:abc1d99809845fa430a5c2fc4e83d1c7c"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>coveo::linq::all</b> (const Pred &amp;pred) -&gt; detail::all_impl&lt; Pred &gt;</td></tr>
@@ -447,7 +447,7 @@ template&lt;typename Seq2 , typename ResultSelector &gt; </td></tr>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Feb 19 2019 23:49:24 for coveo::linq by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Feb 21 2019 01:23:57 for coveo::linq by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>
