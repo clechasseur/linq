@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.15"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>coveo::linq: List of built-in LINQ operators</title>
+<title>coveo::linq: all</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -63,35 +63,57 @@ $(function() {
 
 <div class="header">
   <div class="summary">
-<a href="#groups">Modules</a>  </div>
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
-<div class="title">List of built-in LINQ operators<div class="ingroups"><a class="el" href="group__linq.html">LINQ expressions</a> &raquo; <a class="el" href="group__linq__operators.html">LINQ operators</a></div></div>  </div>
+<div class="title">all<div class="ingroups"><a class="el" href="group__linq.html">LINQ expressions</a> &raquo; <a class="el" href="group__linq__operators.html">LINQ operators</a> &raquo; <a class="el" href="group__linq__operators__list.html">List of built-in LINQ operators</a></div></div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>Reference for all built-in LINQ operators.  
+<p>Checks if all elements in a sequence satisfy a predicate.  
 <a href="#details">More...</a></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="groups"></a>
-Modules</h2></td></tr>
-<tr class="memitem:group__linq__op__aggregate"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__linq__op__aggregate.html">aggregate</a></td></tr>
-<tr class="memdesc:group__linq__op__aggregate"><td class="mdescLeft">&#160;</td><td class="mdescRight">Aggregates values in a sequence to produce a single value. <br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:group__linq__op__all"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__linq__op__all.html">all</a></td></tr>
-<tr class="memdesc:group__linq__op__all"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if all elements in a sequence satisfy a predicate. <br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:group__linq__op__any"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__linq__op__any.html">any</a></td></tr>
-<tr class="memdesc:group__linq__op__any"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if a sequence has elements. <br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:group__linq__op__average"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__linq__op__average.html">average</a></td></tr>
-<tr class="memdesc:group__linq__op__average"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes average of a sequence of values. <br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:group__linq__op__cast"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__linq__op__cast.html">cast</a></td></tr>
-<tr class="memdesc:group__linq__op__cast"><td class="mdescLeft">&#160;</td><td class="mdescRight">Casts sequence elements to another type. <br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:gabc1d99809845fa430a5c2fc4e83d1c7c"><td class="memTemplParams" colspan="2">template&lt;typename Pred &gt; </td></tr>
+<tr class="memitem:gabc1d99809845fa430a5c2fc4e83d1c7c"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__linq__op__all.html#gabc1d99809845fa430a5c2fc4e83d1c7c">coveo::linq::all</a> (const Pred &amp;pred) -&gt; detail::all_impl&lt; Pred &gt;</td></tr>
+<tr class="memdesc:gabc1d99809845fa430a5c2fc4e83d1c7c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks elements in a sequence against a predicate.  <a href="group__linq__op__all.html#gabc1d99809845fa430a5c2fc4e83d1c7c">More...</a><br /></td></tr>
+<tr class="separator:gabc1d99809845fa430a5c2fc4e83d1c7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<p>This page lists all LINQ operators implemented in the <code>coveo::linq</code> library. They are listed alphabetically and grouped by purpose. </p>
+<p>The <code>all</code> operator scans a sequence and validates that all its elements satisfy a given <em>predicate</em>.</p>
+<p>This is a <b>terminal</b> operator.</p>
+<p><b>.NET equivalent:</b> All </p>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="gabc1d99809845fa430a5c2fc4e83d1c7c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gabc1d99809845fa430a5c2fc4e83d1c7c">&#9670;&nbsp;</a></span>all()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Pred &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto coveo::linq::all </td>
+          <td>(</td>
+          <td class="paramtype">const Pred &amp;&#160;</td>
+          <td class="paramname"><em>pred</em></td><td>)</td>
+          <td> -&gt; detail::all_impl&lt;Pred&gt;
+</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Scans a sequence and calls a <em>predicate</em> with each element. The predicate must return <code>true</code> if the element satisfies the predicate. The final result will indicate if all elements satisfy the predicate.</p>
+<p>Works on empty sequences (returns <code>true</code> in such a case).</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pred</td><td>Predicate to satisfy. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>(Once applied) <code>true</code> if all elements in sequence satisfy <code>pred</code>. </dd></dl>
+
+</div>
+</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

@@ -429,11 +429,32 @@ auto aggregate(const Acc& seed, const F& agg_f, const RF& result_f)
     return detail::aggregate_impl_3<Acc, F, RF>(seed, agg_f, result_f);
 }
 
-// C++ LINQ operator: all
-// .NET equivalent: All
+/**
+ * @ingroup linq_operators_list
+ * @defgroup linq_op_all all
+ * @brief Checks if all elements in a sequence satisfy a predicate.
+ *
+ * The @c all operator scans a sequence and validates that all its elements
+ * satisfy a given @e predicate.
+ *
+ * This is a @b terminal operator.
+ *
+ * <b>.NET equivalent:</b> All
+ */
 
-// Operator that checks if all elements in a sequence satisfy a given predicate.
-// Works on empty sequences (returns true in such a case).
+/**
+ * @ingroup linq_op_all
+ * @brief Checks elements in a sequence against a predicate.
+ *
+ * Scans a sequence and calls a @e predicate with each element. The predicate
+ * must return @c true if the element satisfies the predicate. The final result
+ * will indicate if all elements satisfy the predicate.
+ *
+ * Works on empty sequences (returns @c true in such a case).
+ *
+ * @param pred Predicate to satisfy.
+ * @return (Once applied) @c true if all elements in sequence satisfy @c pred.
+ */
 template<typename Pred>
 auto all(const Pred& pred)
     -> detail::all_impl<Pred>
@@ -441,10 +462,27 @@ auto all(const Pred& pred)
     return detail::all_impl<Pred>(pred);
 }
 
-// C++ LINQ operator: any
-// .NET equivalent: Any
+/**
+ * @ingroup linq_operators_list
+ * @defgroup linq_op_any any
+ * @brief Checks if a sequence has elements.
+ *
+ * The @c any operator checks if a sequence has elements, or if it has elements
+ * that satisfy a given @e predicate.
+ *
+ * This is a @b terminal operator.
+ *
+ * <b>.NET equivalent:</b> Any
+ */
 
-// Operator that checks if a sequence has elements.
+/**
+ * @ingroup linq_op_any
+ * @brief Checks for any element.
+ *
+ * Checks if a sequence has elements.
+ *
+ * @return (Once applied) @c true if sequence has at least one element.
+ */
 template<typename = void>
 auto any()
     -> detail::any_impl_0<>
@@ -452,8 +490,20 @@ auto any()
     return detail::any_impl_0<>();
 }
 
-// Operator that checks if at least one element in a sequence satisfy a given predicate.
-// Works on empty sequences (returns false in such a case).
+/**
+ * @ingroup linq_op_any
+ * @brief Checks for any element that satisfy a predicate.
+ *
+ * Checks if a sequence has at least one element that satisfy a @e predicate.
+ * The predicate is called with each element and must return @c true if the
+ * element satisfy the predicate. The final result indicates if there's at least
+ * one element that satisfy the predicate.
+ *
+ * Works on empty sequences (returns @c false in such a case).
+ *
+ * @param pred Predicate to satisfy.
+ * @return (Once applied) @c true if at least one element in sequence satisfies @c pred.
+ */
 template<typename Pred>
 auto any(const Pred& pred)
     -> detail::any_impl_1<Pred>
@@ -461,12 +511,33 @@ auto any(const Pred& pred)
     return detail::any_impl_1<Pred>(pred);
 }
 
-// C++ LINQ operator: average
-// .NET equivalent: Average
+/**
+ * @ingroup linq_operators_list
+ * @defgroup linq_op_average average
+ * @brief Computes average of a sequence of values.
+ *
+ * The @c average operator computes the average of all values in a sequence. To achieve this,
+ * it needs a <em>numerical function</em> to extract a numeric value from each sequence element.
+ *
+ * This is a @b terminal operator.
+ *
+ * <b>.NET equivalent:</b> Average
+ */
 
-// Operator that computes the average of all elements in a sequence
-// using a function to get a numerical value for each.
-// Does not work on empty sequences.
+/**
+ * @ingroup linq_op_average
+ * @brief Computes average using numerical function.
+ *
+ * Computes the average of all elements in a sequence by repeatedly calling a <em>numerical function</em>.
+ * The function receives an element as parameter and must return a numerical value for the element.
+ * The final result is the average of all such numerical values.
+ *
+ * Does not work on empty sequences.
+ *
+ * @param num_f Function to get numerical value for each element.
+ * @return (Once applied) Average of all extracted numerical values.
+ * @exception coveo::linq::empty_sequence The sequence contains no elements.
+ */
 template<typename F>
 auto average(const F& num_f)
     -> detail::average_impl<F>
@@ -474,11 +545,26 @@ auto average(const F& num_f)
     return detail::average_impl<F>(num_f);
 }
 
-// C++ LINQ operator: cast
-// .NET equivalent: Cast
+/**
+ * @ingroup linq_operators_list
+ * @defgroup linq_op_cast cast
+ * @brief Casts sequence elements to another type.
+ *
+ * The @c cast operator modifies a sequence by casting all its element to another type.
+ *
+ * <b>.NET equivalent:</b> Cast
+ */
 
-// Operator that casts (using static_cast) the elements
-// in a sequence to a different type.
+/**
+ * @ingroup linq_op_cast
+ * @brief Casts sequence elements to another type.
+ *
+ * Casts each element in a sequence to another type and returns a new sequence
+ * of all such modified elements. The elements are cast using @c static_cast.
+ *
+ * @tparam U New type to cast elements to.
+ * @return (Once applied) Sequence of cast elements.
+ */
 template<typename U>
 auto cast()
     -> detail::select_impl<detail::indexless_selector_proxy<detail::cast_selector<U>>>
