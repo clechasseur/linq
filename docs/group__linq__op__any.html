@@ -106,7 +106,8 @@ template&lt;typename  = void&gt; </div>
       </table>
 </div><div class="memdoc">
 <p>Checks if a sequence has elements.</p>
-<dl class="section return"><dt>Returns</dt><dd>(Once applied) <code>true</code> if sequence has at least one element. </dd></dl>
+<p>Use like this:</p>
+<div class="fragment"><div class="line"><span class="keyword">const</span> std::vector&lt;int&gt; ONE = { 42, 23, 66 };</div><div class="line"><span class="keyword">const</span> std::vector&lt;int&gt; TWO;</div><div class="line"></div><div class="line"><span class="keyword">using namespace </span>coveo::linq;</div><div class="line"><span class="keywordtype">bool</span> one_any = <a class="code" href="group__linq__entry__points.html#ga974e5ae2b7dec6aecc4be4b58546f6e2">from</a>(ONE)</div><div class="line">             | <a class="code" href="group__linq__op__any.html#gab259bf3801c9749f81bd651fbc80cfad">any</a>();</div><div class="line"><span class="keywordtype">bool</span> two_any = <a class="code" href="group__linq__entry__points.html#ga974e5ae2b7dec6aecc4be4b58546f6e2">from</a>(TWO)</div><div class="line">             | <a class="code" href="group__linq__op__any.html#gab259bf3801c9749f81bd651fbc80cfad">any</a>();</div><div class="line"><span class="comment">// one_any == true</span></div><div class="line"><span class="comment">// two_any == false</span></div></div><!-- fragment --><dl class="section return"><dt>Returns</dt><dd>(Once applied) <code>true</code> if sequence has at least one element. </dd></dl>
 
 </div>
 </div>
@@ -130,7 +131,8 @@ template&lt;typename Pred &gt; </div>
 </div><div class="memdoc">
 <p>Checks if a sequence has at least one element that satisfy a <em>predicate</em>. The predicate is called with each element and must return <code>true</code> if the element satisfy the predicate. The final result indicates if there's at least one element that satisfy the predicate.</p>
 <p>Works on empty sequences (returns <code>false</code> in such a case).</p>
-<dl class="params"><dt>Parameters</dt><dd>
+<p>Use like this:</p>
+<div class="fragment"><div class="line"><span class="keyword">const</span> <span class="keywordtype">int</span> NUMS = { 42, 23, 66 };</div><div class="line"></div><div class="line"><span class="keyword">using namespace </span>coveo::linq;</div><div class="line"><span class="keywordtype">bool</span> any_big = <a class="code" href="group__linq__entry__points.html#ga974e5ae2b7dec6aecc4be4b58546f6e2">from</a>(NUMS)</div><div class="line">             | <a class="code" href="group__linq__op__any.html#gab259bf3801c9749f81bd651fbc80cfad">any</a>([](<span class="keywordtype">int</span> i) { <span class="keywordflow">return</span> i &gt;= 90; });</div><div class="line"><span class="keywordtype">bool</span> any_odd = <a class="code" href="group__linq__entry__points.html#ga974e5ae2b7dec6aecc4be4b58546f6e2">from</a>(NUMS)</div><div class="line">             | <a class="code" href="group__linq__op__any.html#gab259bf3801c9749f81bd651fbc80cfad">any</a>([](<span class="keywordtype">int</span> i) { <span class="keywordflow">return</span> i % 2 != 0; });</div><div class="line"><span class="comment">// any_big == false</span></div><div class="line"><span class="comment">// any_odd == true</span></div></div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">pred</td><td>Predicate to satisfy. </td></tr>
   </table>
@@ -143,7 +145,7 @@ template&lt;typename Pred &gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Feb 22 2019 00:19:27 for coveo::linq by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Feb 23 2019 23:40:14 for coveo::linq by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>

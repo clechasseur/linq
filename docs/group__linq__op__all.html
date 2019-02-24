@@ -104,7 +104,8 @@ template&lt;typename Pred &gt; </div>
 </div><div class="memdoc">
 <p>Scans a sequence and calls a <em>predicate</em> with each element. The predicate must return <code>true</code> if the element satisfies the predicate. The final result will indicate if all elements satisfy the predicate.</p>
 <p>Works on empty sequences (returns <code>true</code> in such a case).</p>
-<dl class="params"><dt>Parameters</dt><dd>
+<p>Use like this:</p>
+<div class="fragment"><div class="line"><span class="keyword">const</span> <span class="keywordtype">int</span> NUMS = { 42, 23, 66 };</div><div class="line"></div><div class="line"><span class="keyword">using namespace </span>coveo::linq;</div><div class="line"><span class="keywordtype">bool</span> all_big = <a class="code" href="group__linq__entry__points.html#ga974e5ae2b7dec6aecc4be4b58546f6e2">from</a>(NUMS)</div><div class="line">             | <a class="code" href="group__linq__op__all.html#gabc1d99809845fa430a5c2fc4e83d1c7c">all</a>([](<span class="keywordtype">int</span> i) { <span class="keywordflow">return</span> i &gt;= 10; });</div><div class="line"><span class="keywordtype">bool</span> all_odd = <a class="code" href="group__linq__entry__points.html#ga974e5ae2b7dec6aecc4be4b58546f6e2">from</a>(NUMS)</div><div class="line">             | <a class="code" href="group__linq__op__all.html#gabc1d99809845fa430a5c2fc4e83d1c7c">all</a>([](<span class="keywordtype">int</span> i) { <span class="keywordflow">return</span> i % 2 != 0; });</div><div class="line"><span class="comment">// all_big == true</span></div><div class="line"><span class="comment">// all_odd == false</span></div></div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">pred</td><td>Predicate to satisfy. </td></tr>
   </table>
@@ -117,7 +118,7 @@ template&lt;typename Pred &gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Feb 22 2019 00:19:27 for coveo::linq by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Feb 23 2019 23:40:14 for coveo::linq by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>

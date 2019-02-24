@@ -375,6 +375,17 @@ auto operator|(Seq&& seq, Op&& op) -> decltype(std::forward<Op>(op)(std::forward
  *
  * Does not work on empty sequences.
  *
+ * Use like this:
+ *
+ * @code
+ *   const int NUMS[] = { 42, 23, 66 };
+ *
+ *   using namespace coveo::linq;
+ *   auto agg = from(NUMS)
+ *            | aggregate([](int so_far, int i) { return so_far + i; });
+ *   // agg == 131
+ * @endcode
+ *
  * @param agg_f Aggregation function.
  * @return (Once applied) Final aggregate value.
  * @exception coveo::linq::empty_sequence The sequence contains no elements.
@@ -394,6 +405,18 @@ auto aggregate(const F& agg_f)
  * The function receives two parameters: the current aggregate value, and the sequence element
  * to add. The function must then add the element to the aggregate and return a new aggregate
  * value. On the first call, the aggregate value is equal to the provided @c seed.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const int NUMS[] = { 42, 23, 66 };
+ *
+ *   using namespace coveo::linq;
+ *   auto agg = from(NUMS)
+ *            | aggregate(11,
+ *                        [](int so_far, int i) { return so_far + i; });
+ *   // agg == 142
+ * @endcode
  *
  * @param seed Initial aggregate value.
  * @param agg_f Aggregation function.
@@ -416,6 +439,19 @@ auto aggregate(const Acc& seed, const F& agg_f)
  * value. On the first call, the aggregate value is equal to the provided @c seed. Once the
  * final aggregate value is computed, it is passed to a <em>result selector</em> to produce
  * a final value to return.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const int NUMS[] = { 42, 23, 66 };
+ *
+ *   using namespace coveo::linq;
+ *   auto agg = from(NUMS)
+ *            | aggregate(11,
+ *                        [](int so_far, int i) { return so_far + i; },
+ *                        [](int so_far) { return so_far / 2; });
+ *   // agg == 71
+ * @endcode
  *
  * @param seed Initial aggregate value.
  * @param agg_f Aggregation function.
@@ -452,6 +488,20 @@ auto aggregate(const Acc& seed, const F& agg_f, const RF& result_f)
  *
  * Works on empty sequences (returns @c true in such a case).
  *
+ * Use like this:
+ *
+ * @code
+ *   const int NUMS = { 42, 23, 66 };
+ *
+ *   using namespace coveo::linq;
+ *   bool all_big = from(NUMS)
+ *                | all([](int i) { return i >= 10; });
+ *   bool all_odd = from(NUMS)
+ *                | all([](int i) { return i % 2 != 0; });
+ *   // all_big == true
+ *   // all_odd == false
+ * @endcode
+ *
  * @param pred Predicate to satisfy.
  * @return (Once applied) @c true if all elements in sequence satisfy @c pred.
  */
@@ -481,6 +531,21 @@ auto all(const Pred& pred)
  *
  * Checks if a sequence has elements.
  *
+ * Use like this:
+ *
+ * @code
+ *   const std::vector<int> ONE = { 42, 23, 66 };
+ *   const std::vector<int> TWO;
+ *
+ *   using namespace coveo::linq;
+ *   bool one_any = from(ONE)
+ *                | any();
+ *   bool two_any = from(TWO)
+ *                | any();
+ *   // one_any == true
+ *   // two_any == false
+ * @endcode
+ *
  * @return (Once applied) @c true if sequence has at least one element.
  */
 template<typename = void>
@@ -500,6 +565,20 @@ auto any()
  * one element that satisfy the predicate.
  *
  * Works on empty sequences (returns @c false in such a case).
+ *
+ * Use like this:
+ *
+ * @code
+ *   const int NUMS = { 42, 23, 66 };
+ *
+ *   using namespace coveo::linq;
+ *   bool any_big = from(NUMS)
+ *                | any([](int i) { return i >= 90; });
+ *   bool any_odd = from(NUMS)
+ *                | any([](int i) { return i % 2 != 0; });
+ *   // any_big == false
+ *   // any_odd == true
+ * @endcode
  *
  * @param pred Predicate to satisfy.
  * @return (Once applied) @c true if at least one element in sequence satisfies @c pred.
@@ -534,6 +613,17 @@ auto any(const Pred& pred)
  *
  * Does not work on empty sequences.
  *
+ * Use like this:
+ *
+ * @code
+ *   const std::vector<std::string> STRS = { "42", "23", "66" };
+ *
+ *   using namespace coveo::linq;
+ *   auto avg = from(STRS)
+ *            | average([](auto&& s) { return std::stoi(s); });
+ *   // avg == 43
+ * @endcode
+ *
  * @param num_f Function to get numerical value for each element.
  * @return (Once applied) Average of all extracted numerical values.
  * @exception coveo::linq::empty_sequence The sequence contains no elements.
@@ -561,6 +651,17 @@ auto average(const F& num_f)
  *
  * Casts each element in a sequence to another type and returns a new sequence
  * of all such modified elements. The elements are cast using @c static_cast.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const int NUMS[] = { 42, 23, 66 };
+ *
+ *   using namespace coveo::linq;
+ *   auto dbls = from(NUMS)
+ *             | cast<double>();
+ *   // dbls == { 42.0, 23.0, 66.0 }
+ * @endcode
  *
  * @tparam U New type to cast elements to.
  * @return (Once applied) Sequence of cast elements.

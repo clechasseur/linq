@@ -104,7 +104,8 @@ template&lt;typename F &gt; </div>
 </div><div class="memdoc">
 <p>Computes the average of all elements in a sequence by repeatedly calling a <em>numerical function</em>. The function receives an element as parameter and must return a numerical value for the element. The final result is the average of all such numerical values.</p>
 <p>Does not work on empty sequences.</p>
-<dl class="params"><dt>Parameters</dt><dd>
+<p>Use like this:</p>
+<div class="fragment"><div class="line"><span class="keyword">const</span> std::vector&lt;std::string&gt; STRS = { <span class="stringliteral">&quot;42&quot;</span>, <span class="stringliteral">&quot;23&quot;</span>, <span class="stringliteral">&quot;66&quot;</span> };</div><div class="line"></div><div class="line"><span class="keyword">using namespace </span>coveo::linq;</div><div class="line"><span class="keyword">auto</span> avg = <a class="code" href="group__linq__entry__points.html#ga974e5ae2b7dec6aecc4be4b58546f6e2">from</a>(STRS)</div><div class="line">         | <a class="code" href="group__linq__op__average.html#ga632e7f9002d9130888a023e4084453c4">average</a>([](<span class="keyword">auto</span>&amp;&amp; s) { <span class="keywordflow">return</span> std::stoi(s); });</div><div class="line"><span class="comment">// avg == 43</span></div></div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">num_f</td><td>Function to get numerical value for each element. </td></tr>
   </table>
@@ -123,7 +124,7 @@ template&lt;typename F &gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Feb 22 2019 00:19:27 for coveo::linq by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Feb 23 2019 23:40:14 for coveo::linq by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>

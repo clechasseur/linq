@@ -112,7 +112,8 @@ template&lt;typename F &gt; </div>
 </div><div class="memdoc">
 <p>Aggregates all elements in a sequence by repeatedly calling an <em>aggregation function</em>. The function receives two parameters: the current aggregate value, and the sequence element to add. The function must then add the element to the aggregate and return a new aggregate value. On the first call, the aggregate value is the first sequence element.</p>
 <p>Does not work on empty sequences.</p>
-<dl class="params"><dt>Parameters</dt><dd>
+<p>Use like this:</p>
+<div class="fragment"><div class="line"><span class="keyword">const</span> <span class="keywordtype">int</span> NUMS[] = { 42, 23, 66 };</div><div class="line"></div><div class="line"><span class="keyword">using namespace </span>coveo::linq;</div><div class="line"><span class="keyword">auto</span> agg = <a class="code" href="group__linq__entry__points.html#ga974e5ae2b7dec6aecc4be4b58546f6e2">from</a>(NUMS)</div><div class="line">         | <a class="code" href="group__linq__op__aggregate.html#gad45124e03053ced6f5b58c683dd73fee">aggregate</a>([](<span class="keywordtype">int</span> so_far, <span class="keywordtype">int</span> i) { <span class="keywordflow">return</span> so_far + i; });</div><div class="line"><span class="comment">// agg == 131</span></div></div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">agg_f</td><td>Aggregation function. </td></tr>
   </table>
@@ -157,7 +158,8 @@ template&lt;typename Acc , typename F &gt; </div>
       </table>
 </div><div class="memdoc">
 <p>Aggregates all elements in a sequence by repeatedly calling an <em>aggregation function</em>. The function receives two parameters: the current aggregate value, and the sequence element to add. The function must then add the element to the aggregate and return a new aggregate value. On the first call, the aggregate value is equal to the provided <code>seed</code>.</p>
-<dl class="params"><dt>Parameters</dt><dd>
+<p>Use like this:</p>
+<div class="fragment"><div class="line"><span class="keyword">const</span> <span class="keywordtype">int</span> NUMS[] = { 42, 23, 66 };</div><div class="line"></div><div class="line"><span class="keyword">using namespace </span>coveo::linq;</div><div class="line"><span class="keyword">auto</span> agg = <a class="code" href="group__linq__entry__points.html#ga974e5ae2b7dec6aecc4be4b58546f6e2">from</a>(NUMS)</div><div class="line">         | <a class="code" href="group__linq__op__aggregate.html#gad45124e03053ced6f5b58c683dd73fee">aggregate</a>(11,</div><div class="line">                     [](<span class="keywordtype">int</span> so_far, <span class="keywordtype">int</span> i) { <span class="keywordflow">return</span> so_far + i; });</div><div class="line"><span class="comment">// agg == 142</span></div></div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">seed</td><td>Initial aggregate value. </td></tr>
     <tr><td class="paramname">agg_f</td><td>Aggregation function. </td></tr>
@@ -203,7 +205,8 @@ template&lt;typename Acc , typename F , typename RF &gt; </div>
       </table>
 </div><div class="memdoc">
 <p>Aggregates all elements in a sequence by repeatedly calling an <em>aggregation function</em>. The function receives two parameters: the current aggregate value, and the sequence element to add. The function must then add the element to the aggregate and return a new aggregate value. On the first call, the aggregate value is equal to the provided <code>seed</code>. Once the final aggregate value is computed, it is passed to a <em>result selector</em> to produce a final value to return.</p>
-<dl class="params"><dt>Parameters</dt><dd>
+<p>Use like this:</p>
+<div class="fragment"><div class="line"><span class="keyword">const</span> <span class="keywordtype">int</span> NUMS[] = { 42, 23, 66 };</div><div class="line"></div><div class="line"><span class="keyword">using namespace </span>coveo::linq;</div><div class="line"><span class="keyword">auto</span> agg = <a class="code" href="group__linq__entry__points.html#ga974e5ae2b7dec6aecc4be4b58546f6e2">from</a>(NUMS)</div><div class="line">         | <a class="code" href="group__linq__op__aggregate.html#gad45124e03053ced6f5b58c683dd73fee">aggregate</a>(11,</div><div class="line">                     [](<span class="keywordtype">int</span> so_far, <span class="keywordtype">int</span> i) { <span class="keywordflow">return</span> so_far + i; },</div><div class="line">                     [](<span class="keywordtype">int</span> so_far) { <span class="keywordflow">return</span> so_far / 2; });</div><div class="line"><span class="comment">// agg == 71</span></div></div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">seed</td><td>Initial aggregate value. </td></tr>
     <tr><td class="paramname">agg_f</td><td>Aggregation function. </td></tr>
@@ -218,7 +221,7 @@ template&lt;typename Acc , typename F , typename RF &gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Feb 22 2019 00:19:27 for coveo::linq by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Feb 23 2019 23:40:14 for coveo::linq by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>

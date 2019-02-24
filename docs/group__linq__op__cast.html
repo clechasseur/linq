@@ -101,7 +101,8 @@ template&lt;typename U &gt; </div>
       </table>
 </div><div class="memdoc">
 <p>Casts each element in a sequence to another type and returns a new sequence of all such modified elements. The elements are cast using <code>static_cast</code>.</p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
+<p>Use like this:</p>
+<div class="fragment"><div class="line"><span class="keyword">const</span> <span class="keywordtype">int</span> NUMS[] = { 42, 23, 66 };</div><div class="line"></div><div class="line"><span class="keyword">using namespace </span>coveo::linq;</div><div class="line"><span class="keyword">auto</span> dbls = <a class="code" href="group__linq__entry__points.html#ga974e5ae2b7dec6aecc4be4b58546f6e2">from</a>(NUMS)</div><div class="line">          | cast&lt;double&gt;();</div><div class="line"><span class="comment">// dbls == { 42.0, 23.0, 66.0 }</span></div></div><!-- fragment --><dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">U</td><td>New type to cast elements to. </td></tr>
   </table>
@@ -114,7 +115,7 @@ template&lt;typename U &gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Feb 22 2019 00:19:27 for coveo::linq by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Feb 23 2019 23:40:14 for coveo::linq by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>
