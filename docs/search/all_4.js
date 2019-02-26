@@ -1,5 +1,7 @@
 var searchData=
 [
+  ['element_5fat',['element_at',['../group__linq__op__elem__at.html#ga2f97df3253cdd434ffe49b8846287c8e',1,'coveo::linq']]],
+  ['element_5fat_5for_5fdefault',['element_at_or_default',['../group__linq__op__elem__at__or__def.html#gacbaed59b1005b2903fb67da9c3e1ab9f',1,'coveo::linq']]],
   ['empty',['empty',['../classcoveo_1_1enumerable.html#acb57adb225af6d3fe21b7cc780290b75',1,'coveo::enumerable']]],
   ['empty_5fsequence',['empty_sequence',['../classcoveo_1_1linq_1_1empty__sequence.html',1,'coveo::linq']]],
   ['end',['end',['../classcoveo_1_1enumerable.html#ab1270f19e893477e2176a567be787308',1,'coveo::enumerable']]],
@@ -12,5 +14,9 @@ var searchData=
   ['enumerate_5fone',['enumerate_one',['../seq_2enumerable_8h.html#a32f6db3c165592bc9ed3b7a249c8edd7',1,'coveo']]],
   ['enumerate_5fone_5fref',['enumerate_one_ref',['../seq_2enumerable_8h.html#aebdbc22341304234156591d5241fdd1d',1,'coveo']]],
   ['enumerate_5frange',['enumerate_range',['../seq_2enumerable_8h.html#a2abce1019006685858b49bbcf324b033',1,'coveo']]],
-  ['exception_2eh',['exception.h',['../exception_8h.html',1,'']]]
+  ['except',['except',['../group__linq__op__except.html#gade5f473a19c34abb4a8de526afefa756',1,'coveo::linq::except(Seq2 &amp;&amp;seq2) -&gt; detail::except_impl&lt; Seq2, detail::less&lt;&gt;&gt;'],['../group__linq__op__except.html#gaf4c93753e4abef182ddccab414754712',1,'coveo::linq::except(Seq2 &amp;&amp;seq2, Pred &amp;&amp;pred) -&gt; detail::except_impl&lt; Seq2, Pred &gt;']]],
+  ['exception_2eh',['exception.h',['../exception_8h.html',1,'']]],
+  ['element_5fat',['element_at',['../group__linq__op__elem__at.html',1,'']]],
+  ['element_5fat_5for_5fdefault',['element_at_or_default',['../group__linq__op__elem__at__or__def.html',1,'']]],
+  ['except',['except',['../group__linq__op__except.html',1,'']]]
 ];

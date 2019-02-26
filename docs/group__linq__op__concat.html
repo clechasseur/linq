@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.15"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>coveo::linq: cast</title>
+<title>coveo::linq: concat</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -65,50 +65,53 @@ $(function() {
   <div class="summary">
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
-<div class="title">cast<div class="ingroups"><a class="el" href="group__linq.html">LINQ expressions</a> &raquo; <a class="el" href="group__linq__operators.html">LINQ operators</a> &raquo; <a class="el" href="group__linq__operators__list.html">List of built-in LINQ operators</a></div></div>  </div>
+<div class="title">concat<div class="ingroups"><a class="el" href="group__linq.html">LINQ expressions</a> &raquo; <a class="el" href="group__linq__operators.html">LINQ operators</a> &raquo; <a class="el" href="group__linq__operators__list.html">List of built-in LINQ operators</a></div></div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>Casts sequence elements to another type.  
+<p>Concatenate two sequences.  
 <a href="#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:gaab2130ad3029d176bdc933614270d3de"><td class="memTemplParams" colspan="2">template&lt;typename U &gt; </td></tr>
-<tr class="memitem:gaab2130ad3029d176bdc933614270d3de"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__linq__op__cast.html#gaab2130ad3029d176bdc933614270d3de">coveo::linq::cast</a> () -&gt; detail::select_impl&lt; detail::indexless_selector_proxy&lt; detail::cast_selector&lt; U &gt;&gt;&gt;</td></tr>
-<tr class="memdesc:gaab2130ad3029d176bdc933614270d3de"><td class="mdescLeft">&#160;</td><td class="mdescRight">Casts sequence elements to another type.  <a href="group__linq__op__cast.html#gaab2130ad3029d176bdc933614270d3de">More...</a><br /></td></tr>
-<tr class="separator:gaab2130ad3029d176bdc933614270d3de"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gabb282c00ddab5b4d3d0591a03a20c724"><td class="memTemplParams" colspan="2">template&lt;typename Seq2 &gt; </td></tr>
+<tr class="memitem:gabb282c00ddab5b4d3d0591a03a20c724"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__linq__op__concat.html#gabb282c00ddab5b4d3d0591a03a20c724">coveo::linq::concat</a> (Seq2 &amp;&amp;seq2) -&gt; detail::concat_impl&lt; Seq2 &gt;</td></tr>
+<tr class="memdesc:gabb282c00ddab5b4d3d0591a03a20c724"><td class="mdescLeft">&#160;</td><td class="mdescRight">Concatenates two sequences.  <a href="group__linq__op__concat.html#gabb282c00ddab5b4d3d0591a03a20c724">More...</a><br /></td></tr>
+<tr class="separator:gabb282c00ddab5b4d3d0591a03a20c724"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<p>The <code>cast</code> operator modifies a sequence by casting all its element to another type.</p>
-<p><b>.NET equivalent:</b> Cast </p>
+<p>The <code>concat</code> operator concatenates two sequences, producing a new sequence containing all elements from both source sequences.</p>
+<p><b>.NET equivalent:</b> Concat </p>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="gaab2130ad3029d176bdc933614270d3de"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaab2130ad3029d176bdc933614270d3de">&#9670;&nbsp;</a></span>cast()</h2>
+<a id="gabb282c00ddab5b4d3d0591a03a20c724"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gabb282c00ddab5b4d3d0591a03a20c724">&#9670;&nbsp;</a></span>concat()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename U &gt; </div>
+template&lt;typename Seq2 &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">auto coveo::linq::cast </td>
+          <td class="memname">auto coveo::linq::concat </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> -&gt; detail::select_impl&lt;detail::indexless_selector_proxy&lt;detail::cast_selector&lt;U&gt;&gt;&gt;
+          <td class="paramtype">Seq2 &amp;&amp;&#160;</td>
+          <td class="paramname"><em>seq2</em></td><td>)</td>
+          <td> -&gt; detail::concat_impl&lt;Seq2&gt;
 </td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Casts each element in a sequence to another type and returns a new sequence of all such modified elements. The elements are cast using <code>static_cast</code>.</p>
+<p>Concatenates two sequences, producing a sequence that contains all elements from both source sequences.</p>
+<p>For this to work, both source sequences must contain compatible elements.</p>
+<p>The resulting sequence's elements will be <code>const</code> if at least one source sequence's elements are <code>const</code>.</p>
 <p>Use like this:</p>
-<div class="fragment"><div class="line"><span class="keyword">const</span> <span class="keywordtype">int</span> NUMS[] = { 42, 23, 66 };</div><div class="line"></div><div class="line"><span class="keyword">using namespace </span>coveo::linq;</div><div class="line"><span class="keyword">auto</span> dbls = <a class="code" href="group__linq__entry__points.html#ga974e5ae2b7dec6aecc4be4b58546f6e2">from</a>(NUMS)</div><div class="line">          | cast&lt;double&gt;();</div><div class="line"><span class="comment">// dbls == { 42.0, 23.0, 66.0 }</span></div></div><!-- fragment --><dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">U</td><td>New type to cast elements to. </td></tr>
+<div class="fragment"><div class="line"><span class="keyword">const</span> <span class="keywordtype">int</span> ONE[] = { 42, 23, 66 };</div><div class="line"><span class="keyword">const</span> <span class="keywordtype">int</span> TWO[] = { 67, 11, 7 };</div><div class="line"></div><div class="line"><span class="keyword">using namespace </span>coveo::linq;</div><div class="line"><span class="keyword">auto</span> seq = <a class="code" href="group__linq__entry__points.html#ga974e5ae2b7dec6aecc4be4b58546f6e2">from</a>(ONE)</div><div class="line">         | <a class="code" href="group__linq__op__concat.html#gabb282c00ddab5b4d3d0591a03a20c724">concat</a>(TWO);</div><div class="line"><span class="comment">// seq == { 42, 23, 66, 67, 11, 7 }</span></div></div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">seq2</td><td>Second sequence to concatenate. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>(Once applied) Sequence of cast elements. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>(Once applied) Concatenation of both sequences. </dd></dl>
 
 </div>
 </div>

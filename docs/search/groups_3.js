@@ -1,8 +1,6 @@
 var searchData=
 [
-  ['linq_20expressions',['LINQ expressions',['../group__linq.html',1,'']]],
-  ['linq_20operator_20chaining',['LINQ operator chaining',['../group__linq__chaining.html',1,'']]],
-  ['linq_20expression_20entry_20points',['LINQ expression entry points',['../group__linq__entry__points.html',1,'']]],
-  ['linq_20operators',['LINQ operators',['../group__linq__operators.html',1,'']]],
-  ['list_20of_20built_2din_20linq_20operators',['List of built-in LINQ operators',['../group__linq__operators__list.html',1,'']]]
+  ['element_5fat',['element_at',['../group__linq__op__elem__at.html',1,'']]],
+  ['element_5fat_5for_5fdefault',['element_at_or_default',['../group__linq__op__elem__at__or__def.html',1,'']]],
+  ['except',['except',['../group__linq__op__except.html',1,'']]]
 ];

@@ -674,11 +674,44 @@ auto cast()
         detail::indexless_selector_proxy<detail::cast_selector<U>>(detail::cast_selector<U>()));
 }
 
-// C++ LINQ operator: concat
-// .NET equivalent: Concat
+/**
+ * @ingroup linq_operators_list
+ * @defgroup linq_op_concat concat
+ * @brief Concatenate two sequences.
+ *
+ * The @c concat operator concatenates two sequences, producing a new sequence
+ * containing all elements from both source sequences.
+ *
+ * <b>.NET equivalent:</b> Concat
+ */
 
-// Operator that concatenates the elements of two sequences.
-// Sequences must have compatible elements for this to work.
+/**
+ * @ingroup linq_op_concat
+ * @brief Concatenates two sequences.
+ *
+ * Concatenates two sequences, producing a sequence that contains all elements
+ * from both source sequences.
+ *
+ * For this to work, both source sequences must contain compatible elements.
+ *
+ * The resulting sequence's elements will be @c const if at least one source
+ * sequence's elements are @c const.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const int ONE[] = { 42, 23, 66 };
+ *   const int TWO[] = { 67, 11, 7 };
+ *
+ *   using namespace coveo::linq;
+ *   auto seq = from(ONE)
+ *            | concat(TWO);
+ *   // seq == { 42, 23, 66, 67, 11, 7 }
+ * @endcode
+ *
+ * @param seq2 Second sequence to concatenate.
+ * @return (Once applied) Concatenation of both sequences.
+ */
 template<typename Seq2>
 auto concat(Seq2&& seq2)
     -> detail::concat_impl<Seq2>
@@ -686,11 +719,42 @@ auto concat(Seq2&& seq2)
     return detail::concat_impl<Seq2>(std::forward<Seq2>(seq2));
 }
 
-// C++ LINQ operator: contains
-// .NET equivalent: Contains
+/**
+ * @ingroup linq_operators_list
+ * @defgroup linq_op_contains contains
+ * @brief Looks for an element in a sequence.
+ *
+ * The @c contains operator determines if a sequence contains a specific element.
+ *
+ * This is a @b terminal operator.
+ *
+ * <b>.NET equivalent:</b> Contains
+ */
 
-// Operator that determines if a sequence contains a specific element.
-// Uses operator== to compare the elements.
+/**
+ * @ingroup linq_op_contains
+ * @brief Look for element in a sequence.
+ *
+ * Scans a sequence, looking for the provided element. Elements are compared
+ * using <tt>operator==()</tt>.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const int NUMS[] = { 42, 23, 66 };
+ *
+ *   using namespace coveo::linq;
+ *   auto has_42 = from(NUMS)
+ *               | contains(42);
+ *   auto has_67 = from(NUMS)
+ *               | contains(67);
+ *   // has_42 == true
+ *   // has_67 == false
+ * @endcode
+ *
+ * @param obj Element to look for.
+ * @return (Once applied) @c true if @c obj was found in sequence.
+ */
 template<typename T>
 auto contains(const T& obj)
     -> detail::contains_impl_1<T>
@@ -698,8 +762,34 @@ auto contains(const T& obj)
     return detail::contains_impl_1<T>(obj);
 }
 
-// Same thing with a predicate to compare the elements.
-// The predicate always receives obj as its second argument.
+/**
+ * @ingroup linq_op_contains
+ * @brief Look for element in a sequence using a predicate.
+ *
+ * Scans a sequence, looking for the provided element. Elements are compared
+ * using the provided predicate.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const int NUMS[] = { 42, 23, 66 };
+ *
+ *   auto fuzzy_equal = [](int i, int j) { return std::abs(i - j) <= 2; };
+ *
+ *   using namespace coveo::linq;
+ *   auto has_67 = from(NUMS)
+ *               | contains(67, fuzzy_equal);
+ *   auto has_11 = from(NUMS)
+ *               | contains(11, fuzzy_equal);
+ *   // has_67 == true
+ *   // has_11 == false
+ * @endcode
+ *
+ * @param obj Element to look for.
+ * @param pred Predicate used to compare the elements. Always receives
+ *             @c obj as its second argument.
+ * @return (Once applied) @c true if @c obj was found in sequence.
+ */
 template<typename T, typename Pred>
 auto contains(const T& obj, const Pred& pred)
     -> detail::contains_impl_2<T, Pred>
@@ -707,10 +797,38 @@ auto contains(const T& obj, const Pred& pred)
     return detail::contains_impl_2<T, Pred>(obj, pred);
 }
 
-// C++ LINQ operator: count
-// .NET equivalent: Count
+/**
+ * @ingroup linq_operators_list
+ * @defgroup linq_op_count count
+ * @brief Counts elements in a sequence.
+ *
+ * The @c count operator computes the number of elements in a sequence,
+ * or the number of elements satisfying a given predicate.
+ *
+ * This is a @b terminal operator.
+ *
+ * <b>.NET equivalent:</b> Count
+ */
 
-// Operator that returns the number of elements in a sequence.
+/**
+ * @ingroup linq_op_count
+ * @brief Counts elements in sequence.
+ *
+ * Computes the number of elements in a sequence.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const int NUMS[] = { 42, 23, 66 };
+ *
+ *   using namespace coveo::linq;
+ *   auto num = from(NUMS)
+ *            | count();
+ *   // num == 3
+ * @endcode
+ *
+ * @return (Once applied) Number of elements in sequence.
+ */
 template<typename = void>
 auto count()
     -> detail::count_impl_0<>
@@ -718,8 +836,27 @@ auto count()
     return detail::count_impl_0<>();
 }
 
-// Operator that returns the number of elements in a sequence
-// that satisfy a given predicate.
+/**
+ * @ingroup linq_op_count
+ * @brief Counts elements in sequence satisfying a predicate.
+ *
+ * Computes the number of elements in a sequence that satisfy the given predicate.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const int NUMS[] = { 42, 23, 66 };
+ *
+ *   using namespace coveo::linq;
+ *   auto num = from(NUMS)
+ *            | count([](int i) { return i % 2 == 0; });
+ *   // num == 2
+ * @endcode
+ *
+ * @param pred Predicate to satisfy.
+ * @return (Once applied) Number of elements in sequence for which
+ *         @c pred has returned @c true.
+ */
 template<typename Pred>
 auto count(const Pred& pred)
     -> detail::count_impl_1<Pred>
@@ -727,11 +864,42 @@ auto count(const Pred& pred)
     return detail::count_impl_1<Pred>(pred);
 }
 
-// C++ LINQ operator: default_if_empty
-// .NET equivalent: DefaultIfEmpty
+/**
+ * @ingroup linq_operators_list
+ * @defgroup linq_op_def_empty default_if_empty
+ * @brief Ensures a sequence has at least one element.
+ *
+ * The @c default_if_empty operator either returns the source sequence or,
+ * if that sequence is empty, a new sequence with a single, default element.
+ *
+ * <b>.NET equivalent:</b> DefaultIfEmpty
+ */
 
-// Operator that returns a sequence or, if it's empty, a sequence
-// containing a single, default element.
+/**
+ * @ingroup linq_op_def_empty
+ * @brief Ensures sequence has at least one element.
+ *
+ * Either returns the source sequence or, if that sequence is empty,
+ * a new sequence containing a single, default element.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const std::vector<int> THREE = { 42, 23, 66 };
+ *   const std::vector<int> EMPTY;
+ *
+ *   using namespace coveo::linq;
+ *   auto seq1 = from(THREE)
+ *             | default_if_empty();
+ *   auto seq2 = from(EMPTY)
+ *             | default_if_empty();
+ *   // seq1 == { 42, 23, 66 }
+ *   // seq2 == { 0 }
+ * @endcode
+ *
+ * @return (Once applied) Source sequence, or sequence with
+ *         single, default element.
+ */
 template<typename = void>
 auto default_if_empty()
     -> detail::default_if_empty_impl_0<>
@@ -739,7 +907,32 @@ auto default_if_empty()
     return detail::default_if_empty_impl_0<>();
 }
 
-// Same thing but with a specific default value if sequence is empty.
+/**
+ * @ingroup linq_op_def_empty
+ * @brief Ensures sequence has at least one element, specifying said element.
+ *
+ * Either returns the source sequence or, if that sequence is empty,
+ * a new sequence containing the provided default element.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const std::vector<int> THREE = { 42, 23, 66 };
+ *   const std::vector<int> EMPTY;
+ *
+ *   using namespace coveo::linq;
+ *   auto seq1 = from(THREE)
+ *             | default_if_empty(11);
+ *   auto seq2 = from(EMPTY)
+ *             | default_if_empty(11);
+ *   // seq1 == { 42, 23, 66 }
+ *   // seq2 == { 11 }
+ * @endcode
+ *
+ * @param obj Default element to use if sequence is empty.
+ * @return (Once applied) Source sequence, or sequence with
+ *         single element @c obj.
+ */
 template<typename T>
 auto default_if_empty(const T& obj)
     -> detail::default_if_empty_impl_1<T>
@@ -747,11 +940,40 @@ auto default_if_empty(const T& obj)
     return detail::default_if_empty_impl_1<T>(obj);
 }
 
-// C++ LINQ operator: distinct
-// .NET equivalent: Distinct
+/**
+ * @ingroup linq_operators_list
+ * @defgroup linq_op_distinct distinct
+ * @brief Filters out duplicate elements in a sequence.
+ *
+ * The @c distinct operator filters out duplicate elements in a sequence.
+ * Unique elements are returned in the same order they appear in the source sequence.
+ *
+ * <b>.NET equivalent:</b> Distinct
+ */
 
-// Operator that filters out duplicate elements in a sequence.
-// Otherwise, returns elements in the same order.
+/**
+ * @ingroup linq_op_distinct
+ * @brief Filters out duplicate elements in sequence.
+ *
+ * Filters out duplicate elements in a sequence, returning the unique
+ * elements in the same order they appear in the source sequence.
+ *
+ * To filter out duplicates, elements are sorted using <tt>operator&lt;()</tt>.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const int NUMS[] = { 42, 23, 11, 66, 11, 42, 7, 66, 67 };
+ *
+ *   using namespace coveo::linq;
+ *   auto seq = from(NUMS)
+ *            | distinct();
+ *   // seq = { 42, 23, 11, 66, 7, 67 }
+ * @endcode
+ *
+ * @return (Once applied) Sequence containing all unique elements
+ *         from source sequence.
+ */
 template<typename = void>
 auto distinct()
     -> detail::distinct_impl<detail::less<>>
@@ -759,8 +981,33 @@ auto distinct()
     return detail::distinct_impl<detail::less<>>(detail::less<>());
 }
 
-// Same thing but with a predicate to compare the elements.
-// The predicate must provide a strict ordering of elements, like std::less.
+/**
+ * @ingroup linq_op_distinct
+ * @brief Filters out duplicate elements in sequence using predicate.
+ *
+ * Filters out duplicate elements in a sequence, returning the unique
+ * elements in the same order they appear in the source sequence.
+ *
+ * To filter out duplicates, the provided predicate is used to sort
+ * the elements. The predicate must provide a strict ordering of the
+ * elements, like <tt>std::less</tt>.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const int NUMS[] = { 42, 23, 11, 66, 11, 42, 7, 66, 67 };
+ *
+ *   using namespace coveo::linq;
+ *   auto seq = from(NUMS)
+ *            | distinct([](int i, int j) { return i > j; });
+ *   // seq = { 42, 23, 11, 66, 7, 67 }
+ * @endcode
+ *
+ * @param pred Predicate used to order the elements in order to
+ *             remove the duplicates.
+ * @return (Once applied) Sequence containing all unique elements
+ *         from source sequence.
+ */
 template<typename Pred>
 auto distinct(Pred&& pred)
     -> detail::distinct_impl<Pred>
@@ -768,11 +1015,45 @@ auto distinct(Pred&& pred)
     return detail::distinct_impl<Pred>(std::forward<Pred>(pred));
 }
 
-// C++ LINQ operator: element_at
-// .NET equivalent: ElementAt
+/**
+ * @ingroup linq_operators_list
+ * @defgroup linq_op_elem_at element_at
+ * @brief Returns nth element in a sequence.
+ *
+ * The @c element_at operator returns the nth element in the sequence.
+ * If the sequence does not have enough elements, an exception is thrown.
+ *
+ * This is a @b terminal operator.
+ *
+ * <b>.NET equivalent:</b> ElementAt
+ */
 
-// Operator that returns the nth element in a sequence.
-// Throws if sequence does not have enough elements.
+/**
+ * @ingroup linq_op_elem_at
+ * @brief Returns nth element in sequence.
+ *
+ * Returns the <tt>n</tt>th element in a sequence. If the sequence
+ * does not have enough elements, <tt>coveo::linq::out_of_range</tt>
+ * is thrown.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const int NUMS[] = { 42, 23, 66 };
+ *
+ *   using namespace coveo::linq;
+ *   auto second = from(NUMS)
+ *               | element_at(1);
+ *   // second == 23
+ *   // This throws an exception:
+ *   // auto fourth = from(NUMS)
+ *   //             | element_at(3);
+ * @endcode
+ *
+ * @param n 0-based index of element to return.
+ * @return (Once applied) <tt>n</tt>th element in sequence.
+ * @exception coveo::linq::out_of_range The sequence does not have enough elements.
+ */
 template<typename = void>
 auto element_at(std::size_t n)
     -> detail::element_at_impl<>
@@ -780,12 +1061,45 @@ auto element_at(std::size_t n)
     return detail::element_at_impl<>(n);
 }
 
-// C++ LINQ operator: element_at_or_default
-// .NET equivalent: ElementAtOrDefault
+/**
+ * @ingroup linq_operators_list
+ * @defgroup linq_op_elem_at_or_def element_at_or_default
+ * @brief Returns nth element in a sequence, or a default value.
+ *
+ * The @c element_at operator returns the nth element in the sequence.
+ * If the sequence does not have enough elements, a default value is returned instead.
+ *
+ * This is a @b terminal operator.
+ *
+ * <b>.NET equivalent:</b> ElementAtOrDefault
+ */
 
-// Operator that returns the nth element in a sequence or,
-// if the sequence does not have enough elements, a
-// default-initialized value.
+/**
+ * @ingroup linq_op_elem_at_or_def
+ * @brief Returns nth element in sequence or default value.
+ *
+ * Returns the <tt>n</tt>th element in a sequence. If the sequence
+ * does not have enough elements, a <em>default-initialized</em>
+ * value is returned instead.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const int NUMS[] = { 42, 23, 66 };
+ *
+ *   using namespace coveo::linq;
+ *   auto second = from(NUMS)
+ *               | element_at(1);
+ *   auto fourth = from(NUMS)
+ *               | element_at(3);
+ *   // second == 23
+ *   // fourth == 0
+ * @endcode
+ *
+ * @param n 0-based index of element to return.
+ * @return (Once applied) <tt>n</tt>th element in sequence or,
+ *         if sequence does not have enough elements, a default value.
+ */
 template<typename = void>
 auto element_at_or_default(std::size_t n)
     -> detail::element_at_or_default_impl<>
@@ -793,11 +1107,46 @@ auto element_at_or_default(std::size_t n)
     return detail::element_at_or_default_impl<>(n);
 }
 
-// C++ LINQ operator: except
-// .NET equivalent: Except
+/**
+ * @ingroup linq_operators_list
+ * @defgroup linq_op_except except
+ * @brief Performs a set difference between two sequences.
+ *
+ * The @c except operator returns all elements in the first sequence
+ * that are not also found in the second sequence (essentially a set
+ * difference). The elements are returned in the order that they appear
+ * in the first sequence.
+ *
+ * <b>.NET equivalent:</b> Except
+ */
 
-// Operator that returns all elements that are in the first sequence
-// but not in the second sequence (essentially a set difference).
+/**
+ * @ingroup linq_op_except
+ * @brief Performs set difference between two sequences.
+ *
+ * Returns a sequence containing all elements from the first source sequence
+ * that are not also in the second source sequence (essentially a set difference).
+ * Elements are returned in the order that they appear in the first sequence.
+ *
+ * To filter out elements, elements are sorted using <tt>operator&lt;()</tt>.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const int YES[] = { 42, 23, 66, 11, 7, 67 };
+ *   const int NO[]  = { 10, 7, 60, 42, 43, 50 };
+ *
+ *   using namespace coveo::linq;
+ *   auto seq = from(YES)
+ *            | except(NO);
+ *   // seq = { 23, 66, 11, 67 }
+ * @endcode
+ *
+ * @param seq2 Second source sequence, containing the elements
+ *             to filter out.
+ * @return (Once applied) Sequence containing elements from first
+ *         source sequence that are not in @c seq2.
+ */
 template<typename Seq2>
 auto except(Seq2&& seq2)
     -> detail::except_impl<Seq2, detail::less<>>
@@ -805,8 +1154,35 @@ auto except(Seq2&& seq2)
     return detail::except_impl<Seq2, detail::less<>>(std::forward<Seq2>(seq2), detail::less<>());
 }
 
-// Same thing but with a predicate to compare the elements.
-// The predicate must provide a strict ordering of the elements, like std::less.
+/**
+ * @ingroup linq_op_except
+ * @brief Performs set difference between two sequences using predicate.
+ *
+ * Returns a sequence containing all elements from the first source sequence
+ * that are not also in the second source sequence (essentially a set difference).
+ * Elements are returned in the order that they appear in the first sequence.
+ *
+ * To filter out elements, the provided predicate is used to sort the elements.
+ * The predicate must provide a strict ordering of the elements, like <tt>std::less</tt>.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const int YES[] = { 42, 23, 66, 11, 7, 67 };
+ *   const int NO[]  = { 10, 7, 60, 42, 43, 50 };
+ *
+ *   using namespace coveo::linq;
+ *   auto seq = from(YES)
+ *            | except(NO, [](int i, int j) { return i > j; });
+ *   // seq = { 23, 66, 11, 67 }
+ * @endcode
+ *
+ * @param seq2 Second source sequence, containing the elements
+ *             to filter out.
+ * @param pred Predicate used to order elements to filter out.
+ * @return (Once applied) Sequence containing elements from first
+ *         source sequence that are not in @c seq2.
+ */
 template<typename Seq2, typename Pred>
 auto except(Seq2&& seq2, Pred&& pred)
     -> detail::except_impl<Seq2, Pred>

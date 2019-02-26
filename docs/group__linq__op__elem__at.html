@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.15"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>coveo::linq: average</title>
+<title>coveo::linq: element_at</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -65,56 +65,55 @@ $(function() {
   <div class="summary">
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
-<div class="title">average<div class="ingroups"><a class="el" href="group__linq.html">LINQ expressions</a> &raquo; <a class="el" href="group__linq__operators.html">LINQ operators</a> &raquo; <a class="el" href="group__linq__operators__list.html">List of built-in LINQ operators</a></div></div>  </div>
+<div class="title">element_at<div class="ingroups"><a class="el" href="group__linq.html">LINQ expressions</a> &raquo; <a class="el" href="group__linq__operators.html">LINQ operators</a> &raquo; <a class="el" href="group__linq__operators__list.html">List of built-in LINQ operators</a></div></div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>Computes average of a sequence of values.  
+<p>Returns nth element in a sequence.  
 <a href="#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga632e7f9002d9130888a023e4084453c4"><td class="memTemplParams" colspan="2">template&lt;typename F &gt; </td></tr>
-<tr class="memitem:ga632e7f9002d9130888a023e4084453c4"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__linq__op__average.html#ga632e7f9002d9130888a023e4084453c4">coveo::linq::average</a> (const F &amp;num_f) -&gt; detail::average_impl&lt; F &gt;</td></tr>
-<tr class="memdesc:ga632e7f9002d9130888a023e4084453c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes average using numerical function.  <a href="group__linq__op__average.html#ga632e7f9002d9130888a023e4084453c4">More...</a><br /></td></tr>
-<tr class="separator:ga632e7f9002d9130888a023e4084453c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2f97df3253cdd434ffe49b8846287c8e"><td class="memTemplParams" colspan="2">template&lt;typename  = void&gt; </td></tr>
+<tr class="memitem:ga2f97df3253cdd434ffe49b8846287c8e"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__linq__op__elem__at.html#ga2f97df3253cdd434ffe49b8846287c8e">coveo::linq::element_at</a> (std::size_t n) -&gt; detail::element_at_impl&lt;&gt;</td></tr>
+<tr class="memdesc:ga2f97df3253cdd434ffe49b8846287c8e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns nth element in sequence.  <a href="group__linq__op__elem__at.html#ga2f97df3253cdd434ffe49b8846287c8e">More...</a><br /></td></tr>
+<tr class="separator:ga2f97df3253cdd434ffe49b8846287c8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<p>The <code>average</code> operator computes the average of all values in a sequence. To achieve this, it needs a <em>numerical function</em> to extract a numeric value from each sequence element.</p>
+<p>The <code>element_at</code> operator returns the nth element in the sequence. If the sequence does not have enough elements, an exception is thrown.</p>
 <p>This is a <b>terminal</b> operator.</p>
-<p><b>.NET equivalent:</b> Average </p>
+<p><b>.NET equivalent:</b> ElementAt </p>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="ga632e7f9002d9130888a023e4084453c4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga632e7f9002d9130888a023e4084453c4">&#9670;&nbsp;</a></span>average()</h2>
+<a id="ga2f97df3253cdd434ffe49b8846287c8e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga2f97df3253cdd434ffe49b8846287c8e">&#9670;&nbsp;</a></span>element_at()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename F &gt; </div>
+template&lt;typename  = void&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">auto coveo::linq::average </td>
+          <td class="memname">auto coveo::linq::element_at </td>
           <td>(</td>
-          <td class="paramtype">const F &amp;&#160;</td>
-          <td class="paramname"><em>num_f</em></td><td>)</td>
-          <td> -&gt; detail::average_impl&lt;F&gt;
+          <td class="paramtype">std::size_t&#160;</td>
+          <td class="paramname"><em>n</em></td><td>)</td>
+          <td> -&gt; detail::element_at_impl&lt;&gt;
 </td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Computes the average of all elements in a sequence by repeatedly calling a <em>numerical function</em>. The function receives an element as parameter and must return a numerical value for the element. The final result is the average of all such numerical values.</p>
-<p>Does not work on empty sequences.</p>
+<p>Returns the <code>n</code>th element in a sequence. If the sequence does not have enough elements, <code><a class="el" href="classcoveo_1_1linq_1_1out__of__range.html" title="Out-of-range exception.">coveo::linq::out_of_range</a></code> is thrown.</p>
 <p>Use like this:</p>
-<div class="fragment"><div class="line"><span class="keyword">const</span> std::vector&lt;std::string&gt; STRS = { <span class="stringliteral">&quot;42&quot;</span>, <span class="stringliteral">&quot;23&quot;</span>, <span class="stringliteral">&quot;66&quot;</span> };</div><div class="line"></div><div class="line"><span class="keyword">using namespace </span>coveo::linq;</div><div class="line"><span class="keyword">auto</span> avg = <a class="code" href="group__linq__entry__points.html#ga974e5ae2b7dec6aecc4be4b58546f6e2">from</a>(STRS)</div><div class="line">         | <a class="code" href="group__linq__op__average.html#ga632e7f9002d9130888a023e4084453c4">average</a>([](<span class="keyword">auto</span>&amp;&amp; s) { <span class="keywordflow">return</span> std::stoi(s); });</div><div class="line"><span class="comment">// avg == 43</span></div></div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
+<div class="fragment"><div class="line"><span class="keyword">const</span> <span class="keywordtype">int</span> NUMS[] = { 42, 23, 66 };</div><div class="line"></div><div class="line"><span class="keyword">using namespace </span>coveo::linq;</div><div class="line"><span class="keyword">auto</span> second = <a class="code" href="group__linq__entry__points.html#ga974e5ae2b7dec6aecc4be4b58546f6e2">from</a>(NUMS)</div><div class="line">            | <a class="code" href="group__linq__op__elem__at.html#ga2f97df3253cdd434ffe49b8846287c8e">element_at</a>(1);</div><div class="line"><span class="comment">// second == 23</span></div><div class="line"><span class="comment">// This throws an exception:</span></div><div class="line"><span class="comment">// auto fourth = from(NUMS)</span></div><div class="line"><span class="comment">//             | element_at(3);</span></div></div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">num_f</td><td>Function to get numerical value for each element. </td></tr>
+    <tr><td class="paramname">n</td><td>0-based index of element to return. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>(Once applied) Average of all extracted numerical values. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>(Once applied) <code>n</code>th element in sequence. </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classcoveo_1_1linq_1_1empty__sequence.html" title="Empty sequence exception.">coveo::linq::empty_sequence</a></td><td>The sequence contains no elements. </td></tr>
+    <tr><td class="paramname"><a class="el" href="classcoveo_1_1linq_1_1out__of__range.html" title="Out-of-range exception.">coveo::linq::out_of_range</a></td><td>The sequence does not have enough elements. </td></tr>
   </table>
   </dd>
 </dl>
