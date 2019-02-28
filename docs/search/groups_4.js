@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['implementing_20custom_20linq_20operators',['Implementing custom LINQ operators',['../group__linq__custom__operators.html',1,'']]]
+  ['first',['first',['../group__linq__op__first.html',1,'']]],
+  ['first_5for_5fdefault',['first_or_default',['../group__linq__op__first__or__def.html',1,'']]]
 ];

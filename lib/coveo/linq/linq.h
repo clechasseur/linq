@@ -1190,11 +1190,46 @@ auto except(Seq2&& seq2, Pred&& pred)
     return detail::except_impl<Seq2, Pred>(std::forward<Seq2>(seq2), std::forward<Pred>(pred));
 }
 
-// C++ LINQ operqator: first
-// .NET equivalent: First
+/**
+ * @ingroup linq_operators_list
+ * @defgroup linq_op_first first
+ * @brief Returns first element in a sequence.
+ *
+ * The @c first operator returns the first element in a sequence,
+ * or the first element to satisfy a predicate. If the sequence does
+ * not have such an element, an exception is thrown.
+ *
+ * This is a @b terminal operator.
+ *
+ * <b>.NET equivalent:</b> First
+ */
 
-// Operator that returns the first element in a sequence.
-// Does not work on empty sequences.
+/**
+ * @ingroup linq_op_first
+ * @brief Returns first element in sequence.
+ *
+ * Returns the first element in a sequence. If the sequence
+ * does not have elements, <tt>coveo::linq::empty_sequence</tt>
+ * is thrown.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const std::vector<int> YES = { 42, 23, 66 };
+ *   const std::vector<int> NAY;
+ *
+ *   using namespace coveo::linq;
+ *   auto fir1 = from(YES)
+ *             | first();
+ *   // fir1 == 42
+ *   // This throws an exception:
+ *   // auto fir2 = from(NAY)
+ *   //           | first();
+ * @endcode
+ *
+ * @return (Once applied) First element in sequence.
+ * @exception coveo::linq::empty_sequence The sequence does not have elements.
+ */
 template<typename = void>
 auto first()
     -> detail::first_impl_0<>
@@ -1202,8 +1237,35 @@ auto first()
     return detail::first_impl_0<>();
 }
 
-// Operator that returns the first element in a sequence
-// that satisfies a predicate. Does not work on empty sequences.
+/**
+ * @ingroup linq_op_first
+ * @brief Returns first element in sequence that satisfy predicate.
+ *
+ * Returns the first element in a sequence for which the given
+ * predicate returns @c true. If the sequence does not have elements,
+ * <tt>coveo::linq::empty_sequence</tt> is thrown; if the sequence does
+ * not contain an element that satisfy the predicate,
+ * <tt>coveo::linq::out_of_range</tt> is thrown.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const int NUMS[] = { 42, 23, 66 };
+ *
+ *   using namespace coveo::linq;
+ *   auto odd = from(NUMS)
+ *            | first([](int i) { return i % 2 != 0; });
+ *   // odd == 23
+ *   // This throws an exception:
+ *   // auto big = from(NUMS)
+ *   //          | first([](int i) { return  i >= 90; });
+ * @endcode
+ *
+ * @param pred Predicate to satisfy.
+ * @return (Once applied) First element in sequence for which @c pred returns @c true.
+ * @exception coveo::linq::empty_sequence The sequence does not have elements.
+ * @exception coveo::linq::out_of_range The sequence has no element that satisfy @c pred.
+ */
 template<typename Pred>
 auto first(const Pred& pred)
     -> detail::first_impl_1<Pred>
@@ -1211,11 +1273,46 @@ auto first(const Pred& pred)
     return detail::first_impl_1<Pred>(pred);
 }
 
-// C++ LINQ operator: first_or_default
-// .NET equivalent: FirstOrDefault
+/**
+ * @ingroup linq_operators_list
+ * @defgroup linq_op_first_or_def first_or_default
+ * @brief Returns first element in a sequence, or a default value.
+ *
+ * The @c first_or_default operator returns the first element in a sequence,
+ * or the first element to satisfy a predicate. If the sequence does
+ * not have such an element, a default value is returned.
+ *
+ * This is a @b terminal operator.
+ *
+ * <b>.NET equivalent:</b> FirstOrDefault
+ */
 
-// Operator that returns the first element in a sequence
-// or a default-initialized value if it's empty.
+/**
+ * @ingroup linq_op_first_or_def
+ * @brief Returns first element in sequence, or default value.
+ *
+ * Returns the first element in a sequence. If the sequence
+ * does not have elements, a <em>default-initialized</em>
+ * value is returned instead.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const std::vector<int> YES = { 42, 23, 66 };
+ *   const std::vector<int> NAY;
+ *
+ *   using namespace coveo::linq;
+ *   auto fir1 = from(YES)
+ *             | first();
+ *   auto fir2 = from(NAY)
+ *             | first();
+ *   // fir1 == 42
+ *   // fir2 == 0
+ * @endcode
+ *
+ * @return (Once applied) First element in sequence, or a default value
+ *         if sequence does not have elements.
+ */
 template<typename = void>
 auto first_or_default()
     -> detail::first_or_default_impl_0<>
@@ -1223,9 +1320,33 @@ auto first_or_default()
     return detail::first_or_default_impl_0<>();
 }
 
-// Operator that returns the first element in a sequence
-// that satistifies a predicate or, if none are found,
-// a default-initialized value.
+/**
+ * @ingroup linq_op_first_or_def
+ * @brief Returns first element in sequence that satisfy predicate, or default value.
+ *
+ * Returns the first element in a sequence for which the given
+ * predicate returns @c true. If the sequence does not have elements
+ * or does not contain an element that satisfy the predicate, a
+ * <em>default-initialized</em> value is returned instead.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const int NUMS[] = { 42, 23, 66 };
+ *
+ *   using namespace coveo::linq;
+ *   auto odd = from(NUMS)
+ *            | first([](int i) { return i % 2 != 0; });
+ *   auto big = from(NUMS)
+ *            | first([](int i) { return  i >= 90; });
+ *   // odd == 23
+ *   // big == 0
+ * @endcode
+ *
+ * @param pred Predicate to satisfy.
+ * @return (Once applied) First element in sequence for which @c pred returns @c true
+ *         or, if no such element exists in sequence, a default value.
+ */
 template<typename Pred>
 auto first_or_default(const Pred& pred)
     -> detail::first_or_default_impl_1<Pred>
@@ -1233,12 +1354,58 @@ auto first_or_default(const Pred& pred)
     return detail::first_or_default_impl_1<Pred>(pred);
 }
 
-// C++ LINQ operators: group_by, group_values_by, group_by_and_fold, group_values_by_and_fold
-// .NET equivalent: GroupBy
+/**
+ * @ingroup linq_operators_list
+ * @defgroup linq_op_group_by group_by / group_values_by / group_by_and_fold / group_values_by_and_fold
+ * @brief Groups elements in a sequence according to their keys.
+ *
+ * The @c group_by operator (and its siblings) group elements in a sequence according to their keys.
+ * Keys are extracted from elements using a <em>key selector</em>. Variants of the operator can also
+ * extract values from elements using a <em>value selector</em>, or modify the resulting sequence using
+ * a <em>result selector</em>.
+ *
+ * <b>.NET equivalent:</b> GroupBy
+ */
 
-// Operator that groups elements in a sequence according to their keys, as returned by a key selector.
-// Returns a sequence of pairs whose first element is the common key and second element is a sequence
-// of values matching that key.
+/**
+ * @ingroup linq_op_group_by
+ * @brief Groups elements in sequence according to their keys.
+ *
+ * Scans the input sequence and, for each element, fetches a key using
+ * the provided <em>key selector</em>. Then, creates groups of elements
+ * that have a common key. The result is a sequence of <tt>pair</tt>s
+ * whose @c first element is a key and whose @c second element is a sequence
+ * of elements matching that key. The groups are returned in ascending order
+ * of key, as determined by <tt>operator&lt;()</tt>.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const std::vector<std::pair<int, std::string>> DATA = {
+ *       { 42, "Life" },
+ *       { 23, "Hangar" },
+ *       { 42, "Universe" },
+ *       { 66, "Route" },
+ *       { 23, "Jeep" },
+ *   };
+ *
+ *   using namespace coveo::linq;
+ *   auto groups = from(DATA)
+ *               | group_by([](std::pair<int, std::string> p) { return p.first; });
+ *   auto it = std::begin(groups);
+ *   auto group1 = *it++;
+ *   auto group2 = *it++;
+ *   auto group3 = *it++;
+ *   // group1.first == 23, group1.second == { { 23, "Hangar" }, { 23, "Jeep" } }
+ *   // group2.first == 42, group2.second == { { 42, "Life" }, { 42, "Universe" } }
+ *   // group3.first == 66, group3.second == { { 66, "Route" } }
+ *   // it == std::end(groups)
+ * @endcode
+ *
+ * @param key_sel Key selector, used to extract a key for a sequence element.
+ * @return (Once applied) Sequence of <tt>pair</tt>s whose @c first element is a
+ *         key and whose @c second element is a sequence of matching elements.
+ */
 template<typename KeySelector>
 auto group_by(KeySelector&& key_sel)
     -> detail::group_by_impl<KeySelector,
@@ -1255,7 +1422,48 @@ auto group_by(KeySelector&& key_sel)
                                                  detail::less<>());
 }
 
-// Same thing but with a predicate used to compare keys.
+/**
+ * @ingroup linq_op_group_by
+ * @brief Groups elements in sequence according to their keys using predicate.
+ *
+ * Scans the input sequence and, for each element, fetches a key using
+ * the provided <em>key selector</em>. Then, creates groups of elements
+ * that have a common key. The result is a sequence of <tt>pair</tt>s
+ * whose @c first element is a key and whose @c second element is a sequence
+ * of elements matching that key. The groups are returned in order of key,
+ * as determined by the provided predicate. The predicate must provide a
+ * strict ordering of the keys, like <tt>std::less</tt>.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const std::vector<std::pair<int, std::string>> DATA = {
+ *       { 42, "Life" },
+ *       { 23, "Hangar" },
+ *       { 42, "Universe" },
+ *       { 66, "Route" },
+ *       { 23, "Jeep" },
+ *   };
+ *
+ *   using namespace coveo::linq;
+ *   auto groups = from(DATA)
+ *               | group_by([](std::pair<int, std::string> p) { return p.first; },
+ *                          [](int i, int j) { return i > j; });
+ *   auto it = std::begin(groups);
+ *   auto group1 = *it++;
+ *   auto group2 = *it++;
+ *   auto group3 = *it++;
+ *   // group1.first == 66, group1.second == { { 66, "Route" } }
+ *   // group2.first == 42, group2.second == { { 42, "Life" }, { 42, "Universe" } }
+ *   // group3.first == 23, group3.second == { { 23, "Hangar" }, { 23, "Jeep" } }
+ *   // it == std::end(groups)
+ * @endcode
+ *
+ * @param key_sel Key selector, used to extract a key for a sequence element.
+ * @param pred Predicate used to compare the keys.
+ * @return (Once applied) Sequence of <tt>pair</tt>s whose @c first element is a
+ *         key and whose @c second element is a sequence of matching elements.
+ */
 template<typename KeySelector,
          typename Pred>
 auto group_by(KeySelector&& key_sel,
@@ -1274,8 +1482,48 @@ auto group_by(KeySelector&& key_sel,
                                        std::forward<Pred>(pred));
 }
 
-// Operator that groups values according to keys, with both keys
-// and values extracted from a sequence's elements using selectors.
+/**
+ * @ingroup linq_op_group_by
+ * @brief Groups values in sequence according to their keys.
+ *
+ * Scans the input sequence and, for each element, fetches a key using
+ * the provided <em>key selector</em> and a value using the provided
+ * <em>value selector</em>. Then, creates groups of values that have
+ * a common key. The result is a sequence of <tt>pair</tt>s whose @c first
+ * element is a key and whose @c second element is a sequence of values
+ * matching that key. The groups are returned in ascending order of key,
+ * as determined by <tt>operator&lt;()</tt>.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const std::vector<std::pair<int, std::string>> DATA = {
+ *       { 42, "Life" },
+ *       { 23, "Hangar" },
+ *       { 42, "Universe" },
+ *       { 66, "Route" },
+ *       { 23, "Jeep" },
+ *   };
+ *
+ *   using namespace coveo::linq;
+ *   auto groups = from(DATA)
+ *               | group_values_by([](std::pair<int, std::string> p) { return p.first; },
+ *                                 [](std::pair<int, std::string> p) { return p.second; });
+ *   auto it = std::begin(groups);
+ *   auto group1 = *it++;
+ *   auto group2 = *it++;
+ *   auto group3 = *it++;
+ *   // group1.first == 23, group1.second == { "Hangar", "Jeep" }
+ *   // group2.first == 42, group2.second == { "Life", "Universe" }
+ *   // group3.first == 66, group3.second == { "Route" }
+ *   // it == std::end(groups)
+ * @endcode
+ *
+ * @param key_sel Key selector, used to extract a key for a sequence element.
+ * @param value_sel Value selector, used to extract a value for a sequence element.
+ * @return (Once applied) Sequence of <tt>pair</tt>s whose @c first element is a
+ *         key and whose @c second element is a sequence of matching values.
+ */
 template<typename KeySelector,
          typename ValueSelector>
 auto group_values_by(KeySelector&& key_sel,
@@ -1294,7 +1542,51 @@ auto group_values_by(KeySelector&& key_sel,
                                                  detail::less<>());
 }
 
-// Same thing but with a predicate used to compare keys.
+/**
+ * @ingroup linq_op_group_by
+ * @brief Groups values in sequence according to their keys using predicate.
+ *
+ * Scans the input sequence and, for each element, fetches a key using
+ * the provided <em>key selector</em> and a value using the provided
+ * <em>value selector</em>. Then, creates groups of values that have
+ * a common key. The result is a sequence of <tt>pair</tt>s whose @c first
+ * element is a key and whose @c second element is a sequence of values
+ * matching that key. The groups are returned in order of key, as determined
+ * by the provided predicate. The predicate must provide a strict ordering
+ * of the keys, like <tt>std::less</tt>.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const std::vector<std::pair<int, std::string>> DATA = {
+ *       { 42, "Life" },
+ *       { 23, "Hangar" },
+ *       { 42, "Universe" },
+ *       { 66, "Route" },
+ *       { 23, "Jeep" },
+ *   };
+ *
+ *   using namespace coveo::linq;
+ *   auto groups = from(DATA)
+ *               | group_values_by([](std::pair<int, std::string> p) { return p.first; },
+ *                                 [](std::pair<int, std::string> p) { return p.second; },
+ *                                 [](int i, int j) { return i > j; });
+ *   auto it = std::begin(groups);
+ *   auto group1 = *it++;
+ *   auto group2 = *it++;
+ *   auto group3 = *it++;
+ *   // group1.first == 66, group1.second == { "Route" }
+ *   // group2.first == 42, group2.second == { "Life", "Universe" }
+ *   // group3.first == 23, group3.second == { "Hangar", "Jeep" }
+ *   // it == std::end(groups)
+ * @endcode
+ *
+ * @param key_sel Key selector, used to extract a key for a sequence element.
+ * @param value_sel Value selector, used to extract a value for a sequence element.
+ * @param pred Predicate used to compare the keys.
+ * @return (Once applied) Sequence of <tt>pair</tt>s whose @c first element is a
+ *         key and whose @c second element is a sequence of matching values.
+ */
 template<typename KeySelector,
          typename ValueSelector,
          typename Pred>
@@ -1315,10 +1607,41 @@ auto group_values_by(KeySelector&& key_sel,
                                        std::forward<Pred>(pred));
 }
 
-// Operator that groups a sequence's elements by keys as returned by a key selector,
-// then folds each group into a final result using a result selector. The result
-// selector is called with two arguments: the common key of all elements and a
-// sequence of values matching that key.
+/**
+ * @ingroup linq_op_group_by
+ * @brief Groups elements in sequence according to their keys then folds the results.
+ *
+ * Scans the input sequence and, for each element, fetches a key using
+ * the provided <em>key selector</em>. Then, creates groups of elements
+ * that have a common key and uses the provided <em>result selector</em>
+ * to convert the groups. The result selector is called with two arguments:
+ * a key, and a sequence of elements matching that key. The final result is
+ * a sequence of the values returned by the result selector. The result
+ * selector is called in ascending order of key, as determined by
+ * <tt>operator&lt;()</tt>.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const std::vector<std::pair<int, std::string>> DATA = {
+ *       { 42, "Life" },
+ *       { 23, "Hangar" },
+ *       { 42, "Universe" },
+ *       { 66, "Route" },
+ *       { 23, "Jeep" },
+ *   };
+ *
+ *   using namespace coveo::linq;
+ *   auto res = from(DATA)
+ *            | group_by_and_fold([](std::pair<int, std::string> p) { return p.first; },
+ *                                [](int k, coveo::enumerable<const std::pair<int, std::string>> e) { k + return e.size(); });
+ *   // res == { 25, 44, 67 }
+ * @endcode
+ *
+ * @param key_sel Key selector, used to extract a key for a sequence element.
+ * @param result_sel Result selector, used to fold groups into final results.
+ * @return (Once applied) Sequence of values returned by @c result_sel.
+ */
 template<typename KeySelector,
          typename ResultSelector>
 auto group_by_and_fold(KeySelector&& key_sel,
@@ -1337,7 +1660,44 @@ auto group_by_and_fold(KeySelector&& key_sel,
                                                  detail::less<>());
 }
 
-// Same thing with a predicate to compare the keys.
+/**
+ * @ingroup linq_op_group_by
+ * @brief Groups elements in sequence according to their keys using predicate, then folds the results.
+ *
+ * Scans the input sequence and, for each element, fetches a key using
+ * the provided <em>key selector</em>. Then, creates groups of elements
+ * that have a common key and uses the provided <em>result selector</em>
+ * to convert the groups. The result selector is called with two arguments:
+ * a key, and a sequence of elements matching that key. The final result is
+ * a sequence of the values returned by the result selector. The result
+ * selector is called in order of key, as determined by the provided
+ * predicate. The predicate must provide a strict ordering of the keys,
+ * like <tt>std::less</tt>.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const std::vector<std::pair<int, std::string>> DATA = {
+ *       { 42, "Life" },
+ *       { 23, "Hangar" },
+ *       { 42, "Universe" },
+ *       { 66, "Route" },
+ *       { 23, "Jeep" },
+ *   };
+ *
+ *   using namespace coveo::linq;
+ *   auto res = from(DATA)
+ *            | group_by_and_fold([](std::pair<int, std::string> p) { return p.first; },
+ *                                [](int k, coveo::enumerable<const std::pair<int, std::string>> e) { k + return e.size(); },
+ *                                [](int i, int j) { return i > j; });
+ *   // res == { 67, 44, 25 }
+ * @endcode
+ *
+ * @param key_sel Key selector, used to extract a key for a sequence element.
+ * @param result_sel Result selector, used to fold groups into final results.
+ * @param pred Predicate used to compare the keys.
+ * @return (Once applied) Sequence of values returned by @c result_sel.
+ */
 template<typename KeySelector,
          typename ResultSelector,
          typename Pred>
@@ -1358,9 +1718,44 @@ auto group_by_and_fold(KeySelector&& key_sel,
                                        std::forward<Pred>(pred));
 }
 
-// Operator that creates groups of keys and values from a sequence's
-// elements using selectors, then uses a result selector on each group
-// to create the final results.
+/**
+ * @ingroup linq_op_group_by
+ * @brief Groups values in sequence according to their keys then folds the results.
+ *
+ * Scans the input sequence and, for each element, fetches a key using
+ * the provided <em>key selector</em> and a value using the provided
+ * <em>value selector</em>. Then, creates groups of values that have
+ * a common key and uses the provided <em>result selector</em> to convert
+ * the groups. The result selector is called with two arguments: a key,
+ * and a sequence of values matching that key. The final result is a
+ * sequence of the values returned by the result selector. The result
+ * selector is called in ascending order of key, as determined by
+ * <tt>operator&lt;()</tt>.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const std::vector<std::pair<int, std::string>> DATA = {
+ *       { 42, "Life" },
+ *       { 23, "Hangar" },
+ *       { 42, "Universe" },
+ *       { 66, "Route" },
+ *       { 23, "Jeep" },
+ *   };
+ *
+ *   using namespace coveo::linq;
+ *   auto res = from(DATA)
+ *            | group_values_by_and_fold([](std::pair<int, std::string> p) { return p.first; },
+ *                                       [](std::pair<int, std::string> p) { return p.second; },
+ *                                       [](int k, coveo::enumerable<const std::string> e) { k + return e.begin()->size(); });
+ *   // res == { 29, 46, 71 }
+ * @endcode
+ *
+ * @param key_sel Key selector, used to extract a key for a sequence element.
+ * @param value_sel Value selector, used to extract a value for a sequence element.
+ * @param result_sel Result selector, used to fold groups into final results.
+ * @return (Once applied) Sequence of values returned by @c result_sel.
+ */
 template<typename KeySelector,
          typename ValueSelector,
          typename ResultSelector>
@@ -1381,7 +1776,47 @@ auto group_values_by_and_fold(KeySelector&& key_sel,
                                                  detail::less<>());
 }
 
-// Same thing with a predicate to compare the keys.
+/**
+ * @ingroup linq_op_group_by
+ * @brief Groups values in sequence according to their keys using predicate, then folds the results.
+ *
+ * Scans the input sequence and, for each element, fetches a key using
+ * the provided <em>key selector</em> and a value using the provided
+ * <em>value selector</em>. Then, creates groups of values that have
+ * a common key and uses the provided <em>result selector</em> to convert
+ * the groups. The result selector is called with two arguments: a key,
+ * and a sequence of values matching that key. The final result is a
+ * sequence of the values returned by the result selector. The result
+ * selector is called in order of key, as determined by the provided
+ * predicate. The predicate must provide a strict ordering of the keys,
+ * like <tt>std::less</tt>.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const std::vector<std::pair<int, std::string>> DATA = {
+ *       { 42, "Life" },
+ *       { 23, "Hangar" },
+ *       { 42, "Universe" },
+ *       { 66, "Route" },
+ *       { 23, "Jeep" },
+ *   };
+ *
+ *   using namespace coveo::linq;
+ *   auto res = from(DATA)
+ *            | group_values_by_and_fold([](std::pair<int, std::string> p) { return p.first; },
+ *                                       [](std::pair<int, std::string> p) { return p.second; },
+ *                                       [](int k, coveo::enumerable<const std::string> e) { k + return e.begin()->size(); },
+ *                                       [](int i, int j) { return i > j; });
+ *   // res == { 71, 46, 29 }
+ * @endcode
+ *
+ * @param key_sel Key selector, used to extract a key for a sequence element.
+ * @param value_sel Value selector, used to extract a value for a sequence element.
+ * @param result_sel Result selector, used to fold groups into final results.
+ * @param pred Predicate used to compare the keys.
+ * @return (Once applied) Sequence of values returned by @c result_sel.
+ */
 template<typename KeySelector,
          typename ValueSelector,
          typename ResultSelector,
@@ -1404,8 +1839,19 @@ auto group_values_by_and_fold(KeySelector&& key_sel,
                                        std::forward<Pred>(pred));
 }
 
-// C++ LINQ operator: group_join
-// .NET equivalent: GroupJoin
+/**
+ * @ingroup linq_operators_list
+ * @defgroup linq_op_group_join group_join
+ * @brief Joins and groups elements in two sequences according to their keys.
+ *
+ * The @c group_join operator scans two sequences: an <em>outer sequence</em> and an
+ * <em>inner sequence</em>. For each element in the sequences, it extracts a key using
+ * some <em>key selectors</em>. Then, it creates groups of elements from the inner sequence
+ * and joins them to elements in the outer sequence with matching keys. Finally, a
+ * <em>result selector</em> is used to fold the groups into the final results.
+ *
+ * <b>.NET equivalent:</b> GroupJoin
+ */
 
 // Operator that extracts keys from an outer and inner sequences using key selectors,
 // then creates groups of elements from inner sequence matching keys of elements in

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.15"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>coveo::linq: coveo::is_enumerable&lt; T &gt; Struct Template Reference</title>
+<title>coveo::linq: group_join</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -46,6 +46,7 @@ $(function() {
 });
 /* @license-end */</script>
 <div id="main-nav"></div>
+</div><!-- top -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -60,33 +61,16 @@ $(function() {
 </iframe>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><b>coveo</b></li><li class="navelem"><a class="el" href="structcoveo_1_1is__enumerable.html">is_enumerable</a></li>  </ul>
-</div>
-</div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">coveo::is_enumerable&lt; T &gt; Struct Template Reference</div>  </div>
+<div class="title">group_join<div class="ingroups"><a class="el" href="group__linq.html">LINQ expressions</a> &raquo; <a class="el" href="group__linq__operators.html">LINQ operators</a> &raquo; <a class="el" href="group__linq__operators__list.html">List of built-in LINQ operators</a></div></div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>Traits class to identify enumerable objects.  
- <a href="structcoveo_1_1is__enumerable.html#details">More...</a></p>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><h3>template&lt;typename T&gt;<br />
-struct coveo::is_enumerable&lt; T &gt;</h3>
-
-<p>Traits class that can be used to identify enumerable objects.</p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">T</td><td>Type to identify. </td></tr>
-  </table>
-  </dd>
-</dl>
-</div><hr/>The documentation for this struct was generated from the following file:<ul>
-<li>coveo/seq/<a class="el" href="sequence__util_8h_source.html">sequence_util.h</a></li>
-</ul>
+<p>Joins and groups elements in two sequences according to their keys.  
+<a href="#details">More...</a></p>
+<p>The <code>group_join</code> operator scans two sequences: an <em>outer sequence</em> and an <em>inner sequence</em>. For each element in the sequences, it extracts a key using some <em>key selectors</em>. Then, it creates groups of elements from the inner sequence and joins them to elements in the outer sequence with matching keys. Finally, a <em>result selector</em> is used to fold the groups into the final results.</p>
+<p><b>.NET equivalent:</b> GroupJoin </p>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
