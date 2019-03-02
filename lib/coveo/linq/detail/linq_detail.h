@@ -1328,7 +1328,7 @@ private:
                 // Note that since we no longer need the map afterwards, we can actually move
                 // the vectors stored as map values into the results vector.
                 results_.reserve(groups.size());
-                for (const auto& group_pair : groups) {
+                for (auto&& group_pair : groups) {
                     results_.emplace_back(result_sel_(group_pair.first,
                                                       enumerate_container(std::move(group_pair.second))));
                 }
