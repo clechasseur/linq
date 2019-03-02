@@ -62,6 +62,8 @@ $(function() {
 </div>
 
 <div class="header">
+  <div class="summary">
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">group_join<div class="ingroups"><a class="el" href="group__linq.html">LINQ expressions</a> &raquo; <a class="el" href="group__linq__operators.html">LINQ operators</a> &raquo; <a class="el" href="group__linq__operators__list.html">List of built-in LINQ operators</a></div></div>  </div>
 </div><!--header-->
@@ -69,12 +71,153 @@ $(function() {
 
 <p>Joins and groups elements in two sequences according to their keys.  
 <a href="#details">More...</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:ga4ba2e5bfd6ef98728f522b09360a1ebd"><td class="memTemplParams" colspan="2">template&lt;typename InnerSeq , typename OuterKeySelector , typename InnerKeySelector , typename ResultSelector &gt; </td></tr>
+<tr class="memitem:ga4ba2e5bfd6ef98728f522b09360a1ebd"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__linq__op__group__join.html#ga4ba2e5bfd6ef98728f522b09360a1ebd">coveo::linq::group_join</a> (InnerSeq &amp;&amp;inner_seq, OuterKeySelector &amp;&amp;outer_key_sel, InnerKeySelector &amp;&amp;inner_key_sel, ResultSelector &amp;&amp;result_sel) -&gt; detail::group_join_impl&lt; InnerSeq, OuterKeySelector, InnerKeySelector, ResultSelector, detail::less&lt;&gt;&gt;</td></tr>
+<tr class="memdesc:ga4ba2e5bfd6ef98728f522b09360a1ebd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Joins and groups elements in two sequences according to their keys.  <a href="group__linq__op__group__join.html#ga4ba2e5bfd6ef98728f522b09360a1ebd">More...</a><br /></td></tr>
+<tr class="separator:ga4ba2e5bfd6ef98728f522b09360a1ebd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf8cc0bd408d35f38e6abd8d7eb326127"><td class="memTemplParams" colspan="2">template&lt;typename InnerSeq , typename OuterKeySelector , typename InnerKeySelector , typename ResultSelector , typename Pred &gt; </td></tr>
+<tr class="memitem:gaf8cc0bd408d35f38e6abd8d7eb326127"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__linq__op__group__join.html#gaf8cc0bd408d35f38e6abd8d7eb326127">coveo::linq::group_join</a> (InnerSeq &amp;&amp;inner_seq, OuterKeySelector &amp;&amp;outer_key_sel, InnerKeySelector &amp;&amp;inner_key_sel, ResultSelector &amp;&amp;result_sel, Pred &amp;&amp;pred) -&gt; detail::group_join_impl&lt; InnerSeq, OuterKeySelector, InnerKeySelector, ResultSelector, Pred &gt;</td></tr>
+<tr class="memdesc:gaf8cc0bd408d35f38e6abd8d7eb326127"><td class="mdescLeft">&#160;</td><td class="mdescRight">Joins and groups elements in two sequences according to their keys using predicate.  <a href="group__linq__op__group__join.html#gaf8cc0bd408d35f38e6abd8d7eb326127">More...</a><br /></td></tr>
+<tr class="separator:gaf8cc0bd408d35f38e6abd8d7eb326127"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>The <code>group_join</code> operator scans two sequences: an <em>outer sequence</em> and an <em>inner sequence</em>. For each element in the sequences, it extracts a key using some <em>key selectors</em>. Then, it creates groups of elements from the inner sequence and joins them to elements in the outer sequence with matching keys. Finally, a <em>result selector</em> is used to fold the groups into the final results.</p>
 <p><b>.NET equivalent:</b> GroupJoin </p>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="ga4ba2e5bfd6ef98728f522b09360a1ebd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga4ba2e5bfd6ef98728f522b09360a1ebd">&#9670;&nbsp;</a></span>group_join() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename InnerSeq , typename OuterKeySelector , typename InnerKeySelector , typename ResultSelector &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto coveo::linq::group_join </td>
+          <td>(</td>
+          <td class="paramtype">InnerSeq &amp;&amp;&#160;</td>
+          <td class="paramname"><em>inner_seq</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">OuterKeySelector &amp;&amp;&#160;</td>
+          <td class="paramname"><em>outer_key_sel</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">InnerKeySelector &amp;&amp;&#160;</td>
+          <td class="paramname"><em>inner_key_sel</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ResultSelector &amp;&amp;&#160;</td>
+          <td class="paramname"><em>result_sel</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> -&gt; detail::group_join_impl&lt;InnerSeq,
+                               OuterKeySelector,
+                               InnerKeySelector,
+                               ResultSelector,
+                               detail::less&lt;&gt;&gt;
+</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Extracts keys for the elements of an <em>outer sequence</em> (the one on which this operator is applied, e.g. the one passed to <code><a class="el" href="group__linq__entry__points.html#ga974e5ae2b7dec6aecc4be4b58546f6e2" title="Standard LINQ expression entry point.">coveo::linq::from()</a></code>) and the provided <em>inner sequence</em> using the provided <em>key selectors</em>. Next, creates groups of elements from the inner sequence with keys matching that of the elements in the outer sequence. Finally, the provided <em>result selector</em> is used to convert the groups into the final results. The result selector is called with two arguments: an element from the outer sequence and a group of elements from the inner sequence that share the same key.</p>
+<p>In order to match the keys, they are compared using <code>operator&lt;()</code>.</p>
+<p>Use like this:</p>
+<div class="fragment"><div class="line"><span class="keyword">using</span> person_data = std::pair&lt;int, std::string&gt;;</div><div class="line"><span class="keyword">using</span> person_messages = std::pair&lt;int, std::string&gt;;</div><div class="line"></div><div class="line"><span class="keyword">const</span> std::vector&lt;person_data&gt; PERSONS = {</div><div class="line">    { 1, <span class="stringliteral">&quot;John Doe&quot;</span> },</div><div class="line">    { 2, <span class="stringliteral">&quot;Jane Smith&quot;</span> },</div><div class="line">};</div><div class="line"><span class="keyword">const</span> std::vector&lt;person_messages&gt; MESSAGES = {</div><div class="line">    { 1, <span class="stringliteral">&quot;This is a test message&quot;</span> },</div><div class="line">    { 2, <span class="stringliteral">&quot;Hello Jane!&quot;</span> },</div><div class="line">    { 1, <span class="stringliteral">&quot;Doctors hate him!&quot;</span> },</div><div class="line">    { 1, <span class="stringliteral">&quot;Welcome to the company&quot;</span> },</div><div class="line">    { 2, <span class="stringliteral">&quot;Todo before we leave for vacation&quot;</span> },</div><div class="line">};</div><div class="line"></div><div class="line"><span class="keyword">using namespace </span>coveo::linq;</div><div class="line"><span class="keyword">auto</span> seq = <a class="code" href="group__linq__entry__points.html#ga974e5ae2b7dec6aecc4be4b58546f6e2">from</a>(PERSONS)</div><div class="line">         | <a class="code" href="group__linq__op__group__join.html#ga4ba2e5bfd6ef98728f522b09360a1ebd">group_join</a>(MESSAGES,</div><div class="line">                      [](<span class="keyword">const</span> person_data&amp; pd) { <span class="keywordflow">return</span> pd.first; },</div><div class="line">                      [](<span class="keyword">const</span> person_messages&amp; pm) { <span class="keywordflow">return</span> pm.first; }</div><div class="line">                      [](<span class="keyword">const</span> person_data&amp; pd, <span class="keyword">const</span> <a class="code" href="classcoveo_1_1enumerable.html">coveo::enumerable&lt;const person_messages&gt;</a>&amp; e) {</div><div class="line">                          std::string res = pd.second + <span class="stringliteral">&quot;: &quot;</span>;</div><div class="line">                          <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp;&amp; pm : e) {</div><div class="line">                              res += pm.second + <span class="stringliteral">&quot;, &quot;</span>;</div><div class="line">                          }</div><div class="line">                          <span class="keywordflow">return</span> res;</div><div class="line">                      });</div><div class="line"><span class="comment">// seq == {</span></div><div class="line"><span class="comment">//            &quot;John Doe: This is a test message, Doctors hate him!, Welcome to the company, &quot;,</span></div><div class="line"><span class="comment">//            &quot;Jane Smith: Hello Jane!, Todo before we leave for vacation, &quot;</span></div><div class="line"><span class="comment">//        }</span></div></div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">inner_seq</td><td>Inner sequence to scan to create groups. </td></tr>
+    <tr><td class="paramname">outer_key_sel</td><td>Selector to get keys for elements in the outer sequence. </td></tr>
+    <tr><td class="paramname">inner_key_sel</td><td>Selector to get keys for elements in the inner sequence. </td></tr>
+    <tr><td class="paramname">result_sel</td><td>Result selector used to produce final results. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>(Once applied) Sequence of values returned by <code>result_sel</code>. </dd></dl>
+
+</div>
+</div>
+<a id="gaf8cc0bd408d35f38e6abd8d7eb326127"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaf8cc0bd408d35f38e6abd8d7eb326127">&#9670;&nbsp;</a></span>group_join() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename InnerSeq , typename OuterKeySelector , typename InnerKeySelector , typename ResultSelector , typename Pred &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto coveo::linq::group_join </td>
+          <td>(</td>
+          <td class="paramtype">InnerSeq &amp;&amp;&#160;</td>
+          <td class="paramname"><em>inner_seq</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">OuterKeySelector &amp;&amp;&#160;</td>
+          <td class="paramname"><em>outer_key_sel</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">InnerKeySelector &amp;&amp;&#160;</td>
+          <td class="paramname"><em>inner_key_sel</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ResultSelector &amp;&amp;&#160;</td>
+          <td class="paramname"><em>result_sel</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Pred &amp;&amp;&#160;</td>
+          <td class="paramname"><em>pred</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> -&gt; detail::group_join_impl&lt;InnerSeq,
+                               OuterKeySelector,
+                               InnerKeySelector,
+                               ResultSelector,
+                               Pred&gt;
+</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Extracts keys for the elements of an <em>outer sequence</em> (the one on which this operator is applied, e.g. the one passed to <code><a class="el" href="group__linq__entry__points.html#ga974e5ae2b7dec6aecc4be4b58546f6e2" title="Standard LINQ expression entry point.">coveo::linq::from()</a></code>) and the provided <em>inner sequence</em> using the provided <em>key selectors</em>. Next, creates groups of elements from the inner sequence with keys matching that of the elements in the outer sequence. Finally, the provided <em>result selector</em> is used to convert the groups into the final results. The result selector is called with two arguments: an element from the outer sequence and a group of elements from the inner sequence that share the same key.</p>
+<p>In order to match the keys, they are compared using the provided predicate. The predicate must provide a strict ordering of the keys, like <code>std::less</code>.</p>
+<p>Use like this:</p>
+<div class="fragment"><div class="line"><span class="keyword">using</span> person_data = std::pair&lt;int, std::string&gt;;</div><div class="line"><span class="keyword">using</span> person_messages = std::pair&lt;int, std::string&gt;;</div><div class="line"></div><div class="line"><span class="keyword">const</span> std::vector&lt;person_data&gt; PERSONS = {</div><div class="line">    { 1, <span class="stringliteral">&quot;John Doe&quot;</span> },</div><div class="line">    { 2, <span class="stringliteral">&quot;Jane Smith&quot;</span> },</div><div class="line">};</div><div class="line"><span class="keyword">const</span> std::vector&lt;person_messages&gt; MESSAGES = {</div><div class="line">    { 1, <span class="stringliteral">&quot;This is a test message&quot;</span> },</div><div class="line">    { 2, <span class="stringliteral">&quot;Hello Jane!&quot;</span> },</div><div class="line">    { 1, <span class="stringliteral">&quot;Doctors hate him!&quot;</span> },</div><div class="line">    { 1, <span class="stringliteral">&quot;Welcome to the company&quot;</span> },</div><div class="line">    { 2, <span class="stringliteral">&quot;Todo before we leave for vacation&quot;</span> },</div><div class="line">};</div><div class="line"></div><div class="line"><span class="keyword">using namespace </span>coveo::linq;</div><div class="line"><span class="keyword">auto</span> seq = <a class="code" href="group__linq__entry__points.html#ga974e5ae2b7dec6aecc4be4b58546f6e2">from</a>(PERSONS)</div><div class="line">         | <a class="code" href="group__linq__op__group__join.html#ga4ba2e5bfd6ef98728f522b09360a1ebd">group_join</a>(MESSAGES,</div><div class="line">                      [](<span class="keyword">const</span> person_data&amp; pd) { <span class="keywordflow">return</span> pd.first; },</div><div class="line">                      [](<span class="keyword">const</span> person_messages&amp; pm) { <span class="keywordflow">return</span> pm.first; }</div><div class="line">                      [](<span class="keyword">const</span> person_data&amp; pd, <span class="keyword">const</span> <a class="code" href="classcoveo_1_1enumerable.html">coveo::enumerable&lt;const person_messages&gt;</a>&amp; e) {</div><div class="line">                          std::string res = pd.second + <span class="stringliteral">&quot;: &quot;</span>;</div><div class="line">                          <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp;&amp; pm : e) {</div><div class="line">                              res += pm.second + <span class="stringliteral">&quot;, &quot;</span>;</div><div class="line">                          }</div><div class="line">                          <span class="keywordflow">return</span> res;</div><div class="line">                      },</div><div class="line">                      [](<span class="keywordtype">int</span> i, <span class="keywordtype">int</span> j) { <span class="keywordflow">return</span> i &gt; j; });</div><div class="line"><span class="comment">// seq == {</span></div><div class="line"><span class="comment">//            &quot;John Doe: This is a test message, Doctors hate him!, Welcome to the company, &quot;,</span></div><div class="line"><span class="comment">//            &quot;Jane Smith: Hello Jane!, Todo before we leave for vacation, &quot;</span></div><div class="line"><span class="comment">//        }</span></div></div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">inner_seq</td><td>Inner sequence to scan to create groups. </td></tr>
+    <tr><td class="paramname">outer_key_sel</td><td>Selector to get keys for elements in the outer sequence. </td></tr>
+    <tr><td class="paramname">inner_key_sel</td><td>Selector to get keys for elements in the inner sequence. </td></tr>
+    <tr><td class="paramname">result_sel</td><td>Result selector used to produce final results. </td></tr>
+    <tr><td class="paramname">pred</td><td>Predicate used to compare keys. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>(Once applied) Sequence of values returned by <code>result_sel</code>. </dd></dl>
+
+</div>
+</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Feb 27 2019 23:46:37 for coveo::linq by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Mar 1 2019 23:39:53 for coveo::linq by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>

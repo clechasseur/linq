@@ -232,14 +232,14 @@ Functions</h2></td></tr>
 <tr class="memitem:gab1589867e12b285488233ee06896cb1d"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__linq__op__group__by.html#gab1589867e12b285488233ee06896cb1d">coveo::linq::group_values_by_and_fold</a> (KeySelector &amp;&amp;key_sel, ValueSelector &amp;&amp;value_sel, ResultSelector &amp;&amp;result_sel, Pred &amp;&amp;pred) -&gt; detail::group_by_impl&lt; KeySelector, ValueSelector, ResultSelector, Pred &gt;</td></tr>
 <tr class="memdesc:gab1589867e12b285488233ee06896cb1d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Groups values in sequence according to their keys using predicate, then folds the results.  <a href="group__linq__op__group__by.html#gab1589867e12b285488233ee06896cb1d">More...</a><br /></td></tr>
 <tr class="separator:gab1589867e12b285488233ee06896cb1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4ba2e5bfd6ef98728f522b09360a1ebd"><td class="memTemplParams" colspan="2"><a id="a4ba2e5bfd6ef98728f522b09360a1ebd"></a>
-template&lt;typename InnerSeq , typename OuterKeySelector , typename InnerKeySelector , typename ResultSelector &gt; </td></tr>
-<tr class="memitem:a4ba2e5bfd6ef98728f522b09360a1ebd"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>coveo::linq::group_join</b> (InnerSeq &amp;&amp;inner_seq, OuterKeySelector &amp;&amp;outer_key_sel, InnerKeySelector &amp;&amp;inner_key_sel, ResultSelector &amp;&amp;result_sel) -&gt; detail::group_join_impl&lt; InnerSeq, OuterKeySelector, InnerKeySelector, ResultSelector, detail::less&lt;&gt;&gt;</td></tr>
-<tr class="separator:a4ba2e5bfd6ef98728f522b09360a1ebd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af8cc0bd408d35f38e6abd8d7eb326127"><td class="memTemplParams" colspan="2"><a id="af8cc0bd408d35f38e6abd8d7eb326127"></a>
-template&lt;typename InnerSeq , typename OuterKeySelector , typename InnerKeySelector , typename ResultSelector , typename Pred &gt; </td></tr>
-<tr class="memitem:af8cc0bd408d35f38e6abd8d7eb326127"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>coveo::linq::group_join</b> (InnerSeq &amp;&amp;inner_seq, OuterKeySelector &amp;&amp;outer_key_sel, InnerKeySelector &amp;&amp;inner_key_sel, ResultSelector &amp;&amp;result_sel, Pred &amp;&amp;pred) -&gt; detail::group_join_impl&lt; InnerSeq, OuterKeySelector, InnerKeySelector, ResultSelector, Pred &gt;</td></tr>
-<tr class="separator:af8cc0bd408d35f38e6abd8d7eb326127"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4ba2e5bfd6ef98728f522b09360a1ebd"><td class="memTemplParams" colspan="2">template&lt;typename InnerSeq , typename OuterKeySelector , typename InnerKeySelector , typename ResultSelector &gt; </td></tr>
+<tr class="memitem:ga4ba2e5bfd6ef98728f522b09360a1ebd"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__linq__op__group__join.html#ga4ba2e5bfd6ef98728f522b09360a1ebd">coveo::linq::group_join</a> (InnerSeq &amp;&amp;inner_seq, OuterKeySelector &amp;&amp;outer_key_sel, InnerKeySelector &amp;&amp;inner_key_sel, ResultSelector &amp;&amp;result_sel) -&gt; detail::group_join_impl&lt; InnerSeq, OuterKeySelector, InnerKeySelector, ResultSelector, detail::less&lt;&gt;&gt;</td></tr>
+<tr class="memdesc:ga4ba2e5bfd6ef98728f522b09360a1ebd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Joins and groups elements in two sequences according to their keys.  <a href="group__linq__op__group__join.html#ga4ba2e5bfd6ef98728f522b09360a1ebd">More...</a><br /></td></tr>
+<tr class="separator:ga4ba2e5bfd6ef98728f522b09360a1ebd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf8cc0bd408d35f38e6abd8d7eb326127"><td class="memTemplParams" colspan="2">template&lt;typename InnerSeq , typename OuterKeySelector , typename InnerKeySelector , typename ResultSelector , typename Pred &gt; </td></tr>
+<tr class="memitem:gaf8cc0bd408d35f38e6abd8d7eb326127"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__linq__op__group__join.html#gaf8cc0bd408d35f38e6abd8d7eb326127">coveo::linq::group_join</a> (InnerSeq &amp;&amp;inner_seq, OuterKeySelector &amp;&amp;outer_key_sel, InnerKeySelector &amp;&amp;inner_key_sel, ResultSelector &amp;&amp;result_sel, Pred &amp;&amp;pred) -&gt; detail::group_join_impl&lt; InnerSeq, OuterKeySelector, InnerKeySelector, ResultSelector, Pred &gt;</td></tr>
+<tr class="memdesc:gaf8cc0bd408d35f38e6abd8d7eb326127"><td class="mdescLeft">&#160;</td><td class="mdescRight">Joins and groups elements in two sequences according to their keys using predicate.  <a href="group__linq__op__group__join.html#gaf8cc0bd408d35f38e6abd8d7eb326127">More...</a><br /></td></tr>
+<tr class="separator:gaf8cc0bd408d35f38e6abd8d7eb326127"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a07d7fa9c9bf45992e16b70d37fcdefe0"><td class="memTemplParams" colspan="2"><a id="a07d7fa9c9bf45992e16b70d37fcdefe0"></a>
 template&lt;typename Seq2 &gt; </td></tr>
 <tr class="memitem:a07d7fa9c9bf45992e16b70d37fcdefe0"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>coveo::linq::intersect</b> (Seq2 &amp;&amp;seq2) -&gt; detail::intersect_impl&lt; Seq2, detail::less&lt;&gt;&gt;</td></tr>
@@ -447,7 +447,7 @@ template&lt;typename Seq2 , typename ResultSelector &gt; </td></tr>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Feb 27 2019 23:46:37 for coveo::linq by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Mar 1 2019 23:39:53 for coveo::linq by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>

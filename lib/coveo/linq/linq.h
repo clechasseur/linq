@@ -1853,11 +1853,63 @@ auto group_values_by_and_fold(KeySelector&& key_sel,
  * <b>.NET equivalent:</b> GroupJoin
  */
 
-// Operator that extracts keys from an outer and inner sequences using key selectors,
-// then creates groups of elements from inner sequence matching keys of elements in
-// outer sequence. A result selector is then used to convert each group into a final result.
-// The result selector is called with two arguments: an element from the outer sequence
-// and a sequence of elements from the inner sequence whose keys match.
+/**
+ * @ingroup linq_op_group_join
+ * @brief Joins and groups elements in two sequences according to their keys.
+ *
+ * Extracts keys for the elements of an <em>outer sequence</em> (the one on which
+ * this operator is applied, e.g. the one passed to <tt>coveo::linq::from()</tt>)
+ * and the provided <em>inner sequence</em> using the provided <em>key selectors</em>.
+ * Next, creates groups of elements from the inner sequence with keys matching that
+ * of the elements in the outer sequence. Finally, the provided <em>result selector</em>
+ * is used to convert the groups into the final results. The result selector is called
+ * with two arguments: an element from the outer sequence and a group of elements from
+ * the inner sequence that share the same key.
+ *
+ * In order to match the keys, they are compared using <tt>operator&lt;()</tt>.
+ *
+ * Use like this:
+ *
+ * @code
+ *   using person_data = std::pair<int, std::string>;
+ *   using person_messages = std::pair<int, std::string>;
+ *
+ *   const std::vector<person_data> PERSONS = {
+ *       { 1, "John Doe" },
+ *       { 2, "Jane Smith" },
+ *   };
+ *   const std::vector<person_messages> MESSAGES = {
+ *       { 1, "This is a test message" },
+ *       { 2, "Hello Jane!" },
+ *       { 1, "Doctors hate him!" },
+ *       { 1, "Welcome to the company" },
+ *       { 2, "Todo before we leave for vacation" },
+ *   };
+ *
+ *   using namespace coveo::linq;
+ *   auto seq = from(PERSONS)
+ *            | group_join(MESSAGES,
+ *                         [](const person_data& pd) { return pd.first; },
+ *                         [](const person_messages& pm) { return pm.first; }
+ *                         [](const person_data& pd, const coveo::enumerable<const person_messages>& e) {
+ *                             std::string res = pd.second + ": ";
+ *                             for (auto&& pm : e) {
+ *                                 res += pm.second + ", ";
+ *                             }
+ *                             return res;
+ *                         });
+ *   // seq == {
+ *   //            "John Doe: This is a test message, Doctors hate him!, Welcome to the company, ",
+ *   //            "Jane Smith: Hello Jane!, Todo before we leave for vacation, "
+ *   //        }
+ * @endcode
+ *
+ * @param inner_seq Inner sequence to scan to create groups.
+ * @param outer_key_sel Selector to get keys for elements in the outer sequence.
+ * @param inner_key_sel Selector to get keys for elements in the inner sequence.
+ * @param result_sel Result selector used to produce final results.
+ * @return (Once applied) Sequence of values returned by @c result_sel.
+ */
 template<typename InnerSeq,
          typename OuterKeySelector,
          typename InnerKeySelector,
@@ -1883,7 +1935,66 @@ auto group_join(InnerSeq&& inner_seq,
                                                    detail::less<>());
 }
 
-// Same as above, with a predicate to compare the keys in both sequences.
+/**
+ * @ingroup linq_op_group_join
+ * @brief Joins and groups elements in two sequences according to their keys using predicate.
+ *
+ * Extracts keys for the elements of an <em>outer sequence</em> (the one on which
+ * this operator is applied, e.g. the one passed to <tt>coveo::linq::from()</tt>)
+ * and the provided <em>inner sequence</em> using the provided <em>key selectors</em>.
+ * Next, creates groups of elements from the inner sequence with keys matching that
+ * of the elements in the outer sequence. Finally, the provided <em>result selector</em>
+ * is used to convert the groups into the final results. The result selector is called
+ * with two arguments: an element from the outer sequence and a group of elements from
+ * the inner sequence that share the same key.
+ *
+ * In order to match the keys, they are compared using the provided predicate. The
+ * predicate must provide a strict ordering of the keys, like <tt>std::less</tt>.
+ *
+ * Use like this:
+ *
+ * @code
+ *   using person_data = std::pair<int, std::string>;
+ *   using person_messages = std::pair<int, std::string>;
+ *
+ *   const std::vector<person_data> PERSONS = {
+ *       { 1, "John Doe" },
+ *       { 2, "Jane Smith" },
+ *   };
+ *   const std::vector<person_messages> MESSAGES = {
+ *       { 1, "This is a test message" },
+ *       { 2, "Hello Jane!" },
+ *       { 1, "Doctors hate him!" },
+ *       { 1, "Welcome to the company" },
+ *       { 2, "Todo before we leave for vacation" },
+ *   };
+ *
+ *   using namespace coveo::linq;
+ *   auto seq = from(PERSONS)
+ *            | group_join(MESSAGES,
+ *                         [](const person_data& pd) { return pd.first; },
+ *                         [](const person_messages& pm) { return pm.first; }
+ *                         [](const person_data& pd, const coveo::enumerable<const person_messages>& e) {
+ *                             std::string res = pd.second + ": ";
+ *                             for (auto&& pm : e) {
+ *                                 res += pm.second + ", ";
+ *                             }
+ *                             return res;
+ *                         },
+ *                         [](int i, int j) { return i > j; });
+ *   // seq == {
+ *   //            "John Doe: This is a test message, Doctors hate him!, Welcome to the company, ",
+ *   //            "Jane Smith: Hello Jane!, Todo before we leave for vacation, "
+ *   //        }
+ * @endcode
+ *
+ * @param inner_seq Inner sequence to scan to create groups.
+ * @param outer_key_sel Selector to get keys for elements in the outer sequence.
+ * @param inner_key_sel Selector to get keys for elements in the inner sequence.
+ * @param result_sel Result selector used to produce final results.
+ * @param pred Predicate used to compare keys.
+ * @return (Once applied) Sequence of values returned by @c result_sel.
+ */
 template<typename InnerSeq,
          typename OuterKeySelector,
          typename InnerKeySelector,
