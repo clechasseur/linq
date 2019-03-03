@@ -82,14 +82,14 @@ Modules</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<p>A <em>LINQ operator</em> is designed to accept a sequence as input, perform some specific task with it and return a result, which is usually (but not necessarily) another sequence. For example, a LINQ operator might filter the elements of a sequence to remove unwanted ones, or it could concatenate the sequence with another. Some LINQ operators are inspired by database operations, like <code>coveo::linq::join()</code>, but not all of them have an equivalent in the database world.</p>
+<p>A <em>LINQ operator</em> is designed to accept a sequence as input, perform some specific task with it and return a result, which is usually (but not necessarily) another sequence. For example, a LINQ operator might filter the elements of a sequence to remove unwanted ones, or it could concatenate the sequence with another. Some LINQ operators are inspired by database operations, like <code><a class="el" href="group__linq__op__join.html#ga2b3f5e7c982cff967ac9d5d1fdda9cce" title="Joins elements in two sequences according to their keys using predicate.">coveo::linq::join()</a></code>, but not all of them have an equivalent in the database world.</p>
 <p>Some LINQ operators are identified as <b>terminal</b>. This means that they return a result that is not a sequence, but a single value. Because of this, they can only appear at the end of a LINQ expression, since no other operator can be chained after them.</p>
 <p>In the <code>coveo::linq</code> library, LINQ operators are implemented as functions that return a <em>function object</em> implementing the operator logic. The function object is then <em>applied</em> to the sequence by <code><a class="el" href="group__linq__chaining.html#gaf38ff23c8bdf9a47b55e516dd378194e" title="Applies LINQ operators and allows chaining.">coveo::linq::operator|()</a></code>. For more information on this and on how to develop custom LINQ operators, see <a class="el" href="group__linq__custom__operators.html">Implementing custom LINQ operators</a>.</p>
 <p>The <code>coveo::linq</code> library includes many different operators for various needs. Most of them are inspired by a corresponding operator in the .NET library, although usage is often different. For a list of operators, see <a class="el" href="group__linq__operators__list.html">List of built-in LINQ operators</a>. </p>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Mar 1 2019 23:39:53 for coveo::linq by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Mar 2 2019 22:40:48 for coveo::linq by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>

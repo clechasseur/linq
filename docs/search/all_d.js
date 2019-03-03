@@ -1,5 +1,11 @@
 var searchData=
 [
-  ['raw_5fvalue_5ftype',['raw_value_type',['../classcoveo_1_1enumerable.html#adf663d74ea6a803b5e1a4aa18ad81249',1,'coveo::enumerable::raw_value_type()'],['../classcoveo_1_1enumerable_1_1iterator.html#a5e8a9330a78189bfef5fbc7cb01b9bcb',1,'coveo::enumerable::iterator::raw_value_type()'],['../structcoveo_1_1seq__element__traits.html#a7554b1bfb5770f86d4b1d09bb82260e2',1,'coveo::seq_element_traits::raw_value_type()']]],
-  ['reference',['reference',['../classcoveo_1_1enumerable.html#ab0e11b8ab1b63b938f2ebd6ed26858de',1,'coveo::enumerable::reference()'],['../classcoveo_1_1enumerable_1_1iterator.html#a193d93da0105951a98cf7db6a6e77008',1,'coveo::enumerable::iterator::reference()'],['../structcoveo_1_1seq__element__traits.html#a084e319fd71b5954a2906044d7b795cf',1,'coveo::seq_element_traits::reference()']]]
+  ['operator_20_2a',['operator *',['../classcoveo_1_1enumerable_1_1iterator.html#a7dc24cd6231236f11aeaa9a09a12124d',1,'coveo::enumerable::iterator']]],
+  ['operator_21_3d',['operator!=',['../classcoveo_1_1enumerable_1_1iterator.html#a41e17e930744b04a5ec54d82a107ccda',1,'coveo::enumerable::iterator']]],
+  ['operator_2b_2b',['operator++',['../classcoveo_1_1enumerable_1_1iterator.html#a22a3e5a57bb209c58d56faba7d0fb3b8',1,'coveo::enumerable::iterator::operator++()'],['../classcoveo_1_1enumerable_1_1iterator.html#a30662781383ac39581ceab74bba61e08',1,'coveo::enumerable::iterator::operator++(int)']]],
+  ['operator_2d_3e',['operator-&gt;',['../classcoveo_1_1enumerable_1_1iterator.html#a05c80719a0a9f60828931350ddee3757',1,'coveo::enumerable::iterator']]],
+  ['operator_3d',['operator=',['../classcoveo_1_1enumerable.html#a34919be6e82b09b8e5eb805fc02817a8',1,'coveo::enumerable::operator=()'],['../classcoveo_1_1enumerable_1_1iterator.html#a1752528008fda7d4dd394eee321a4f82',1,'coveo::enumerable::iterator::operator=(const iterator &amp;obj)=default'],['../classcoveo_1_1enumerable_1_1iterator.html#a8917e5cd720b1967f5fefbeacd1dd224',1,'coveo::enumerable::iterator::operator=(iterator &amp;&amp;obj)']]],
+  ['operator_3d_3d',['operator==',['../classcoveo_1_1enumerable_1_1iterator.html#ac2a4264780a03a2718871194ee3244ef',1,'coveo::enumerable::iterator']]],
+  ['operator_7c',['operator|',['../group__linq__chaining.html#gaf38ff23c8bdf9a47b55e516dd378194e',1,'coveo::linq']]],
+  ['out_5fof_5frange',['out_of_range',['../classcoveo_1_1linq_1_1out__of__range.html',1,'coveo::linq']]]
 ];

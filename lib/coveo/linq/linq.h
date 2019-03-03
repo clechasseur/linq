@@ -2022,11 +2022,44 @@ auto group_join(InnerSeq&& inner_seq,
                                          std::forward<Pred>(pred));
 }
 
-// C++ LINQ operator: intersect
-// .NET equivalent: Intersect
+/**
+ * @ingroup linq_operators_list
+ * @defgroup linq_op_intersect intersect
+ * @brief Performs a set intersection of two sequences.
+ *
+ * The @c intersect operator returns all elements in the first sequence
+ * that are also found in the second sequence (essentially a set intersection).
+ * The elements are returned in the order that they appear in the first sequence.
+ *
+ * <b>.NET equivalent:</b> Intersect
+ */
 
-// Operator that returns all elements that are found in two sequences.
-// Essentially a set intersection.
+/**
+ * @ingroup linq_op_intersect
+ * @brief Performs set intersection of two sequences.
+ *
+ * Returns a sequence containing all elements from the first source sequence
+ * that are also in the second source sequence (essentially a set intersection).
+ * Elements are returned in the order that they appear in the first sequence.
+ *
+ * Elements are found using <tt>operator&lt;()</tt> to compare them.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const int ONE[] = { 42, 23, 66, 11, 7, 67 };
+ *   const int TWO[] = { 10, 7, 60, 42, 43, 23 };
+ *
+ *   using namespace coveo::linq;
+ *   auto seq = from(ONE)
+ *            | intersect(TWO);
+ *   // seq = { 42, 23, 7 }
+ * @endcode
+ *
+ * @param seq2 Second source sequence.
+ * @return (Once applied) Sequence containing elements from first
+ *         source sequence that are also in @c seq2.
+ */
 template<typename Seq2>
 auto intersect(Seq2&& seq2)
     -> detail::intersect_impl<Seq2, detail::less<>>
@@ -2035,8 +2068,34 @@ auto intersect(Seq2&& seq2)
                                                         detail::less<>());
 }
 
-// Same as above, with a predicate to compare the elements.
-// The predicate must provide a strict ordering of the elements, like std::less.
+/**
+ * @ingroup linq_op_intersect
+ * @brief Performs set intersection of two sequences using predicate.
+ *
+ * Returns a sequence containing all elements from the first source sequence
+ * that are also in the second source sequence (essentially a set intersection).
+ * Elements are returned in the order that they appear in the first sequence.
+ *
+ * Elements are found using the provided predicate to compare them. The predicate
+ * must provide a strict ordering of the elements, like <tt>std::less</tt>.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const int ONE[] = { 42, 23, 66, 11, 7, 67 };
+ *   const int TWO[] = { 10, 7, 60, 42, 43, 23 };
+ *
+ *   using namespace coveo::linq;
+ *   auto seq = from(ONE)
+ *            | intersect(TWO, [](int i, int j) { return i > j; });
+ *   // seq = { 42, 23, 7 }
+ * @endcode
+ *
+ * @param seq2 Second source sequence.
+ * @param pred Predicate used to compare the elements.
+ * @return (Once applied) Sequence containing elements from first
+ *         source sequence that are also in @c seq2.
+ */
 template<typename Seq2, typename Pred>
 auto intersect(Seq2&& seq2, Pred&& pred)
     -> detail::intersect_impl<Seq2, Pred>
@@ -2045,13 +2104,77 @@ auto intersect(Seq2&& seq2, Pred&& pred)
                                               std::forward<Pred>(pred));
 }
 
-// C++ LINQ operator: join
-// .NET equivalent: Join
+/**
+ * @ingroup linq_operators_list
+ * @defgroup linq_op_join join
+ * @brief Joins elements in two sequences according to their keys.
+ *
+ * The @c join operator scans two sequences: an <em>outer sequence</em> and an
+ * <em>inner sequence</em>. For each element in the sequences, it extracts a key using
+ * some <em>key selectors</em>. Then, it joins elements from the inner sequence to
+ * elements in the outer sequence with matching keys. Finally, a <em>result selector</em>
+ * is used to fold the elements into the final results. (This operator is similar to
+ * a database JOIN.)
+ *
+ * <b>.NET equivalent:</b> Join
+ */
 
-// Operator that extracts keys from elements in two sequences and joins
-// elements with matching keys using a result selector, like a database JOIN.
-// The result selector is called with two arguments: an element from the outer
-// sequence and an element from the inner sequence whose key matches.
+/**
+ * @ingroup linq_op_join
+ * @brief Joins elements in two sequences according to their keys.
+ *
+ * Extracts keys for the elements of an <em>outer sequence</em> (the one on which
+ * this operator is applied, e.g. the one passed to <tt>coveo::linq::from()</tt>)
+ * and the provided <em>inner sequence</em> using the provided <em>key selectors</em>.
+ * Next, joins elements from the inner sequence with  elements in the outer sequence
+ * with matching keys. Finally, the provided <em>result selector</em> is used to convert
+ * the elements into the final results. The result selector is called with two arguments:
+ * an element from the outer sequence and an element from the inner sequence that share
+ * the same key.
+ *
+ * In order to match the keys, they are compared using <tt>operator&lt;()</tt>.
+ *
+ * Use like this:
+ *
+ * @code
+ *   using person_data = std::pair<int, std::string>;
+ *   using person_messages = std::pair<int, std::string>;
+ *
+ *   const std::vector<person_data> PERSONS = {
+ *       { 1, "John Doe" },
+ *       { 2, "Jane Smith" },
+ *   };
+ *   const std::vector<person_messages> MESSAGES = {
+ *       { 1, "This is a test message" },
+ *       { 2, "Hello Jane!" },
+ *       { 1, "Doctors hate him!" },
+ *       { 1, "Welcome to the company" },
+ *       { 2, "Todo before we leave for vacation" },
+ *   };
+ *
+ *   using namespace coveo::linq;
+ *   auto seq = from(PERSONS)
+ *            | join(MESSAGES,
+ *                   [](const person_data& pd) { return pd.first; },
+ *                   [](const person_messages& pm) { return pm.first; }
+ *                   [](const person_data& pd, const person_messages& pm) {
+ *                       return pd.second + ": " + pm.second;
+ *                   });
+ *   // seq == {
+ *   //            "John Doe: This is a test message",
+ *   //            "John Doe: Doctors hate him!",
+ *   //            "John Doe: Welcome to the company",
+ *   //            "Jane Smith: Hello Jane!",
+ *   //            "Jane Smith: Todo before we leave for vacation"
+ *   //        }
+ * @endcode
+ *
+ * @param inner_seq Inner sequence to scan.
+ * @param outer_key_sel Selector to get keys for elements in the outer sequence.
+ * @param inner_key_sel Selector to get keys for elements in the inner sequence.
+ * @param result_sel Result selector used to produce final results.
+ * @return (Once applied) Sequence of values returned by @c result_sel.
+ */
 template<typename InnerSeq,
          typename OuterKeySelector,
          typename InnerKeySelector,
@@ -2077,7 +2200,65 @@ auto join(InnerSeq&& inner_seq,
                                              detail::less<>());
 }
 
-// Same as above, with a predicate to compare the keys.
+/**
+ * @ingroup linq_op_join
+ * @brief Joins elements in two sequences according to their keys using predicate.
+ *
+ * Extracts keys for the elements of an <em>outer sequence</em> (the one on which
+ * this operator is applied, e.g. the one passed to <tt>coveo::linq::from()</tt>)
+ * and the provided <em>inner sequence</em> using the provided <em>key selectors</em>.
+ * Next, joins elements from the inner sequence with  elements in the outer sequence
+ * with matching keys. Finally, the provided <em>result selector</em> is used to convert
+ * the elements into the final results. The result selector is called with two arguments:
+ * an element from the outer sequence and an element from the inner sequence that share
+ * the same key.
+ *
+ * In order to match the keys, they are compared using the provided predicate. The
+ * predicate must provide a strict ordering of the keys, like <tt>std::less</tt>.
+ *
+ * Use like this:
+ *
+ * @code
+ *   using person_data = std::pair<int, std::string>;
+ *   using person_messages = std::pair<int, std::string>;
+ *
+ *   const std::vector<person_data> PERSONS = {
+ *       { 1, "John Doe" },
+ *       { 2, "Jane Smith" },
+ *   };
+ *   const std::vector<person_messages> MESSAGES = {
+ *       { 1, "This is a test message" },
+ *       { 2, "Hello Jane!" },
+ *       { 1, "Doctors hate him!" },
+ *       { 1, "Welcome to the company" },
+ *       { 2, "Todo before we leave for vacation" },
+ *   };
+ *
+ *   using namespace coveo::linq;
+ *   auto seq = from(PERSONS)
+ *            | join(MESSAGES,
+ *                   [](const person_data& pd) { return pd.first; },
+ *                   [](const person_messages& pm) { return pm.first; }
+ *                   [](const person_data& pd, const person_messages& pm) {
+ *                       return pd.second + ": " + pm.second;
+ *                   },
+ *                   [](int i, int j) { return i > j; });
+ *   // seq == {
+ *   //            "John Doe: This is a test message",
+ *   //            "John Doe: Doctors hate him!",
+ *   //            "John Doe: Welcome to the company",
+ *   //            "Jane Smith: Hello Jane!",
+ *   //            "Jane Smith: Todo before we leave for vacation"
+ *   //        }
+ * @endcode
+ *
+ * @param inner_seq Inner sequence to scan.
+ * @param outer_key_sel Selector to get keys for elements in the outer sequence.
+ * @param inner_key_sel Selector to get keys for elements in the inner sequence.
+ * @param result_sel Result selector used to produce final results.
+ * @param pred Predicate used to compare the keys.
+ * @return (Once applied) Sequence of values returned by @c result_sel.
+ */
 template<typename InnerSeq,
          typename OuterKeySelector,
          typename InnerKeySelector,
@@ -2105,11 +2286,46 @@ auto join(InnerSeq&& inner_seq,
                                    std::forward<Pred>(pred));
 }
 
-// C++ LINQ operqator: last
-// .NET equivalent: Last
+/**
+ * @ingroup linq_operators_list
+ * @defgroup linq_op_last last
+ * @brief Returns last element in a sequence.
+ *
+ * The @c last operator returns the last element in a sequence,
+ * or the last element to satisfy a predicate. If the sequence does
+ * not have such an element, an exception is thrown.
+ *
+ * This is a @b terminal operator.
+ *
+ * <b>.NET equivalent:</b> Last
+ */
 
-// Operator that returns the last element in a sequence.
-// Does not work on empty sequences.
+/**
+ * @ingroup linq_op_last
+ * @brief Returns last element in sequence.
+ *
+ * Returns the last element in a sequence. If the sequence
+ * does not have elements, <tt>coveo::linq::empty_sequence</tt>
+ * is thrown.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const std::vector<int> YES = { 42, 23, 66 };
+ *   const std::vector<int> NAY;
+ *
+ *   using namespace coveo::linq;
+ *   auto las1 = from(YES)
+ *             | last();
+ *   // las1 == 66
+ *   // This throws an exception:
+ *   // auto las2 = from(NAY)
+ *   //           | last();
+ * @endcode
+ *
+ * @return (Once applied) Last element in sequence.
+ * @exception coveo::linq::empty_sequence The sequence does not have elements.
+ */
 template<typename = void>
 auto last()
     -> detail::last_impl_0<>
@@ -2117,8 +2333,35 @@ auto last()
     return detail::last_impl_0<>();
 }
 
-// Operator that returns the last element in a sequence
-// that satisfies a predicate. Does not work on empty sequences.
+/**
+ * @ingroup linq_op_last
+ * @brief Returns last element in sequence that satisfy predicate.
+ *
+ * Returns the last element in a sequence for which the given
+ * predicate returns @c true. If the sequence does not have elements,
+ * <tt>coveo::linq::empty_sequence</tt> is thrown; if the sequence does
+ * not contain an element that satisfy the predicate,
+ * <tt>coveo::linq::out_of_range</tt> is thrown.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const int NUMS[] = { 42, 23, 66 };
+ *
+ *   using namespace coveo::linq;
+ *   auto even = from(NUMS)
+ *             | last([](int i) { return i % 2 == 0; });
+ *   // even == 66
+ *   // This throws an exception:
+ *   // auto big = from(NUMS)
+ *   //          | last([](int i) { return  i >= 90; });
+ * @endcode
+ *
+ * @param pred Predicate to satisfy.
+ * @return (Once applied) Last element in sequence for which @c pred returns @c true.
+ * @exception coveo::linq::empty_sequence The sequence does not have elements.
+ * @exception coveo::linq::out_of_range The sequence has no element that satisfy @c pred.
+ */
 template<typename Pred>
 auto last(const Pred& pred)
     -> detail::last_impl_1<Pred>
@@ -2126,11 +2369,46 @@ auto last(const Pred& pred)
     return detail::last_impl_1<Pred>(pred);
 }
 
-// C++ LINQ operator: last_or_default
-// .NET equivalent: LastOrDefault
+/**
+ * @ingroup linq_operators_list
+ * @defgroup linq_op_last_or_def last_or_default
+ * @brief Returns last element in a sequence, or a default value.
+ *
+ * The @c last_or_default operator returns the last element in a sequence,
+ * or the last element to satisfy a predicate. If the sequence does
+ * not have such an element, a default value is returned.
+ *
+ * This is a @b terminal operator.
+ *
+ * <b>.NET equivalent:</b> LastOrDefault
+ */
 
-// Operator that returns the last element in a sequence
-// or a default-initialized value if it's empty.
+/**
+ * @ingroup linq_op_last_or_def
+ * @brief Returns last element in sequence, or default value.
+ *
+ * Returns the last element in a sequence. If the sequence
+ * does not have elements, a <em>default-initialized</em>
+ * value is returned instead.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const std::vector<int> YES = { 42, 23, 66 };
+ *   const std::vector<int> NAY;
+ *
+ *   using namespace coveo::linq;
+ *   auto las1 = from(YES)
+ *             | last();
+ *   auto las2 = from(NAY)
+ *             | last();
+ *   // las1 == 66
+ *   // las2 == 0
+ * @endcode
+ *
+ * @return (Once applied) Last element in sequence, or a default value
+ *         if sequence does not have elements.
+ */
 template<typename = void>
 auto last_or_default()
     -> detail::last_or_default_impl_0<>
@@ -2138,9 +2416,33 @@ auto last_or_default()
     return detail::last_or_default_impl_0<>();
 }
 
-// Operator that returns the last element in a sequence
-// that satistifies a predicate or, if none are found,
-// a default-initialized value.
+/**
+ * @ingroup linq_op_last_or_def
+ * @brief Returns last element in sequence that satisfy predicate, or default value.
+ *
+ * Returns the last element in a sequence for which the given
+ * predicate returns @c true. If the sequence does not have elements
+ * or does not contain an element that satisfy the predicate, a
+ * <em>default-initialized</em> value is returned instead.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const int NUMS[] = { 42, 23, 66 };
+ *
+ *   using namespace coveo::linq;
+ *   auto even = from(NUMS)
+ *             | last([](int i) { return i % 2 == 0; });
+ *   auto big = from(NUMS)
+ *            | last([](int i) { return  i >= 90; });
+ *   // even == 66
+ *   // big == 0
+ * @endcode
+ *
+ * @param pred Predicate to satisfy.
+ * @return (Once applied) Last element in sequence for which @c pred returns @c true
+ *         or, if no such element exists in sequence, a default value.
+ */
 template<typename Pred>
 auto last_or_default(const Pred& pred)
     -> detail::last_or_default_impl_1<Pred>
@@ -2148,11 +2450,45 @@ auto last_or_default(const Pred& pred)
     return detail::last_or_default_impl_1<Pred>(pred);
 }
 
-// C++ LINQ operator: max
-// .NET equivalent: Max
+/**
+ * @ingroup linq_operators_list
+ * @defgroup linq_op_max max
+ * @brief Returns maximum element in a sequence.
+ *
+ * The @c max operator returns the maximum element in a sequence. If the
+ * sequence does not have elements, an exception is thrown.
+ *
+ * This is a @b terminal operator.
+ *
+ * <b>.NET equivalent:</b> Max
+ */
 
-// Operator that returns the maximum value in a sequence.
-// Does not work on empty sequences.
+/**
+ * @ingroup linq_op_max
+ * @brief Returns maximum element in sequence.
+ *
+ * Returns the maximum element in a sequence. If the sequence
+ * does not have elements, <tt>coveo::linq::empty_sequence</tt>
+ * is thrown.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const std::vector<int> YES = { 42, 23, 66, 11, 7 };
+ *   const std::vector<int> NAY;
+ *
+ *   using namespace coveo::linq;
+ *   auto max1 = from(YES)
+ *             | max();
+ *   // max1 == 66
+ *   // This throws an exception:
+ *   // auto max2 = from(NAY)
+ *   //           | max();
+ * @endcode
+ *
+ * @return (Once applied) Maximum element in sequence.
+ * @exception coveo::linq::empty_sequence The sequence does not have elements.
+ */
 template<typename = void>
 auto max()
     -> detail::max_impl_0<>
@@ -2160,9 +2496,34 @@ auto max()
     return detail::max_impl_0<>();
 }
 
-// Operator that returns the maximum value in a sequence by
-// projecting each element in the sequence into a different
-// value using a selector. Does not work on empty sequences.
+/**
+ * @ingroup linq_op_max
+ * @brief Returns maximum projected value in sequence.
+ *
+ * Returns the maximum value in a sequence by projecting each element
+ * to a different value using the provided <em>selector</em>. If the
+ * sequence does not have elements, <tt>coveo::linq::empty_sequence</tt>
+ * is thrown.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const std::vector<int> YES = { 42, 23, 66, 11, 7 };
+ *   const std::vector<int> NAY;
+ *
+ *   using namespace coveo::linq;
+ *   auto max1 = from(YES)
+ *             | max([](int i) { return -i; });
+ *   // max1 == -7
+ *   // This throws an exception:
+ *   // auto max2 = from(NAY)
+ *   //           | max([](int i) { return -i; });
+ * @endcode
+ *
+ * @param sel Selector called to project each element into a different value.
+ * @return (Once applied) Maximum projected value in sequence.
+ * @exception coveo::linq::empty_sequence The sequence does not have elements.
+ */
 template<typename Selector>
 auto max(const Selector& sel)
     -> detail::max_impl_1<Selector>
@@ -2170,11 +2531,45 @@ auto max(const Selector& sel)
     return detail::max_impl_1<Selector>(sel);
 }
 
-// C++ LINQ operator: min
-// .NET equivalent: Min
+/**
+ * @ingroup linq_operators_list
+ * @defgroup linq_op_min min
+ * @brief Returns minimum element in a sequence.
+ *
+ * The @c min operator returns the minimum element in a sequence. If the
+ * sequence does not have elements, an exception is thrown.
+ *
+ * This is a @b terminal operator.
+ *
+ * <b>.NET equivalent:</b> Min
+ */
 
-// Operator that returns the minimum value in a sequence.
-// Does not work on empty sequences.
+/**
+ * @ingroup linq_op_min
+ * @brief Returns minimum element in sequence.
+ *
+ * Returns the minimum element in a sequence. If the sequence
+ * does not have elements, <tt>coveo::linq::empty_sequence</tt>
+ * is thrown.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const std::vector<int> YES = { 42, 23, 66, 11, 7 };
+ *   const std::vector<int> NAY;
+ *
+ *   using namespace coveo::linq;
+ *   auto min1 = from(YES)
+ *             | min();
+ *   // min1 == 7
+ *   // This throws an exception:
+ *   // auto min2 = from(NAY)
+ *   //           | min();
+ * @endcode
+ *
+ * @return (Once applied) Minimum element in sequence.
+ * @exception coveo::linq::empty_sequence The sequence does not have elements.
+ */
 template<typename = void>
 auto min()
     -> detail::min_impl_0<>
@@ -2182,9 +2577,34 @@ auto min()
     return detail::min_impl_0<>();
 }
 
-// Operator that returns the minimum value in a sequence by
-// projecting each element in the sequence into a different
-// value using a selector. Does not work on empty sequences.
+/**
+ * @ingroup linq_op_min
+ * @brief Returns minimum projected value in sequence.
+ *
+ * Returns the minimum value in a sequence by projecting each element
+ * to a different value using the provided <em>selector</em>. If the
+ * sequence does not have elements, <tt>coveo::linq::empty_sequence</tt>
+ * is thrown.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const std::vector<int> YES = { 42, 23, 66, 11, 7 };
+ *   const std::vector<int> NAY;
+ *
+ *   using namespace coveo::linq;
+ *   auto min1 = from(YES)
+ *             | min([](int i) { return -i; });
+ *   // min1 == -66
+ *   // This throws an exception:
+ *   // auto min2 = from(NAY)
+ *   //           | min([](int i) { return -i; });
+ * @endcode
+ *
+ * @param sel Selector called to project each element into a different value.
+ * @return (Once applied) Minimum projected value in sequence.
+ * @exception coveo::linq::empty_sequence The sequence does not have elements.
+ */
 template<typename Selector>
 auto min(const Selector& sel)
     -> detail::min_impl_1<Selector>
@@ -2192,11 +2612,46 @@ auto min(const Selector& sel)
     return detail::min_impl_1<Selector>(sel);
 }
 
-// C++ LINQ operator: none
-// No .NET equivalent.
+/**
+ * @ingroup linq_operators_list
+ * @defgroup linq_op_none none
+ * @brief Checks if no element in a sequence satisfy a predicate.
+ *
+ * The @c none operator scans a sequence and validates that none of its elements
+ * satisfy a given @e predicate.
+ *
+ * This is a @b terminal operator.
+ *
+ * <b>.NET equivalent:</b> <em>n/a</em>
+ */
 
-// Operator that checks if no element in a sequence satisfy a given predicate.
-// Works on empty sequences (returns true in such a case).
+/**
+ * @ingroup linq_op_none
+ * @brief Checks elements in a sequence against a predicate.
+ *
+ * Scans a sequence and calls a @e predicate with each element. The predicate
+ * must return @c true if the element satisfies the predicate. The final result
+ * will indicate if no elements satisfy the predicate.
+ *
+ * Works on empty sequences (returns @c true in such a case).
+ *
+ * Use like this:
+ *
+ * @code
+ *   const int NUMS = { 42, 23, 66 };
+ *
+ *   using namespace coveo::linq;
+ *   bool no_big = from(NUMS)
+ *               | none([](int i) { return i >= 90; });
+ *   bool no_odd = from(NUMS)
+ *               | none([](int i) { return i % 2 != 0; });
+ *   // no_big == true
+ *   // no_odd == false
+ * @endcode
+ *
+ * @param pred Predicate to satisfy.
+ * @return (Once applied) @c true if no element in sequence satisfy @c pred.
+ */
 template<typename Pred>
 auto none(const Pred& pred)
     -> detail::none_impl<Pred>

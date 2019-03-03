@@ -1,10 +1,5 @@
 var searchData=
 [
-  ['linq_20expressions',['LINQ expressions',['../group__linq.html',1,'']]],
-  ['linq_2eh',['linq.h',['../linq_2linq_8h.html',1,'(Global Namespace)'],['../linq_8h.html',1,'(Global Namespace)']]],
-  ['linq_20operator_20chaining',['LINQ operator chaining',['../group__linq__chaining.html',1,'']]],
-  ['linq_5fdetail_2eh',['linq_detail.h',['../linq__detail_8h.html',1,'']]],
-  ['linq_20expression_20entry_20points',['LINQ expression entry points',['../group__linq__entry__points.html',1,'']]],
-  ['linq_20operators',['LINQ operators',['../group__linq__operators.html',1,'']]],
-  ['list_20of_20built_2din_20linq_20operators',['List of built-in LINQ operators',['../group__linq__operators__list.html',1,'']]]
+  ['join',['join',['../group__linq__op__join.html#gaadac8d935b5403c35a011b36085292ed',1,'coveo::linq::join(InnerSeq &amp;&amp;inner_seq, OuterKeySelector &amp;&amp;outer_key_sel, InnerKeySelector &amp;&amp;inner_key_sel, ResultSelector &amp;&amp;result_sel) -&gt; detail::join_impl&lt; InnerSeq, OuterKeySelector, InnerKeySelector, ResultSelector, detail::less&lt;&gt;&gt;'],['../group__linq__op__join.html#ga2b3f5e7c982cff967ac9d5d1fdda9cce',1,'coveo::linq::join(InnerSeq &amp;&amp;inner_seq, OuterKeySelector &amp;&amp;outer_key_sel, InnerKeySelector &amp;&amp;inner_key_sel, ResultSelector &amp;&amp;result_sel, Pred &amp;&amp;pred) -&gt; detail::join_impl&lt; InnerSeq, OuterKeySelector, InnerKeySelector, ResultSelector, Pred &gt;']]],
+  ['join',['join',['../group__linq__op__join.html',1,'']]]
 ];
