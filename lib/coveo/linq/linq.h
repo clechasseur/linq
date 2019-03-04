@@ -2659,12 +2659,57 @@ auto none(const Pred& pred)
     return detail::none_impl<Pred>(pred);
 }
 
-// C++ LINQ operators: order_by/order_by_descending/then_by/then_by_descending
-// .NET equivalents: OrderBy/OrderByDesdending/ThenBy/ThenByDescending
+/**
+ * @ingroup linq_operators_list
+ * @defgroup linq_op_order_by order_by / order_by_descending / then_by / then_by_descending
+ * @brief Orders elements in a sequence.
+ *
+ * The @c order_by operator (and its siblings) extract keys from each element in a sequence,
+ * then orders those elements according to those keys. Depending on the operator used, the
+ * ordering will be ascending or descending. If multiple operators are chained (using
+ * <tt>coveo::linq::then_by()</tt>), elements will be ordered according to the first key
+ * extracted and elements with equivalent keys will be further ordered by the other keys.
+ *
+ * <b>.NET equivalent:</b> OrderBy / OrderByDescending / ThenBy / ThenByDescending
+ */
 
-// Operator that orders a sequence by fetching a key for each element
-// using a key selector and then sorting elements by their keys using
-// operator< to compare the keys.
+/**
+ * @ingroup linq_op_order_by
+ * @brief Orders elements in sequence by ascending key.
+ *
+ * For each element in the input sequence, extracts a key using the
+ * provided <em>key selector</em>. Then, returns a sequence containing
+ * the same elements, ordered according to the keys in ascending order.
+ *
+ * Keys are compared using <tt>operator&lt;</tt>.
+ *
+ * Use like this:
+ *
+ * @code
+ *   using coord = std::tuple<int, int, int>;
+ *   const std::vector<coord> COORDS = {
+ *       { 10, 2,  -4 },
+ *       { 2,  20, 8  },
+ *       { -1, 1,  12 },
+ *       { 14, 29, 1  },
+ *       { 3,  3,  3  },
+ *   };
+ *
+ *   using namespace coveo::linq;
+ *   auto seq = from(COORDS)
+ *            | order_by([](const coord& c) { return c.x; });
+ *   // seq == {
+ *   //            { -1, 1,  12 },
+ *   //            { 2,  20, 8  },
+ *   //            { 3,  3,  3  },
+ *   //            { 10, 2,  -4 },
+ *   //            { 14, 29, 1  }
+ *   //        }
+ * @endcode
+ *
+ * @param key_sel Key selector, used to extract a key for a sequence element.
+ * @return (Once applied) Sequence of elements ordered by ascending key.
+ */
 template<typename KeySelector>
 auto order_by(KeySelector&& key_sel)
     -> detail::order_by_impl<detail::order_by_comparator<KeySelector, detail::less<>, false>>
@@ -2673,7 +2718,46 @@ auto order_by(KeySelector&& key_sel)
     return detail::order_by_impl<comparator>(detail::make_unique<comparator>(std::forward<KeySelector>(key_sel), detail::less<>()));
 }
 
-// As above, but uses the given predicate to compare the keys.
+/**
+ * @ingroup linq_op_order_by
+ * @brief Orders elements in sequence by ascending key using predicate.
+ *
+ * For each element in the input sequence, extracts a key using the
+ * provided <em>key selector</em>. Then, returns a sequence containing
+ * the same elements, ordered according to the keys in ascending order.
+ *
+ * Keys are compared using the provided predicate. The predicate must
+ * provide a strict ordering of the keys, like <tt>std::less</tt>.
+ *
+ * Use like this:
+ *
+ * @code
+ *   using coord = std::tuple<int, int, int>;
+ *   const std::vector<coord> COORDS = {
+ *       { 10, 2,  -4 },
+ *       { 2,  20, 8  },
+ *       { -1, 1,  12 },
+ *       { 14, 29, 1  },
+ *       { 3,  3,  3  },
+ *   };
+ *
+ *   using namespace coveo::linq;
+ *   auto seq = from(COORDS)
+ *            | order_by([](const coord& c) { return c.x; },
+ *                       [](int i, int j) { return i < j; });
+ *   // seq == {
+ *   //            { -1, 1,  12 },
+ *   //            { 2,  20, 8  },
+ *   //            { 3,  3,  3  },
+ *   //            { 10, 2,  -4 },
+ *   //            { 14, 29, 1  }
+ *   //        }
+ * @endcode
+ *
+ * @param key_sel Key selector, used to extract a key for a sequence element.
+ * @param pred Predicate used to compare the keys.
+ * @return (Once applied) Sequence of elements ordered by ascending key.
+ */
 template<typename KeySelector, typename Pred>
 auto order_by(KeySelector&& key_sel, Pred&& pred)
     -> detail::order_by_impl<detail::order_by_comparator<KeySelector, Pred, false>>
@@ -2682,8 +2766,44 @@ auto order_by(KeySelector&& key_sel, Pred&& pred)
     return detail::order_by_impl<comparator>(detail::make_unique<comparator>(std::forward<KeySelector>(key_sel), std::forward<Pred>(pred)));
 }
 
-// As the first implementation above, but sorts keys descending,
-// as if using operator>.
+/**
+ * @ingroup linq_op_order_by
+ * @brief Orders elements in sequence by descending key.
+ *
+ * For each element in the input sequence, extracts a key using the
+ * provided <em>key selector</em>. Then, returns a sequence containing
+ * the same elements, ordered according to the keys in descending order.
+ *
+ * Keys are compared using <tt>operator&lt;</tt>, but the result is reversed
+ * to produce descending order.
+ *
+ * Use like this:
+ *
+ * @code
+ *   using coord = std::tuple<int, int, int>;
+ *   const std::vector<coord> COORDS = {
+ *       { 10, 2,  -4 },
+ *       { 2,  20, 8  },
+ *       { -1, 1,  12 },
+ *       { 14, 29, 1  },
+ *       { 3,  3,  3  },
+ *   };
+ *
+ *   using namespace coveo::linq;
+ *   auto seq = from(COORDS)
+ *            | order_by_descending([](const coord& c) { return c.x; });
+ *   // seq == {
+ *   //            { 14, 29, 1  }
+ *   //            { 10, 2,  -4 },
+ *   //            { 3,  3,  3  },
+ *   //            { 2,  20, 8  },
+ *   //            { -1, 1,  12 },
+ *   //        }
+ * @endcode
+ *
+ * @param key_sel Key selector, used to extract a key for a sequence element.
+ * @return (Once applied) Sequence of elements ordered by descending key.
+ */
 template<typename KeySelector>
 auto order_by_descending(KeySelector&& key_sel)
     -> detail::order_by_impl<detail::order_by_comparator<KeySelector, detail::less<>, true>>
@@ -2692,7 +2812,47 @@ auto order_by_descending(KeySelector&& key_sel)
     return detail::order_by_impl<comparator>(detail::make_unique<comparator>(std::forward<KeySelector>(key_sel), detail::less<>()));
 }
 
-// As above, but uses the given predicate to compare the keys.
+/**
+ * @ingroup linq_op_order_by
+ * @brief Orders elements in sequence by descending key using predicate.
+ *
+ * For each element in the input sequence, extracts a key using the
+ * provided <em>key selector</em>. Then, returns a sequence containing
+ * the same elements, ordered according to the keys in descending order.
+ *
+ * Keys are compared using the provided predicate, but the result is reversed
+ * to produce descending order. The predicate must provide a strict ordering
+ * of the keys, like <tt>std::less</tt>.
+ *
+ * Use like this:
+ *
+ * @code
+ *   using coord = std::tuple<int, int, int>;
+ *   const std::vector<coord> COORDS = {
+ *       { 10, 2,  -4 },
+ *       { 2,  20, 8  },
+ *       { -1, 1,  12 },
+ *       { 14, 29, 1  },
+ *       { 3,  3,  3  },
+ *   };
+ *
+ *   using namespace coveo::linq;
+ *   auto seq = from(COORDS)
+ *            | order_by_descending([](const coord& c) { return c.x; },
+ *                                  [](int i, int j) { return i < j; });
+ *   // seq == {
+ *   //            { 14, 29, 1  }
+ *   //            { 10, 2,  -4 },
+ *   //            { 3,  3,  3  },
+ *   //            { 2,  20, 8  },
+ *   //            { -1, 1,  12 },
+ *   //        }
+ * @endcode
+ *
+ * @param key_sel Key selector, used to extract a key for a sequence element.
+ * @param pred Predicate used to compare the keys.
+ * @return (Once applied) Sequence of elements ordered by descending key.
+ */
 template<typename KeySelector, typename Pred>
 auto order_by_descending(KeySelector&& key_sel, Pred&& pred)
     -> detail::order_by_impl<detail::order_by_comparator<KeySelector, Pred, true>>
@@ -2701,8 +2861,45 @@ auto order_by_descending(KeySelector&& key_sel, Pred&& pred)
     return detail::order_by_impl<comparator>(detail::make_unique<comparator>(std::forward<KeySelector>(key_sel), std::forward<Pred>(pred)));
 }
 
-// Operator that further orders a sequence previously ordered via order_by
-// using a different key selector.
+/**
+ * @ingroup linq_op_order_by
+ * @brief Further orders elements in sequence by ascending key.
+ *
+ * Further orders a sequence previously ordered via <tt>coveo::linq::order_by()</tt>
+ * or similar operator. Elements that were previously considered equivalent will
+ * be further ordered by ascending order of keys as extracted by the provided
+ * <em>key selector</em>.
+ *
+ * Keys are compared using <tt>operator&lt;</tt>.
+ *
+ * Use like this:
+ *
+ * @code
+ *   using coord = std::tuple<int, int, int>;
+ *   const std::vector<coord> COORDS = {
+ *       { 2,  2,  -4 },
+ *       { 2,  20, 8  },
+ *       { -1, 1,  12 },
+ *       { 3,  29, 1  },
+ *       { 3,  3,  3  },
+ *   };
+ *
+ *   using namespace coveo::linq;
+ *   auto seq = from(COORDS)
+ *            | order_by([](const coord& c) { return c.x; })
+ *            | then_by([](const coord& c) { return c.y; });
+ *   // seq == {
+ *   //            { -1, 1,  12 },
+ *   //            { 2,  2,  -4 },
+ *   //            { 2,  20, 8  },
+ *   //            { 3,  3,  3  },
+ *   //            { 3,  29, 1  }
+ *   //        }
+ * @endcode
+ *
+ * @param key_sel Key selector, used to extract a key for a sequence element.
+ * @return (Once applied) Sequence of elements further ordered by ascending key.
+ */
 template<typename KeySelector>
 auto then_by(KeySelector&& key_sel)
     -> decltype(order_by(std::forward<KeySelector>(key_sel)))
@@ -2710,7 +2907,49 @@ auto then_by(KeySelector&& key_sel)
     return order_by(std::forward<KeySelector>(key_sel));
 }
 
-// As above, but uses the given predicate to compare the new keys.
+/**
+ * @ingroup linq_op_order_by
+ * @brief Further orders elements in sequence by ascending key using predicate.
+ *
+ * Further orders a sequence previously ordered via <tt>coveo::linq::order_by()</tt>
+ * or similar operator. Elements that were previously considered equivalent will
+ * be further ordered by ascending order of keys as extracted by the provided
+ * <em>key selector</em>.
+ *
+ * Keys are compared using the provided predicate. The predicate must
+ * provide a strict ordering of the keys, like <tt>std::less</tt>.
+ *
+ * Use like this:
+ *
+ * @code
+ *   using coord = std::tuple<int, int, int>;
+ *   const std::vector<coord> COORDS = {
+ *       { 2,  2,  -4 },
+ *       { 2,  20, 8  },
+ *       { -1, 1,  12 },
+ *       { 3,  29, 1  },
+ *       { 3,  3,  3  },
+ *   };
+ *
+ *   using namespace coveo::linq;
+ *   auto seq = from(COORDS)
+ *            | order_by([](const coord& c) { return c.x; },
+ *                       [](int i, int j) { return i < j; })
+ *            | then_by([](const coord& c) { return c.y; },
+ *                      [](int i, int j) { return i < j; });
+ *   // seq == {
+ *   //            { -1, 1,  12 },
+ *   //            { 2,  2,  -4 },
+ *   //            { 2,  20, 8  },
+ *   //            { 3,  3,  3  },
+ *   //            { 3,  29, 1  }
+ *   //        }
+ * @endcode
+ *
+ * @param key_sel Key selector, used to extract a key for a sequence element.
+ * @param pred Predicate used to compare the keys.
+ * @return (Once applied) Sequence of elements further ordered by ascending key.
+ */
 template<typename KeySelector, typename Pred>
 auto then_by(KeySelector&& key_sel, Pred&& pred)
     -> decltype(order_by(std::forward<KeySelector>(key_sel), std::forward<Pred>(pred)))
@@ -2718,8 +2957,46 @@ auto then_by(KeySelector&& key_sel, Pred&& pred)
     return order_by(std::forward<KeySelector>(key_sel), std::forward<Pred>(pred));
 }
 
-// Operator that further orders a sequence previously ordered via order_by
-// using a different key selector, but in descending order.
+/**
+ * @ingroup linq_op_order_by
+ * @brief Further orders elements in sequence by descending key.
+ *
+ * Further orders a sequence previously ordered via <tt>coveo::linq::order_by()</tt>
+ * or similar operator. Elements that were previously considered equivalent will
+ * be further ordered by descending order of keys as extracted by the provided
+ * <em>key selector</em>.
+ *
+ * Keys are compared using <tt>operator&lt;</tt>, but the result is reversed
+ * to produce descending order.
+ *
+ * Use like this:
+ *
+ * @code
+ *   using coord = std::tuple<int, int, int>;
+ *   const std::vector<coord> COORDS = {
+ *       { 2,  2,  -4 },
+ *       { 2,  20, 8  },
+ *       { -1, 1,  12 },
+ *       { 3,  29, 1  },
+ *       { 3,  3,  3  },
+ *   };
+ *
+ *   using namespace coveo::linq;
+ *   auto seq = from(COORDS)
+ *            | order_by([](const coord& c) { return c.x; })
+ *            | then_by_descending([](const coord& c) { return c.y; });
+ *   // seq == {
+ *   //            { -1, 1,  12 },
+ *   //            { 2,  20, 8  },
+ *   //            { 2,  2,  -4 },
+ *   //            { 3,  29, 1  }
+ *   //            { 3,  3,  3  },
+ *   //        }
+ * @endcode
+ *
+ * @param key_sel Key selector, used to extract a key for a sequence element.
+ * @return (Once applied) Sequence of elements further ordered by descending key.
+ */
 template<typename KeySelector>
 auto then_by_descending(KeySelector&& key_sel)
     -> decltype(order_by_descending(std::forward<KeySelector>(key_sel)))
@@ -2727,7 +3004,50 @@ auto then_by_descending(KeySelector&& key_sel)
     return order_by_descending(std::forward<KeySelector>(key_sel));
 }
 
-// As above, but uses the given predicate to compare the new keys.
+/**
+ * @ingroup linq_op_order_by
+ * @brief Further orders elements in sequence by descending key using predicate.
+ *
+ * Further orders a sequence previously ordered via <tt>coveo::linq::order_by()</tt>
+ * or similar operator. Elements that were previously considered equivalent will
+ * be further ordered by descending order of keys as extracted by the provided
+ * <em>key selector</em>.
+ *
+ * Keys are compared using the provided predicate, but the result is reversed
+ * to produce descending order. The predicate must provide a strict ordering
+ * of the keys, like <tt>std::less</tt>.
+ *
+ * Use like this:
+ *
+ * @code
+ *   using coord = std::tuple<int, int, int>;
+ *   const std::vector<coord> COORDS = {
+ *       { 2,  2,  -4 },
+ *       { 2,  20, 8  },
+ *       { -1, 1,  12 },
+ *       { 3,  29, 1  },
+ *       { 3,  3,  3  },
+ *   };
+ *
+ *   using namespace coveo::linq;
+ *   auto seq = from(COORDS)
+ *            | order_by([](const coord& c) { return c.x; },
+ *                       [](int i, int j) { return i < j; })
+ *            | then_by_descending([](const coord& c) { return c.y; },
+ *                                 [](int i, int j) { return i < j; });
+ *   // seq == {
+ *   //            { -1, 1,  12 },
+ *   //            { 2,  20, 8  },
+ *   //            { 2,  2,  -4 },
+ *   //            { 3,  29, 1  }
+ *   //            { 3,  3,  3  },
+ *   //        }
+ * @endcode
+ *
+ * @param key_sel Key selector, used to extract a key for a sequence element.
+ * @param pred Predicate used to compare the keys.
+ * @return (Once applied) Sequence of elements further ordered by descending key.
+ */
 template<typename KeySelector, typename Pred>
 auto then_by_descending(KeySelector&& key_sel, Pred&& pred)
     -> decltype(order_by_descending(std::forward<KeySelector>(key_sel), std::forward<Pred>(pred)))
@@ -2735,10 +3055,37 @@ auto then_by_descending(KeySelector&& key_sel, Pred&& pred)
     return order_by_descending(std::forward<KeySelector>(key_sel), std::forward<Pred>(pred));
 }
 
-// C++ LINQ operator: reverse
-// .NET equivalent: Reverse
+/**
+ * @ingroup linq_operators_list
+ * @defgroup linq_op_reverse reverse
+ * @brief Reverses elements in a sequence.
+ *
+ * The @c reverse operator, as its name implies, scans a sequence a produces a new
+ * sequence in which the elements are reversed.
+ *
+ * <b>.NET equivalent:</b> Reverse
+ */
 
-// Operator that reverses the elements of a sequence.
+/**
+ * @ingroup linq_op_reverse
+ * @brief Reverses elements in sequence.
+ *
+ * Produces a new sequence in which elements in the source sequence
+ * are in reverse order.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const std::vector<int> NUMS = { 42, 23, 66, 11, 7 };
+ *
+ *   using namespace coveo::linq;
+ *   auto seq = from(NUMS)
+ *            | reverse();
+ *   // seq == { 7, 11, 66, 23, 42 }
+ * @endcode
+ *
+ * @return (Once applied) Sequence of elements in reverse order.
+ */
 template<typename = void>
 auto reverse()
     -> detail::reverse_impl<>
@@ -2746,11 +3093,44 @@ auto reverse()
     return detail::reverse_impl<>();
 }
 
-// C++ LINQ operators: select/select_with_index/select_many/select_many_with_index
-// .NET equivalents: Select/SelectMany
+/**
+ * @ingroup linq_operators_list
+ * @defgroup linq_op_select select / select_with_index / select_many / select_many_with_index
+ * @brief Projects elements in a sequence into another form.
+ *
+ * The @c select operator scans a sequence and projects each of its element into another
+ * form using a <em>selector</em>, returning a sequence of the results. A little similar
+ * to <tt>std::transform()</tt>.
+ *
+ * <b>.NET equivalent:</b> Select / SelectMany
+ */
 
-// Operator that projects each element in a sequence into another form
-// using a selector function, a little like std::transform.
+/**
+ * @ingroup linq_op_select
+ * @brief Projects elements in sequence into another form.
+ *
+ * Produces a new sequence by projecting each element in the source
+ * sequence into another form, a little like <tt>std::transform()</tt>.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const std::vector<std::string> STRS = {
+ *       "Life, the Universe and Everything",
+ *       "Hangar",
+ *       "Route",
+ *   };
+ *
+ *   using namespace coveo::linq;
+ *   auto seq = from(STRS)
+ *            | select([](const std::string& s) { return s.size(); });
+ *   // seq == { 33, 6, 5 }
+ * @endcode
+ *
+ * @param sel Selector used to project each element in source sequence
+ *            into another form.
+ * @return (Once applied) Sequence of projected values.
+ */
 template<typename Selector>
 auto select(Selector&& sel)
     -> detail::select_impl<detail::indexless_selector_proxy<Selector>>
@@ -2759,7 +3139,34 @@ auto select(Selector&& sel)
         detail::indexless_selector_proxy<Selector>(std::forward<Selector>(sel)));
 }
 
-// As above, but selector also receives the index of each element in the sequence.
+/**
+ * @ingroup linq_op_select
+ * @brief Projects elements in sequence into another form using element index.
+ *
+ * Produces a new sequence by projecting each element in the source
+ * sequence into another form, a little like <tt>std::transform()</tt>.
+ * The selector receives, as second argument, the index of the element
+ * in the source sequence.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const std::vector<std::string> STRS = {
+ *       "Life, the Universe and Everything",
+ *       "Hangar",
+ *       "Route",
+ *   };
+ *
+ *   using namespace coveo::linq;
+ *   auto seq = from(STRS)
+ *            | select_with_index([](const std::string& s, std::size_t i) { return s.size() * (i + 1); });
+ *   // seq == { 33, 12, 15 }
+ * @endcode
+ *
+ * @param sel Selector used to project each element in source sequence
+ *            into another form. Receives index of element as second argument.
+ * @return (Once applied) Sequence of projected values.
+ */
 template<typename Selector>
 auto select_with_index(Selector&& sel)
     -> detail::select_impl<Selector>
@@ -2767,9 +3174,37 @@ auto select_with_index(Selector&& sel)
     return detail::select_impl<Selector>(std::forward<Selector>(sel));
 }
 
-// Operator that projects each element in a sequence into a sequence of
-// elements in another form using a selector function then flattens all
-// those sequences into one.
+/**
+ * @ingroup linq_op_select
+ * @brief Projects elements in sequence into many values and flattens them.
+ *
+ * Produces a new sequence by projecting each element in the source
+ * sequence into a sequence of new values, then flattens all those sequences.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const std::vector<std::string> STRS = {
+ *       "Life, the Universe and Everything",
+ *       "Hangar",
+ *       "Route",
+ *   };
+ *
+ *   using namespace coveo::linq;
+ *   auto seq = from(STRS)
+ *            | select_many([](const std::string& s) {
+ *                              return std::vector<std::size_t>{
+ *                                  s.size(),
+ *                                  static_cast<std::size_t>(s.front() - 'A'),
+ *                              };
+ *                          });
+ *   // seq == { 33, 11, 6, 7, 5, 17 }
+ * @endcode
+ *
+ * @param sel Selector used to project each element in source sequence
+ *            into a sequence of values.
+ * @return (Once applied) Sequence of flattened projected values.
+ */
 template<typename Selector>
 auto select_many(Selector&& sel)
     -> detail::select_many_impl<detail::indexless_selector_proxy<Selector>>
@@ -2778,7 +3213,41 @@ auto select_many(Selector&& sel)
         detail::indexless_selector_proxy<Selector>(std::forward<Selector>(sel)));
 }
 
-// As above, but selector also receives the index of each element in the sequence.
+/**
+ * @ingroup linq_op_select
+ * @brief Projects elements in sequence into many values using element index and flattens them.
+ *
+ * Produces a new sequence by projecting each element in the source
+ * sequence into a sequence of new values, then flattens all those sequences.
+ * The selector receives, as second argument, the index of the element
+ * in the source sequence.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const std::vector<std::string> STRS = {
+ *       "Life, the Universe and Everything",
+ *       "Hangar",
+ *       "Route",
+ *   };
+ *
+ *   using namespace coveo::linq;
+ *   auto seq = from(STRS)
+ *            | select_many_with_index([](const std::string& s, std::size_t i) {
+ *                                         return std::vector<std::size_t>{
+ *                                             s.size(),
+ *                                             static_cast<std::size_t>(s.front() - 'A'),
+ *                                             i + 1,
+ *                                         };
+ *                                     });
+ *   // seq == { 33, 11, 1, 6, 7, 2, 5, 17, 3 }
+ * @endcode
+ *
+ * @param sel Selector used to project each element in source sequence
+ *            into a sequence of values. Receives index of element as
+ *            second argument.
+ * @return (Once applied) Sequence of flattened projected values.
+ */
 template<typename Selector>
 auto select_many_with_index(Selector&& sel)
     -> detail::select_many_impl<Selector>

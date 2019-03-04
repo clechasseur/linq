@@ -1,8 +1,8 @@
 var searchData=
 [
-  ['throw_5flinq_5fempty_5fsequence',['throw_linq_empty_sequence',['../exception_8h.html#a165eac6c80ba18c52c2b43b70de4d810',1,'coveo::linq']]],
-  ['throw_5flinq_5fout_5fof_5frange',['throw_linq_out_of_range',['../exception_8h.html#a7cdb1dc43a6925148e98027fab96a97e',1,'coveo::linq']]],
-  ['try_5fget_5fsize_5fdelegate',['try_get_size_delegate',['../sequence__util_8h.html#a3b2f2644800c1371e61c05fc3ad4d58b',1,'coveo']]],
-  ['try_5fget_5fsize_5fdelegate_5ffor_5fiterators',['try_get_size_delegate_for_iterators',['../sequence__util_8h.html#a4d57e4e0109d784013fda1a785068a44',1,'coveo']]],
-  ['try_5freserve',['try_reserve',['../sequence__util_8h.html#af58b81e31f744263498f75fcfeac3735',1,'coveo']]]
+  ['select',['select',['../group__linq__op__select.html#ga180c746cc43c10750ab7c08047ed9948',1,'coveo::linq']]],
+  ['select_5fmany',['select_many',['../group__linq__op__select.html#ga02f2dcd2ab54b97225e86c828dfa7b53',1,'coveo::linq']]],
+  ['select_5fmany_5fwith_5findex',['select_many_with_index',['../group__linq__op__select.html#ga11778222ae7f151d4ed00177b290786a',1,'coveo::linq']]],
+  ['select_5fwith_5findex',['select_with_index',['../group__linq__op__select.html#ga5b5874e63f4e60b9b65a18fd0a819dac',1,'coveo::linq']]],
+  ['size',['size',['../classcoveo_1_1enumerable.html#a027835aabbfafd8b4362b9a7dd3690b5',1,'coveo::enumerable']]]
 ];

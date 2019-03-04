@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['size',['size',['../classcoveo_1_1enumerable.html#a027835aabbfafd8b4362b9a7dd3690b5',1,'coveo::enumerable']]]
+  ['reverse',['reverse',['../group__linq__op__reverse.html#ga79c41e641bdf5fad263e31ebe5b57c83',1,'coveo::linq']]]
 ];

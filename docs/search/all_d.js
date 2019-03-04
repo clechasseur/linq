@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['order_5fby_20_2f_20order_5fby_5fdescending_20_2f_20then_5fby_20_2f_20then_5fby_5fdescending',['order_by / order_by_descending / then_by / then_by_descending',['../group__linq__op__order__by.html',1,'']]],
   ['operator_20_2a',['operator *',['../classcoveo_1_1enumerable_1_1iterator.html#a7dc24cd6231236f11aeaa9a09a12124d',1,'coveo::enumerable::iterator']]],
   ['operator_21_3d',['operator!=',['../classcoveo_1_1enumerable_1_1iterator.html#a41e17e930744b04a5ec54d82a107ccda',1,'coveo::enumerable::iterator']]],
   ['operator_2b_2b',['operator++',['../classcoveo_1_1enumerable_1_1iterator.html#a22a3e5a57bb209c58d56faba7d0fb3b8',1,'coveo::enumerable::iterator::operator++()'],['../classcoveo_1_1enumerable_1_1iterator.html#a30662781383ac39581ceab74bba61e08',1,'coveo::enumerable::iterator::operator++(int)']]],
@@ -7,5 +8,7 @@ var searchData=
   ['operator_3d',['operator=',['../classcoveo_1_1enumerable.html#a34919be6e82b09b8e5eb805fc02817a8',1,'coveo::enumerable::operator=()'],['../classcoveo_1_1enumerable_1_1iterator.html#a1752528008fda7d4dd394eee321a4f82',1,'coveo::enumerable::iterator::operator=(const iterator &amp;obj)=default'],['../classcoveo_1_1enumerable_1_1iterator.html#a8917e5cd720b1967f5fefbeacd1dd224',1,'coveo::enumerable::iterator::operator=(iterator &amp;&amp;obj)']]],
   ['operator_3d_3d',['operator==',['../classcoveo_1_1enumerable_1_1iterator.html#ac2a4264780a03a2718871194ee3244ef',1,'coveo::enumerable::iterator']]],
   ['operator_7c',['operator|',['../group__linq__chaining.html#gaf38ff23c8bdf9a47b55e516dd378194e',1,'coveo::linq']]],
+  ['order_5fby',['order_by',['../group__linq__op__order__by.html#gab9176a9c4edde93a2c0339e7b47755c5',1,'coveo::linq::order_by(KeySelector &amp;&amp;key_sel) -&gt; detail::order_by_impl&lt; detail::order_by_comparator&lt; KeySelector, detail::less&lt;&gt;, false &gt;&gt;'],['../group__linq__op__order__by.html#ga22fcca31971ed000842beb5899de0241',1,'coveo::linq::order_by(KeySelector &amp;&amp;key_sel, Pred &amp;&amp;pred) -&gt; detail::order_by_impl&lt; detail::order_by_comparator&lt; KeySelector, Pred, false &gt;&gt;']]],
+  ['order_5fby_5fdescending',['order_by_descending',['../group__linq__op__order__by.html#ga297add0d6f7096eff9888ce295129146',1,'coveo::linq::order_by_descending(KeySelector &amp;&amp;key_sel) -&gt; detail::order_by_impl&lt; detail::order_by_comparator&lt; KeySelector, detail::less&lt;&gt;, true &gt;&gt;'],['../group__linq__op__order__by.html#gaaeada1fc9862c98ce27e4fd73b30ebd9',1,'coveo::linq::order_by_descending(KeySelector &amp;&amp;key_sel, Pred &amp;&amp;pred) -&gt; detail::order_by_impl&lt; detail::order_by_comparator&lt; KeySelector, Pred, true &gt;&gt;']]],
   ['out_5fof_5frange',['out_of_range',['../classcoveo_1_1linq_1_1out__of__range.html',1,'coveo::linq']]]
 ];
