@@ -3255,11 +3255,49 @@ auto select_many_with_index(Selector&& sel)
     return detail::select_many_impl<Selector>(std::forward<Selector>(sel));
 }
 
-// C++ LINQ operator: sequence_equal
-// .NET equivalent: SequenceEqual
+/**
+ * @ingroup linq_operators_list
+ * @defgroup linq_op_seq_equal sequence_equal
+ * @brief Compares two sequences.
+ *
+ * The @c sequence_equal operator compares two sequences and validates
+ * that they contain the same elements.
+ *
+ * This is a @b terminal operator.
+ *
+ * <b>.NET equivalent:</b> SequenceEqual
+ */
 
-// Operator that verifies if two sequences contain the same elements.
-// Uses operator== to compare the elements.
+/**
+ * @ingroup linq_op_seq_equal
+ * @brief Compares elements in two sequences.
+ *
+ * Scans two sequences and compares each corresponding element using
+ * <tt>operator==()</tt>. Returns @c true if the two sequences contain
+ * the same elements in the same order.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const int NUMS1 = { 42, 23, 66 };
+ *   const std::vector<int> NUMS2 = { 42, 23, 66 };
+ *   const std::vector<int> NUMS3 = { 67, 11, 7 };
+ *
+ *   using namespace coveo::linq;
+ *   bool one_and_two = from(NUMS1)
+ *                    | sequence_equal(NUMS2);
+ *   bool one_and_three = from(NUMS1)
+ *                      | sequence_equal(NUMS3);
+ *   // one_and_two   == true
+ *   // one_and_three == false
+ * @endcode
+ *
+ * @param seq2 Second sequence to compare. The first sequence is the one on
+ *             which the operator will be applied (e.g., the sequence passed
+ *             to <tt>coveo::linq::from()</tt>).
+ * @return (Once applied) @c true both sequences contain the same elements
+ *         in the same order.
+ */
 template<typename Seq2>
 auto sequence_equal(const Seq2& seq2)
     -> detail::sequence_equal_impl_1<Seq2>
@@ -3267,7 +3305,39 @@ auto sequence_equal(const Seq2& seq2)
     return detail::sequence_equal_impl_1<Seq2>(seq2);
 }
 
-// As above, but uses the given predicate to compare the elements.
+/**
+ * @ingroup linq_op_seq_equal
+ * @brief Compares elements in two sequences using predicate.
+ *
+ * Scans two sequences and compares each corresponding element using
+ * the provided predicate. Returns @c true if the two sequences contain
+ * the same elements in the same order.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const int NUMS1 = { 42, 23, 66 };
+ *   const std::vector<int> NUMS2 = { 41, 24, 67 };
+ *   const std::vector<int> NUMS3 = { 30, 30, 90 };
+ *
+ *   auto fuzzy_equal = [](int i, int j) { return std::abs(i - j) <= 2; };
+ *
+ *   using namespace coveo::linq;
+ *   bool one_and_two = from(NUMS1)
+ *                    | sequence_equal(NUMS2, fuzzy_equal);
+ *   bool one_and_three = from(NUMS1)
+ *                      | sequence_equal(NUMS3, fuzzy_equal);
+ *   // one_and_two   == true
+ *   // one_and_three == false
+ * @endcode
+ *
+ * @param seq2 Second sequence to compare. The first sequence is the one on
+ *             which the operator will be applied (e.g., the sequence passed
+ *             to <tt>coveo::linq::from()</tt>).
+ * @param pred Predicate used to compare the elements.
+ * @return (Once applied) @c true both sequences contain the same elements
+ *         in the same order.
+ */
 template<typename Seq2, typename Pred>
 auto sequence_equal(const Seq2& seq2, const Pred& pred)
     -> detail::sequence_equal_impl_2<Seq2, Pred>
@@ -3275,12 +3345,52 @@ auto sequence_equal(const Seq2& seq2, const Pred& pred)
     return detail::sequence_equal_impl_2<Seq2, Pred>(seq2, pred);
 }
 
-// C++ LINQ operator: single
-// .NET equivalent: Single
+/**
+ * @ingroup linq_operators_list
+ * @defgroup linq_op_single single
+ * @brief Returns the only element in a sequence.
+ *
+ * The @c single operator returns the only element in a sequence,
+ * or the only element to satisfy a predicate. If the sequence does
+ * not have such an element or has more than one of them, an exception
+ * is thrown.
+ *
+ * This is a @b terminal operator.
+ *
+ * <b>.NET equivalent:</b> Single
+ */
 
-// Operator that returns the single value in the given sequence.
-// Throws an exception if the sequence is empty or if it has
-// more than one value.
+/**
+ * @ingroup linq_op_single
+ * @brief Returns only element in sequence.
+ *
+ * Returns the only element in a sequence. If the sequence
+ * does not have elements or has more than one element, an
+ * exception is thrown.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const std::vector<int> YES = { 42 };
+ *   const std::vector<int> NAY1;
+ *   const std::vector<int> NAY2 = { 42, 23, 66 };
+ *
+ *   using namespace coveo::linq;
+ *   auto val1 = from(YES)
+ *             | single();
+ *   // val1 == 42
+ *   // This throws an exception:
+ *   // auto val2 = from(NAY1)
+ *   //           | single();
+ *   // This also throws an exception:
+ *   // auto val3 = from(NAY2)
+ *   //           | single();
+ * @endcode
+ *
+ * @return (Once applied) Only element in sequence.
+ * @exception coveo::linq::empty_sequence The sequence does not have elements.
+ * @exception coveo::linq::out_of_range The sequence has more than one element.
+ */
 template<typename = void>
 auto single()
     -> detail::single_impl_0<>
@@ -3288,9 +3398,42 @@ auto single()
     return detail::single_impl_0<>();
 }
 
-// Operator that returns the single value in the given sequence
-// that satisfies the given predicate. Throws an exception if the
-// sequence contains no such element or more than one such element.
+/**
+ * @ingroup linq_op_single
+ * @brief Returns only element in sequence satisfying predicate.
+ *
+ * Returns the only element in a sequence that satisfy the given
+ * predicate. If no element in the sequence or if more than one
+ * element in the sequence satisfy the predicate, an exception
+ * is thrown.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const std::vector<int> YES = { 42, 23, 66 };
+ *   const std::vector<int> NAY1 = { 67, 11, 7 };
+ *   const std::vector<int> NAY2 = { 42, 24, 66 };
+ *
+ *   auto is_odd = [](int i) { return i % 2 != 0; };
+ *
+ *   using namespace coveo::linq;
+ *   auto val1 = from(YES)
+ *             | single(is_odd);
+ *   // val1 == 23
+ *   // This throws an exception:
+ *   // auto val2 = from(NAY1)
+ *   //           | single(is_odd);
+ *   // This also throws an exception:
+ *   // auto val3 = from(NAY2)
+ *   //           | single(is_odd);
+ * @endcode
+ *
+ * @param pred Predicate to satisfy.
+ * @return (Once applied) Only element in sequence for which @c pred returned @c true.
+ * @exception coveo::linq::empty_sequence The sequence does not have elements.
+ * @exception coveo::linq::out_of_range No element satisfy @c pred, or more than one
+ *                                      element satisfy @c pred.
+ */
 template<typename Pred>
 auto single(const Pred& pred)
     -> detail::single_impl_1<Pred>
@@ -3298,12 +3441,52 @@ auto single(const Pred& pred)
     return detail::single_impl_1<Pred>(pred);
 }
 
-// C++ LINQ operator: single_or_default
-// .NET equivalent: SingleOrDefault
+/**
+ * @ingroup linq_operators_list
+ * @defgroup linq_op_single_or_def single_or_default
+ * @brief Returns the only element in a sequence, or a default value.
+ *
+ * The @c single_or_default operator returns the only element in a sequence,
+ * or the only element to satisfy a predicate. If the sequence does not have
+ * such an element or has more than one of them, a default value is returned
+ * instead.
+ *
+ * This is a @b terminal operator.
+ *
+ * <b>.NET equivalent:</b> SingleOrDefault
+ */
 
-// Operator that returns the single value in the given sequence,
-// or a default-initialized value if the sequence is empty or if
-// it has more than one element.
+/**
+ * @ingroup linq_op_single_or_def
+ * @brief Returns only element in sequence, or default value.
+ *
+ * Returns the only element in a sequence. If the sequence
+ * does not have elements or has more than one element, a
+ * <em>default-initialized</em> value is returned instead.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const std::vector<int> YES = { 42 };
+ *   const std::vector<int> NAY1;
+ *   const std::vector<int> NAY2 = { 42, 23, 66 };
+ *
+ *   using namespace coveo::linq;
+ *   auto val1 = from(YES)
+ *             | single_or_default();
+ *   auto val2 = from(NAY1)
+ *             | single_or_default();
+ *   auto val3 = from(NAY2)
+ *             | single_or_default();
+ *   // val1 == 42
+ *   // val2 == 0
+ *   // val3 == 0
+ * @endcode
+ *
+ * @return (Once applied) Only element in sequence, or default value
+ *         if sequence does not have elements or if it has more than
+ *         one element.
+ */
 template<typename = void>
 auto single_or_default()
     -> detail::single_or_default_impl_0<>
@@ -3311,9 +3494,41 @@ auto single_or_default()
     return detail::single_or_default_impl_0<>();
 }
 
-// Operator that returns the single value in the given sequence
-// that satisfies the given predicate, or a default-initialized value
-// if the sequence contains no such element or more than one such element.
+/**
+ * @ingroup linq_op_single_or_def
+ * @brief Returns only element in sequence satisfying predicate, or default value.
+ *
+ * Returns the only element in a sequence that satisfy the given
+ * predicate. If no element in the sequence or if more than one
+ * element in the sequence satisfy the predicate, a
+ * <em>default-initialized</em> value is returned instead.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const std::vector<int> YES = { 42, 23, 66 };
+ *   const std::vector<int> NAY1 = { 67, 11, 7 };
+ *   const std::vector<int> NAY2 = { 42, 24, 66 };
+ *
+ *   auto is_odd = [](int i) { return i % 2 != 0; };
+ *
+ *   using namespace coveo::linq;
+ *   auto val1 = from(YES)
+ *             | single_or_default(is_odd);
+ *   auto val2 = from(NAY1)
+ *             | single_or_default(is_odd);
+ *   auto val3 = from(NAY2)
+ *             | single_or_default(is_odd);
+ *   // val1 == 23
+ *   // val2 == 0
+ *   // val3 == 0
+ * @endcode
+ *
+ * @param pred Predicate to satisfy.
+ * @return (Once applied) Only element in sequence for which @c pred returned @c true,
+ *         or a default value if either no element satisfy @c pred or more than one
+ *         element satisfy @c pred.
+ */
 template<typename Pred>
 auto single_or_default(const Pred& pred)
     -> detail::single_or_default_impl_1<Pred>
@@ -3321,12 +3536,41 @@ auto single_or_default(const Pred& pred)
     return detail::single_or_default_impl_1<Pred>(pred);
 }
 
-// C++ LINQ operator: skip
-// .NET equivalent: Skip
+/**
+ * @ingroup linq_operators_list
+ * @defgroup linq_op_skip skip / skip_while / skip_while_with_index
+ * @brief Skips the first elements in a sequence.
+ *
+ * The @c skip operator (and its siblings) skip the first elements in a
+ * sequence, either by skipping a certain number or using a predicate.
+ *
+ * <b>.NET equivalent:</b> Skip / SkipWhile
+ */
 
-// Operator that skips the X first elements of a sequence.
-// If the sequence contains less than X elements, returns
-// an empty sequence.
+/**
+ * @ingroup linq_op_skip
+ * @brief Skips the first N elements in sequence.
+ *
+ * Given a source sequence, returns a new sequence that skips
+ * the first @c n elements of the source sequence. If the source
+ * sequence contains less than @c n elements, returns an empty
+ * sequence.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const int NUMS = { 42, 23, 66, 11, 7 };
+ *
+ *   using namespace coveo::linq;
+ *   auto seq = from(NUMS)
+ *            | skip(3);
+ *   // seq == { 11, 7 }
+ * @endcode
+ *
+ * @param n Number of elements to skip.
+ * @return (Once applied) New sequence skipping the first @c n
+ *         elements of source sequence.
+ */
 template<typename = void>
 auto skip(std::size_t n)
     -> detail::skip_impl<detail::skip_n_pred<>>
@@ -3334,13 +3578,30 @@ auto skip(std::size_t n)
     return detail::skip_impl<detail::skip_n_pred<>>(detail::skip_n_pred<>(n), n);
 }
 
-// C++ LINQ operators: skip_while, skip_while_with_index
-// .NET equivalent: SkipWhile
-
-// Operator that skips all first elements of a sequence
-// that satisfy a given predicate. If the sequence contains
-// only elements that satisfy the predicate, returns an
-// empty sequence.
+/**
+ * @ingroup linq_op_skip
+ * @brief Skips the first elements in sequence satisfying predicate.
+ *
+ * Given a source sequence, returns a new sequence that skips
+ * the first elements of the source sequence that satisfy the
+ * provided predicate. If the source sequence contains only
+ * elements that satisfy the predicate, returns an empty sequence.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const int NUMS = { 42, 23, 66, 11, 7 };
+ *
+ *   using namespace coveo::linq;
+ *   auto seq = from(NUMS)
+ *            | skip_while([](int i) { return i < 60; });
+ *   // seq == { 66, 11, 7 }
+ * @endcode
+ *
+ * @param pred Predicate used to skip elements.
+ * @return (Once applied) New sequence skipping the first
+ *         elements of source sequence satisfying @c pred.
+ */
 template<typename Pred>
 auto skip_while(Pred&& pred)
     -> detail::skip_impl<detail::indexless_selector_proxy<Pred>>
@@ -3349,8 +3610,33 @@ auto skip_while(Pred&& pred)
                                                                      static_cast<std::size_t>(-1));
 }
 
-// As above, but the predicate receives the index of the
-// element in the sequence as second argument.
+/**
+ * @ingroup linq_op_skip
+ * @brief Skips the first elements in sequence satisfying predicate using element index.
+ *
+ * Given a source sequence, returns a new sequence that skips
+ * the first elements of the source sequence that satisfy the
+ * provided predicate. If the source sequence contains only
+ * elements that satisfy the predicate, returns an empty sequence.
+ *
+ * The predicate is called with two parameters every time: an
+ * element from the source sequence, and its position in the sequence.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const int NUMS = { 42, 23, 66, 11, 7 };
+ *
+ *   using namespace coveo::linq;
+ *   auto seq = from(NUMS)
+ *            | skip_while_with_index([](int i, std::size_t idx) { return i < 90 && idx < 3; });
+ *   // seq == { 11, 7 }
+ * @endcode
+ *
+ * @param pred Predicate used to skip elements.
+ * @return (Once applied) New sequence skipping the first
+ *         elements of source sequence satisfying @c pred.
+ */
 template<typename Pred>
 auto skip_while_with_index(Pred&& pred)
     -> detail::skip_impl<Pred>
