@@ -3645,12 +3645,44 @@ auto skip_while_with_index(Pred&& pred)
                                    static_cast<std::size_t>(-1));
 }
 
-// C++ LINQ operator: sum
-// .NET equivalent: Sum
+/**
+ * @ingroup linq_operators_list
+ * @defgroup linq_op_sum sum
+ * @brief Computes sum of a sequence of values.
+ *
+ * The @c sum operator computes the sum of all values in a sequence. To achieve this,
+ * it needs a <em>numerical function</em> to extract a numeric value from each sequence element.
+ *
+ * This is a @b terminal operator.
+ *
+ * <b>.NET equivalent:</b> Sum
+ */
 
-// Operator that computes the sum of all elements in a sequence
-// using a function to get a numerical value for each.
-// Does not work on empty sequences.
+/**
+ * @ingroup linq_op_sum
+ * @brief Computes sum using numerical function.
+ *
+ * Computes the sum of all elements in a sequence by repeatedly calling a <em>numerical function</em>.
+ * The function receives an element as parameter and must return a numerical value for the element.
+ * The final result is the sum of all such numerical values.
+ *
+ * Does not work on empty sequences.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const std::vector<std::string> STRS = { "42", "23", "66" };
+ *
+ *   using namespace coveo::linq;
+ *   auto tot = from(STRS)
+ *            | sum([](auto&& s) { return std::stoi(s); });
+ *   // tot == 131
+ * @endcode
+ *
+ * @param num_f Function to get numerical value for each element.
+ * @return (Once applied) Sum of all extracted numerical values.
+ * @exception coveo::linq::empty_sequence The sequence contains no elements.
+ */
 template<typename F>
 auto sum(const F& num_f)
     -> detail::sum_impl<F>
@@ -3658,12 +3690,41 @@ auto sum(const F& num_f)
     return detail::sum_impl<F>(num_f);
 }
 
-// C++ LINQ operator: take
-// .NET equivalent: Take
+/**
+ * @ingroup linq_operators_list
+ * @defgroup linq_op_take take / take_while / take_while_with_index
+ * @brief Keeps only the first elements in a sequence.
+ *
+ * The @c take operator (and its siblings) keep only the first elements in
+ * a sequence, either by taking a certain number or using a predicate.
+ *
+ * <b>.NET equivalent:</b> Take / TakeWhile
+ */
 
-// Operator that returns the X first elements of a sequence.
-// If the sequence contains less than X elements, returns
-// as much as possible.
+/**
+ * @ingroup linq_op_take
+ * @brief Keeps the first N elements in sequence.
+ *
+ * Given a source sequence, returns a new sequence that contains
+ * only the first @c n elements of the source sequence. If the
+ * source sequence contains less than @c n elements, returns as
+ * many elements as possible.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const int NUMS = { 42, 23, 66, 11, 7 };
+ *
+ *   using namespace coveo::linq;
+ *   auto seq = from(NUMS)
+ *            | take(3);
+ *   // seq == { 42, 23, 66 }
+ * @endcode
+ *
+ * @param n Number of elements to take.
+ * @return (Once applied) New sequence containing the first @c n
+ *         elements of source sequence.
+ */
 template<typename = void>
 auto take(std::size_t n)
     -> detail::take_impl<detail::skip_n_pred<>>
@@ -3671,13 +3732,30 @@ auto take(std::size_t n)
     return detail::take_impl<detail::skip_n_pred<>>(detail::skip_n_pred<>(n), n);
 }
 
-// C++ LINQ operators: take_while, take_while_with_index
-// .NET equivalent: TakeWhile
-
-// Operator that returns all first elements of a sequence
-// that satisfy a given predicate. If the sequence contains
-// no elements that satisfy the predicate, returns an
-// empty sequence.
+/**
+ * @ingroup linq_op_take
+ * @brief Keeps the first elements in sequence satisfying predicate.
+ *
+ * Given a source sequence, returns a new sequence that contains
+ * only the first elements of the source sequence that satisfy the
+ * provided predicate. If the source sequence contains no element
+ * that satisfy the predicate, returns an empty sequence.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const int NUMS = { 42, 23, 66, 11, 7 };
+ *
+ *   using namespace coveo::linq;
+ *   auto seq = from(NUMS)
+ *            | take_while([](int i) { return i > 20; });
+ *   // seq == { 42, 23, 66 }
+ * @endcode
+ *
+ * @param pred Predicate used to take elements.
+ * @return (Once applied) New sequence containing the first
+ *         elements of source sequence satisfying @c pred.
+ */
 template<typename Pred>
 auto take_while(Pred&& pred)
     -> detail::take_impl<detail::indexless_selector_proxy<Pred>>
@@ -3686,8 +3764,33 @@ auto take_while(Pred&& pred)
                                                                      static_cast<std::size_t>(-1));
 }
 
-// As above, but the predicate receives the index of the
-// element in the sequence as second argument.
+/**
+ * @ingroup linq_op_take
+ * @brief Keeps the first elements in sequence satisfying predicate using element index.
+ *
+ * Given a source sequence, returns a new sequence that contains
+ * only the first elements of the source sequence that satisfy the
+ * provided predicate. If the source sequence contains no element
+ * that satisfy the predicate, returns an empty sequence.
+ *
+ * The predicate is called with two parameters every time: an
+ * element from the source sequence, and its position in the sequence.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const int NUMS = { 42, 23, 66, 11, 7 };
+ *
+ *   using namespace coveo::linq;
+ *   auto seq = from(NUMS)
+ *            | take_while_with_index([](int i, std::size_t idx) { return i > 20 || idx < 4; });
+ *   // seq == { 42, 23, 66, 11 }
+ * @endcode
+ *
+ * @param pred Predicate used to take elements.
+ * @return (Once applied) New sequence containing the first
+ *         elements of source sequence satisfying @c pred.
+ */
 template<typename Pred>
 auto take_while_with_index(Pred&& pred)
     -> detail::take_impl<Pred>
@@ -3696,10 +3799,42 @@ auto take_while_with_index(Pred&& pred)
                                    static_cast<std::size_t>(-1));
 }
 
-// C++ LINQ operators: to, to_vector, to_associative, to_map
-// .NET equivalents: ToArray, ToDictionary, ToList, ToLookup
+/**
+ * @ingroup linq_operators_list
+ * @defgroup linq_op_to to / to_vector / to_associative / to_map
+ * @brief Converts a sequence into another container type.
+ *
+ * The @c to operator (and its siblings) converts a sequence into
+ * another type of container.
+ *
+ * This is a terminal operator if the resulting container is not
+ * in itself a valid sequence.
+ *
+ * <b>.NET equivalent:</b> ToArray / ToDictionary / ToList / ToLookup
+ */
 
-// Operator that converts a sequence into a container of the given type.
+/**
+ * @ingroup linq_op_to
+ * @brief Converts sequence into another container.
+ *
+ * Given a source sequence, returns a new container of the provided type
+ * that contains the source sequence's elements.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const int NUMS = { 42, 23, 66, 11, 7 };
+ *
+ *   using namespace coveo::linq;
+ *   auto lst = from(NUMS)
+ *            | to<std::list<int>>();
+ *   // lst == std::list<int>{ 42, 23, 66, 11, 7 }
+ * @endcode
+ *
+ * @tparam Container Type of container to convert to.
+ * @return (Once applied) Object of type @c Container
+ *         storing the same elements as source sequence.
+ */
 template<typename Container>
 auto to()
     -> detail::to_impl<Container>
@@ -3707,8 +3842,28 @@ auto to()
     return detail::to_impl<Container>();
 }
 
-// Specialized version of the above for std::vector.
-// Auto-detects the element type from the sequence.
+/**
+ * @ingroup linq_op_to
+ * @brief Converts sequence into <tt>std::vector</tt>.
+ *
+ * Given a source sequence, returns a new <tt>std::vector</tt> that
+ * contains the source sequence's elements. The vector's element type
+ * is auto-detected from the source sequence.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const int NUMS = { 42, 23, 66, 11, 7 };
+ *
+ *   using namespace coveo::linq;
+ *   auto vec = from(NUMS)
+ *            | to_vector();
+ *   // vec == std::vector<int>{ 42, 23, 66, 11, 7 }
+ * @endcode
+ *
+ * @return (Once applied) <tt>std::vector</tt> storing the same
+ *         elements as source sequence.
+ */
 template<typename = void>
 auto to_vector()
     -> detail::to_vector_impl<>
@@ -3716,9 +3871,41 @@ auto to_vector()
     return detail::to_vector_impl<>();
 }
 
-// Operator that converts a sequence into a specific type
-// of associative container (like std::map), using a key
-// selector function to fetch a key for each element.
+/**
+ * @ingroup linq_op_to
+ * @brief Converts sequence into associative container using key selector.
+ *
+ * Given a source sequence, returns a new associative container of the
+ * provided type that maps each element's key, as extracted by the provided
+ * <em>key selector</em>, to the corresponding element.
+ *
+ * Use like this:
+ *
+ * @code
+ *   using our_pair = std::pair<int, std::string>;
+ *   using our_mm = std::multimap<int, our_pair>;
+ *
+ *   const std::vector<our_pair> = {
+ *       { 42, "Life" },
+ *       { 23, "Hangar" },
+ *       { 66, "Route" },
+ *   };
+ *
+ *   using namespace coveo::linq;
+ *   auto omp = from(NUMS)
+ *            | to_associative<our_mm>([](our_pair p) { return p.first; });
+ *   // omp == our_mm{
+ *   //            23 => { 23, "Hangar" },
+ *   //            42 => { 42, "Life" },
+ *   //            66 => { 66, "Route" }
+ *   //        }
+ * @endcode
+ *
+ * @tparam Container Type of associative container to convert to.
+ * @param key_sel Selector used to extract keys for sequence elements.
+ * @return (Once applied) Object of type @c Container
+ *         mapping the source sequence's elements as specified.
+ */
 template<typename Container,
          typename KeySelector>
 auto to_associative(const KeySelector& key_sel)
@@ -3727,8 +3914,44 @@ auto to_associative(const KeySelector& key_sel)
     return detail::to_associative_impl_1<Container, KeySelector>(key_sel);
 }
 
-// As above, but using an element selector to convert elements
-// inserted as mapped values.
+/**
+ * @ingroup linq_op_to
+ * @brief Converts sequence into associative container using key and element selector.
+ *
+ * Given a source sequence, returns a new associative container of the
+ * provided type that maps each element's key, as extracted by the provided
+ * <em>key selector</em>, to the corresponding mapped value, as extracted by
+ * the provided <em>element selector</em>.
+ *
+ * Use like this:
+ *
+ * @code
+ *   using our_pair = std::pair<int, std::string>;
+ *   using our_mm = std::multimap<int, std::string>;
+ *
+ *   const std::vector<our_pair> = {
+ *       { 42, "Life" },
+ *       { 23, "Hangar" },
+ *       { 66, "Route" },
+ *   };
+ *
+ *   using namespace coveo::linq;
+ *   auto omp = from(NUMS)
+ *            | to_associative<our_mm>([](our_pair p) { return p.first; },
+ *                                     [](our_pair p) { return p.second; });
+ *   // omp == our_mm{
+ *   //            23 => "Hangar",
+ *   //            42 => "Life",
+ *   //            66 => "Route"
+ *   //        }
+ * @endcode
+ *
+ * @tparam Container Type of associative container to convert to.
+ * @param key_sel Selector used to extract keys for sequence elements.
+ * @param elem_sel Selector used to extract mapped values for sequence elements.
+ * @return (Once applied) Object of type @c Container
+ *         mapping the source sequence's elements as specified.
+ */
 template<typename Container,
          typename KeySelector,
          typename ElementSelector>
@@ -3739,8 +3962,40 @@ auto to_associative(const KeySelector& key_sel,
     return detail::to_associative_impl_2<Container, KeySelector, ElementSelector>(key_sel, elem_sel);
 }
 
-// Specialized version of the above that returns an std::map.
-// Auto-detects the key and mapped types from the sequence and selector.
+/**
+ * @ingroup linq_op_to
+ * @brief Converts sequence into <tt>std::map</tt> using key selector.
+ *
+ * Given a source sequence, returns a new <tt>std::map</tt> that maps
+ * each element's key, as extracted by the provided <em>key selector</em>,
+ * to the corresponding element. The map's type is auto-detected from
+ * the source sequence and selector.
+ *
+ * Use like this:
+ *
+ * @code
+ *   using our_pair = std::pair<int, std::string>;
+ *
+ *   const std::vector<our_pair> = {
+ *       { 42, "Life" },
+ *       { 23, "Hangar" },
+ *       { 66, "Route" },
+ *   };
+ *
+ *   using namespace coveo::linq;
+ *   auto omp = from(NUMS)
+ *            | to_map([](our_pair p) { return p.first; });
+ *   // omp == std::map<int, our_pair>{
+ *   //            23 => { 23, "Hangar" },
+ *   //            42 => { 42, "Life" },
+ *   //            66 => { 66, "Route" }
+ *   //        }
+ * @endcode
+ *
+ * @param key_sel Selector used to extract keys for sequence elements.
+ * @return (Once applied) <tt>std::map</tt> mapping the source sequence's
+ *         elements as specified.
+ */
 template<typename KeySelector>
 auto to_map(const KeySelector& key_sel)
     -> detail::to_map_impl_1<KeySelector>
@@ -3748,8 +4003,43 @@ auto to_map(const KeySelector& key_sel)
     return detail::to_map_impl_1<KeySelector>(key_sel);
 }
 
-// As above, but using an element selector to convert elements
-// inserted as mapped values.
+/**
+ * @ingroup linq_op_to
+ * @brief Converts sequence into <tt>std::map</tt> using key and element selector.
+ *
+ * Given a source sequence, returns a new <tt>std::map</tt> that maps
+ * each element's key, as extracted by the provided <em>key selector</em>,
+ * to the corresponding mapped value, as extracted by the provided
+ * <em>element selector</em>. The map's type is auto-detected from
+ * the source sequence and selectors.
+ *
+ * Use like this:
+ *
+ * @code
+ *   using our_pair = std::pair<int, std::string>;
+ *
+ *   const std::vector<our_pair> = {
+ *       { 42, "Life" },
+ *       { 23, "Hangar" },
+ *       { 66, "Route" },
+ *   };
+ *
+ *   using namespace coveo::linq;
+ *   auto omp = from(NUMS)
+ *            | to_map([](our_pair p) { return p.first; },
+ *                     [](our_pair p) { return p.second; });
+ *   // omp == std::map<int, std::string>{
+ *   //            23 => "Hangar",
+ *   //            42 => "Life",
+ *   //            66 => "Route"
+ *   //        }
+ * @endcode
+ *
+ * @param key_sel Selector used to extract keys for sequence elements.
+ * @param elem_sel Selector used to extract mapped values for sequence elements.
+ * @return (Once applied) <tt>std::map</tt> mapping the source sequence's
+ *         elements as specified.
+ */
 template<typename KeySelector,
          typename ElementSelector>
 auto to_map(const KeySelector& key_sel,
@@ -3759,11 +4049,45 @@ auto to_map(const KeySelector& key_sel,
     return detail::to_map_impl_2<KeySelector, ElementSelector>(key_sel, elem_sel);
 }
 
-// C++ LINQ operator: union_with
-// .NET equivalent: Union
+/**
+ * @ingroup linq_operators_list
+ * @defgroup linq_op_union union_with
+ * @brief Performs a set union of two sequences.
+ *
+ * The @c union_with operator returns the union of all elements in the first and
+ * second sequence (essentially a set union). Similar to a concatenation, except
+ * duplicate elements are filtered out. The elements are returned in the order
+ * that they appear in the sequences.
+ *
+ * <b>.NET equivalent:</b> Union
+ */
 
-// Operator that returns all elements that are found in either of two sequences,
-// excluding duplicates. Essentially a set union.
+/**
+ * @ingroup linq_op_union
+ * @brief Performs set union of two sequences.
+ *
+ * Returns a sequence containing all elements from the two source sequences
+ * (essentially a set union). Duplicate elements are filtered out. Elements
+ * are returned in the order that they appear in the sequences.
+ *
+ * Elements are compared using <tt>operator&lt;()</tt>.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const int ONE[] = { 42, 23, 66, 11, 7, 67 };
+ *   const int TWO[] = { 10, 7, 60, 42, 43, 23 };
+ *
+ *   using namespace coveo::linq;
+ *   auto seq = from(ONE)
+ *            | union_with(TWO);
+ *   // seq = { 42, 23, 66, 11, 7, 67, 10, 60, 43 }
+ * @endcode
+ *
+ * @param seq2 Second source sequence.
+ * @return (Once applied) Sequence containing all elements from
+ *         first source sequence and from @c seq2.
+ */
 template<typename Seq2>
 auto union_with(Seq2&& seq2)
     -> detail::union_impl<Seq2, detail::less<>>
@@ -3772,8 +4096,34 @@ auto union_with(Seq2&& seq2)
                                                     detail::less<>());
 }
 
-// Same as above, with a predicate to compare the elements.
-// The predicate must provide a strict ordering of the elements, like std::less.
+/**
+ * @ingroup linq_op_union
+ * @brief Performs set union of two sequences using predicate.
+ *
+ * Returns a sequence containing all elements from the two source sequences
+ * (essentially a set union). Duplicate elements are filtered out. Elements
+ * are returned in the order that they appear in the sequences.
+ *
+ * Elements are compared using the provided predicate. The predicate must
+ * provide a strict ordering of the elements, like <tt>std::less</tt>.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const int ONE[] = { 42, 23, 66, 11, 7, 67 };
+ *   const int TWO[] = { 10, 7, 60, 42, 43, 23 };
+ *
+ *   using namespace coveo::linq;
+ *   auto seq = from(ONE)
+ *            | union_with(TWO, [](int i, int j) { return i > j; });
+ *   // seq = { 42, 23, 66, 11, 7, 67, 10, 60, 43 }
+ * @endcode
+ *
+ * @param seq2 Second source sequence.
+ * @param pred Predicate used to compare sequence elements.
+ * @return (Once applied) Sequence containing all elements from
+ *         first source sequence and from @c seq2.
+ */
 template<typename Seq2, typename Pred>
 auto union_with(Seq2&& seq2, Pred&& pred)
     -> detail::union_impl<Seq2, Pred>
@@ -3782,11 +4132,40 @@ auto union_with(Seq2&& seq2, Pred&& pred)
                                           std::forward<Pred>(pred));
 }
 
-// C++ LINQ operators: where, where_with_index
-// .NET equivalent: Where
+/**
+ * @ingroup linq_operators_list
+ * @defgroup linq_op_where where / where_with_index
+ * @brief Filters a sequence.
+ *
+ * The @c where operator (and its siblings) filter the elements in a sequence,
+ * returning a new sequence containing only the elements that satisfy a predicate.
+ *
+ * <b>.NET equivalent:</b> Where
+ */
 
-// Operator that only returns elements of a sequence that
-// satisfy a given predicate.
+/**
+ * @ingroup linq_op_where
+ * @brief Filters sequence elements using predicate.
+ *
+ * Returns a sequence that contains only the elements from the
+ * source sequence that satisfy the given predicate. Order of
+ * the elements is preserved.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const int NUMS[] = { 42, 23, 66, 11, 7 };
+ *
+ *   using namespace coveo::linq;
+ *   auto seq = from(NUMS)
+ *            | where([](int i) { return i % 2 != 0; });
+ *   // seq = { 23, 11, 7 }
+ * @endcode
+ *
+ * @param pred Predicate to satisfy.
+ * @return (Once applied) Sequence containing all elements from
+ *         source sequence for which @c pred returned @c true.
+ */
 template<typename Pred>
 auto where(Pred&& pred)
     -> detail::where_impl<detail::indexless_selector_proxy<Pred>>
@@ -3795,8 +4174,32 @@ auto where(Pred&& pred)
         detail::indexless_selector_proxy<Pred>(std::forward<Pred>(pred)));
 }
 
-// As above, but the predicate receives the index of the
-// element as second argument.
+/**
+ * @ingroup linq_op_where
+ * @brief Filters sequence elements using predicate and element index.
+ *
+ * Returns a sequence that contains only the elements from the
+ * source sequence that satisfy the given predicate. Order of
+ * the elements is preserved.
+ *
+ * The predicate receives two arguments: a sequence element and its
+ * position in the sequence.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const int NUMS[] = { 42, 23, 66, 11, 7 };
+ *
+ *   using namespace coveo::linq;
+ *   auto seq = from(NUMS)
+ *            | where_with_index([](int i, std::size_t idx) { return i % 2 != 0 || idx == 0; });
+ *   // seq = { 42, 23, 11, 7 }
+ * @endcode
+ *
+ * @param pred Predicate to satisfy.
+ * @return (Once applied) Sequence containing all elements from
+ *         source sequence for which @c pred returned @c true.
+ */
 template<typename Pred>
 auto where_with_index(Pred&& pred)
     -> detail::where_impl<Pred>
@@ -3804,13 +4207,49 @@ auto where_with_index(Pred&& pred)
     return detail::where_impl<Pred>(std::forward<Pred>(pred));
 }
 
-// C++ LINQ operator: zip
-// .NET equivalent: Zip
+/**
+ * @ingroup linq_operators_list
+ * @defgroup linq_op_zip zip
+ * @brief Zips two sequences by combining corresponding elements.
+ *
+ * The @c zip operator scans two source sequences and and passes elements
+ * with the same index to a <em>result selector</em>, then produces a
+ * sequence containing the results returned by that selector.
+ *
+ * <b>.NET equivalent:</b> Zip
+ */
 
-// Operator that iterates two sequences and passes elements with
-// the same index to a result selector function, producing a sequence
-// of the results. The resulting sequence will be as long as the
-// shortest of the two input sequences.
+/**
+ * @ingroup linq_op_zip
+ * @brief Zips two sequences.
+ *
+ * Scans two source sequences and calls the provided
+ * <em>result selector</em> with elements of the two
+ * sequences that have the same index. Then, produces
+ * a sequence of the results returned by that selector.
+ * The resulting sequence will be as long as the shortest
+ * of the two input sequences.
+ *
+ * Use like this:
+ *
+ * @code
+ *   const int ONE[] = { 42, 23, 66, 11, 7 };
+ *   const int TWO[] = { 8, 21, 90, 4 };
+ *
+ *   using namespace coveo::linq;
+ *   auto seq = from(ONE)
+ *            | zip(TWO, [](int i, int j) { return i + j; });
+ *   // seq = { 50, 44, 156, 15 }
+ * @endcode
+ *
+ * @param seq2 Second sequence to scan. The first sequence is the
+ *             one to which the operator is applied, e.g. the
+ *             one passed to <tt>coveo::linq::from()</tt>.
+ * @param result_sel Selector used to "zip" two corresponding
+ *                   sequence elements.
+ * @return (Once applied) Sequence containing zipped elements
+ *         from the two sequences.
+ */
 template<typename Seq2,
          typename ResultSelector>
 auto zip(Seq2&& seq2, ResultSelector&& result_sel)

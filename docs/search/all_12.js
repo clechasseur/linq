@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['value_5ftype',['value_type',['../classcoveo_1_1enumerable.html#ac745849a61dc02e37399d227e2247790',1,'coveo::enumerable::value_type()'],['../classcoveo_1_1enumerable_1_1iterator.html#aa77d44269ca91db6e6582f93b575a022',1,'coveo::enumerable::iterator::value_type()'],['../structcoveo_1_1seq__element__traits.html#ab63386b3554c084783a8bd6b8f2a744d',1,'coveo::seq_element_traits::value_type()']]]
+  ['union_5fwith',['union_with',['../group__linq__op__union.html',1,'']]],
+  ['union_5fwith',['union_with',['../group__linq__op__union.html#ga40b0e9d2f9c80dd12689ac402bb3e9ec',1,'coveo::linq::union_with(Seq2 &amp;&amp;seq2) -&gt; detail::union_impl&lt; Seq2, detail::less&lt;&gt;&gt;'],['../group__linq__op__union.html#gadd15501ec6f9edbbfbce53e2697ec583',1,'coveo::linq::union_with(Seq2 &amp;&amp;seq2, Pred &amp;&amp;pred) -&gt; detail::union_impl&lt; Seq2, Pred &gt;']]]
 ];

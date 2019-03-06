@@ -380,66 +380,66 @@ Functions</h2></td></tr>
 <tr class="memitem:ga99cc996c06ba5a70e4495f879ab31c28"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__linq__op__skip.html#ga99cc996c06ba5a70e4495f879ab31c28">coveo::linq::skip_while_with_index</a> (Pred &amp;&amp;pred) -&gt; detail::skip_impl&lt; Pred &gt;</td></tr>
 <tr class="memdesc:ga99cc996c06ba5a70e4495f879ab31c28"><td class="mdescLeft">&#160;</td><td class="mdescRight">Skips the first elements in sequence satisfying predicate using element index.  <a href="group__linq__op__skip.html#ga99cc996c06ba5a70e4495f879ab31c28">More...</a><br /></td></tr>
 <tr class="separator:ga99cc996c06ba5a70e4495f879ab31c28"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a909514f1cd93d7f1c465418f4fddd102"><td class="memTemplParams" colspan="2"><a id="a909514f1cd93d7f1c465418f4fddd102"></a>
-template&lt;typename F &gt; </td></tr>
-<tr class="memitem:a909514f1cd93d7f1c465418f4fddd102"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>coveo::linq::sum</b> (const F &amp;num_f) -&gt; detail::sum_impl&lt; F &gt;</td></tr>
-<tr class="separator:a909514f1cd93d7f1c465418f4fddd102"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a824590fb1e15920f6728341ede22c677"><td class="memTemplParams" colspan="2"><a id="a824590fb1e15920f6728341ede22c677"></a>
-template&lt;typename  = void&gt; </td></tr>
-<tr class="memitem:a824590fb1e15920f6728341ede22c677"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>coveo::linq::take</b> (std::size_t n) -&gt; detail::take_impl&lt; detail::skip_n_pred&lt;&gt;&gt;</td></tr>
-<tr class="separator:a824590fb1e15920f6728341ede22c677"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad191066a07f19bbdaf4d923ab2b4a4d7"><td class="memTemplParams" colspan="2"><a id="ad191066a07f19bbdaf4d923ab2b4a4d7"></a>
-template&lt;typename Pred &gt; </td></tr>
-<tr class="memitem:ad191066a07f19bbdaf4d923ab2b4a4d7"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>coveo::linq::take_while</b> (Pred &amp;&amp;pred) -&gt; detail::take_impl&lt; detail::indexless_selector_proxy&lt; Pred &gt;&gt;</td></tr>
-<tr class="separator:ad191066a07f19bbdaf4d923ab2b4a4d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaa98d1d2751c83d32819edd61e72b6b6"><td class="memTemplParams" colspan="2"><a id="aaa98d1d2751c83d32819edd61e72b6b6"></a>
-template&lt;typename Pred &gt; </td></tr>
-<tr class="memitem:aaa98d1d2751c83d32819edd61e72b6b6"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>coveo::linq::take_while_with_index</b> (Pred &amp;&amp;pred) -&gt; detail::take_impl&lt; Pred &gt;</td></tr>
-<tr class="separator:aaa98d1d2751c83d32819edd61e72b6b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8db777fb3cbfad57558f81045e054df9"><td class="memTemplParams" colspan="2"><a id="a8db777fb3cbfad57558f81045e054df9"></a>
-template&lt;typename Container &gt; </td></tr>
-<tr class="memitem:a8db777fb3cbfad57558f81045e054df9"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>coveo::linq::to</b> () -&gt; detail::to_impl&lt; Container &gt;</td></tr>
-<tr class="separator:a8db777fb3cbfad57558f81045e054df9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab3c6b592acab345f2076b013e1a66e0e"><td class="memTemplParams" colspan="2"><a id="ab3c6b592acab345f2076b013e1a66e0e"></a>
-template&lt;typename  = void&gt; </td></tr>
-<tr class="memitem:ab3c6b592acab345f2076b013e1a66e0e"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>coveo::linq::to_vector</b> () -&gt; detail::to_vector_impl&lt;&gt;</td></tr>
-<tr class="separator:ab3c6b592acab345f2076b013e1a66e0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab1f7360d1635751a7d5dc91ba8ff85d3"><td class="memTemplParams" colspan="2"><a id="ab1f7360d1635751a7d5dc91ba8ff85d3"></a>
-template&lt;typename Container , typename KeySelector &gt; </td></tr>
-<tr class="memitem:ab1f7360d1635751a7d5dc91ba8ff85d3"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>coveo::linq::to_associative</b> (const KeySelector &amp;key_sel) -&gt; detail::to_associative_impl_1&lt; Container, KeySelector &gt;</td></tr>
-<tr class="separator:ab1f7360d1635751a7d5dc91ba8ff85d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6dbc0ff8287741bb259420155ee22704"><td class="memTemplParams" colspan="2"><a id="a6dbc0ff8287741bb259420155ee22704"></a>
-template&lt;typename Container , typename KeySelector , typename ElementSelector &gt; </td></tr>
-<tr class="memitem:a6dbc0ff8287741bb259420155ee22704"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>coveo::linq::to_associative</b> (const KeySelector &amp;key_sel, const ElementSelector &amp;elem_sel) -&gt; detail::to_associative_impl_2&lt; Container, KeySelector, ElementSelector &gt;</td></tr>
-<tr class="separator:a6dbc0ff8287741bb259420155ee22704"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af3a70ea7230fdd85dee4936864c995cc"><td class="memTemplParams" colspan="2"><a id="af3a70ea7230fdd85dee4936864c995cc"></a>
-template&lt;typename KeySelector &gt; </td></tr>
-<tr class="memitem:af3a70ea7230fdd85dee4936864c995cc"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>coveo::linq::to_map</b> (const KeySelector &amp;key_sel) -&gt; detail::to_map_impl_1&lt; KeySelector &gt;</td></tr>
-<tr class="separator:af3a70ea7230fdd85dee4936864c995cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7098c35ecccbc430779a47ab2af328b9"><td class="memTemplParams" colspan="2"><a id="a7098c35ecccbc430779a47ab2af328b9"></a>
-template&lt;typename KeySelector , typename ElementSelector &gt; </td></tr>
-<tr class="memitem:a7098c35ecccbc430779a47ab2af328b9"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>coveo::linq::to_map</b> (const KeySelector &amp;key_sel, const ElementSelector &amp;elem_sel) -&gt; detail::to_map_impl_2&lt; KeySelector, ElementSelector &gt;</td></tr>
-<tr class="separator:a7098c35ecccbc430779a47ab2af328b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a40b0e9d2f9c80dd12689ac402bb3e9ec"><td class="memTemplParams" colspan="2"><a id="a40b0e9d2f9c80dd12689ac402bb3e9ec"></a>
-template&lt;typename Seq2 &gt; </td></tr>
-<tr class="memitem:a40b0e9d2f9c80dd12689ac402bb3e9ec"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>coveo::linq::union_with</b> (Seq2 &amp;&amp;seq2) -&gt; detail::union_impl&lt; Seq2, detail::less&lt;&gt;&gt;</td></tr>
-<tr class="separator:a40b0e9d2f9c80dd12689ac402bb3e9ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:add15501ec6f9edbbfbce53e2697ec583"><td class="memTemplParams" colspan="2"><a id="add15501ec6f9edbbfbce53e2697ec583"></a>
-template&lt;typename Seq2 , typename Pred &gt; </td></tr>
-<tr class="memitem:add15501ec6f9edbbfbce53e2697ec583"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>coveo::linq::union_with</b> (Seq2 &amp;&amp;seq2, Pred &amp;&amp;pred) -&gt; detail::union_impl&lt; Seq2, Pred &gt;</td></tr>
-<tr class="separator:add15501ec6f9edbbfbce53e2697ec583"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab08da42234e4ca437c558c6635cd2881"><td class="memTemplParams" colspan="2"><a id="ab08da42234e4ca437c558c6635cd2881"></a>
-template&lt;typename Pred &gt; </td></tr>
-<tr class="memitem:ab08da42234e4ca437c558c6635cd2881"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>coveo::linq::where</b> (Pred &amp;&amp;pred) -&gt; detail::where_impl&lt; detail::indexless_selector_proxy&lt; Pred &gt;&gt;</td></tr>
-<tr class="separator:ab08da42234e4ca437c558c6635cd2881"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1ad7efedd271b25a7c85828d6ac401b6"><td class="memTemplParams" colspan="2"><a id="a1ad7efedd271b25a7c85828d6ac401b6"></a>
-template&lt;typename Pred &gt; </td></tr>
-<tr class="memitem:a1ad7efedd271b25a7c85828d6ac401b6"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>coveo::linq::where_with_index</b> (Pred &amp;&amp;pred) -&gt; detail::where_impl&lt; Pred &gt;</td></tr>
-<tr class="separator:a1ad7efedd271b25a7c85828d6ac401b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6cc855b9472765bf307c6d2186c8ff72"><td class="memTemplParams" colspan="2"><a id="a6cc855b9472765bf307c6d2186c8ff72"></a>
-template&lt;typename Seq2 , typename ResultSelector &gt; </td></tr>
-<tr class="memitem:a6cc855b9472765bf307c6d2186c8ff72"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>coveo::linq::zip</b> (Seq2 &amp;&amp;seq2, ResultSelector &amp;&amp;result_sel) -&gt; detail::zip_impl&lt; Seq2, ResultSelector &gt;</td></tr>
-<tr class="separator:a6cc855b9472765bf307c6d2186c8ff72"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga909514f1cd93d7f1c465418f4fddd102"><td class="memTemplParams" colspan="2">template&lt;typename F &gt; </td></tr>
+<tr class="memitem:ga909514f1cd93d7f1c465418f4fddd102"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__linq__op__sum.html#ga909514f1cd93d7f1c465418f4fddd102">coveo::linq::sum</a> (const F &amp;num_f) -&gt; detail::sum_impl&lt; F &gt;</td></tr>
+<tr class="memdesc:ga909514f1cd93d7f1c465418f4fddd102"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes sum using numerical function.  <a href="group__linq__op__sum.html#ga909514f1cd93d7f1c465418f4fddd102">More...</a><br /></td></tr>
+<tr class="separator:ga909514f1cd93d7f1c465418f4fddd102"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga824590fb1e15920f6728341ede22c677"><td class="memTemplParams" colspan="2">template&lt;typename  = void&gt; </td></tr>
+<tr class="memitem:ga824590fb1e15920f6728341ede22c677"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__linq__op__take.html#ga824590fb1e15920f6728341ede22c677">coveo::linq::take</a> (std::size_t n) -&gt; detail::take_impl&lt; detail::skip_n_pred&lt;&gt;&gt;</td></tr>
+<tr class="memdesc:ga824590fb1e15920f6728341ede22c677"><td class="mdescLeft">&#160;</td><td class="mdescRight">Keeps the first N elements in sequence.  <a href="group__linq__op__take.html#ga824590fb1e15920f6728341ede22c677">More...</a><br /></td></tr>
+<tr class="separator:ga824590fb1e15920f6728341ede22c677"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad191066a07f19bbdaf4d923ab2b4a4d7"><td class="memTemplParams" colspan="2">template&lt;typename Pred &gt; </td></tr>
+<tr class="memitem:gad191066a07f19bbdaf4d923ab2b4a4d7"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__linq__op__take.html#gad191066a07f19bbdaf4d923ab2b4a4d7">coveo::linq::take_while</a> (Pred &amp;&amp;pred) -&gt; detail::take_impl&lt; detail::indexless_selector_proxy&lt; Pred &gt;&gt;</td></tr>
+<tr class="memdesc:gad191066a07f19bbdaf4d923ab2b4a4d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Keeps the first elements in sequence satisfying predicate.  <a href="group__linq__op__take.html#gad191066a07f19bbdaf4d923ab2b4a4d7">More...</a><br /></td></tr>
+<tr class="separator:gad191066a07f19bbdaf4d923ab2b4a4d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaaa98d1d2751c83d32819edd61e72b6b6"><td class="memTemplParams" colspan="2">template&lt;typename Pred &gt; </td></tr>
+<tr class="memitem:gaaa98d1d2751c83d32819edd61e72b6b6"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__linq__op__take.html#gaaa98d1d2751c83d32819edd61e72b6b6">coveo::linq::take_while_with_index</a> (Pred &amp;&amp;pred) -&gt; detail::take_impl&lt; Pred &gt;</td></tr>
+<tr class="memdesc:gaaa98d1d2751c83d32819edd61e72b6b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Keeps the first elements in sequence satisfying predicate using element index.  <a href="group__linq__op__take.html#gaaa98d1d2751c83d32819edd61e72b6b6">More...</a><br /></td></tr>
+<tr class="separator:gaaa98d1d2751c83d32819edd61e72b6b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8db777fb3cbfad57558f81045e054df9"><td class="memTemplParams" colspan="2">template&lt;typename Container &gt; </td></tr>
+<tr class="memitem:ga8db777fb3cbfad57558f81045e054df9"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__linq__op__to.html#ga8db777fb3cbfad57558f81045e054df9">coveo::linq::to</a> () -&gt; detail::to_impl&lt; Container &gt;</td></tr>
+<tr class="memdesc:ga8db777fb3cbfad57558f81045e054df9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts sequence into another container.  <a href="group__linq__op__to.html#ga8db777fb3cbfad57558f81045e054df9">More...</a><br /></td></tr>
+<tr class="separator:ga8db777fb3cbfad57558f81045e054df9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab3c6b592acab345f2076b013e1a66e0e"><td class="memTemplParams" colspan="2">template&lt;typename  = void&gt; </td></tr>
+<tr class="memitem:gab3c6b592acab345f2076b013e1a66e0e"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__linq__op__to.html#gab3c6b592acab345f2076b013e1a66e0e">coveo::linq::to_vector</a> () -&gt; detail::to_vector_impl&lt;&gt;</td></tr>
+<tr class="memdesc:gab3c6b592acab345f2076b013e1a66e0e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts sequence into <code>std::vector</code>.  <a href="group__linq__op__to.html#gab3c6b592acab345f2076b013e1a66e0e">More...</a><br /></td></tr>
+<tr class="separator:gab3c6b592acab345f2076b013e1a66e0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab1f7360d1635751a7d5dc91ba8ff85d3"><td class="memTemplParams" colspan="2">template&lt;typename Container , typename KeySelector &gt; </td></tr>
+<tr class="memitem:gab1f7360d1635751a7d5dc91ba8ff85d3"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__linq__op__to.html#gab1f7360d1635751a7d5dc91ba8ff85d3">coveo::linq::to_associative</a> (const KeySelector &amp;key_sel) -&gt; detail::to_associative_impl_1&lt; Container, KeySelector &gt;</td></tr>
+<tr class="memdesc:gab1f7360d1635751a7d5dc91ba8ff85d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts sequence into associative container using key selector.  <a href="group__linq__op__to.html#gab1f7360d1635751a7d5dc91ba8ff85d3">More...</a><br /></td></tr>
+<tr class="separator:gab1f7360d1635751a7d5dc91ba8ff85d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6dbc0ff8287741bb259420155ee22704"><td class="memTemplParams" colspan="2">template&lt;typename Container , typename KeySelector , typename ElementSelector &gt; </td></tr>
+<tr class="memitem:ga6dbc0ff8287741bb259420155ee22704"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__linq__op__to.html#ga6dbc0ff8287741bb259420155ee22704">coveo::linq::to_associative</a> (const KeySelector &amp;key_sel, const ElementSelector &amp;elem_sel) -&gt; detail::to_associative_impl_2&lt; Container, KeySelector, ElementSelector &gt;</td></tr>
+<tr class="memdesc:ga6dbc0ff8287741bb259420155ee22704"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts sequence into associative container using key and element selector.  <a href="group__linq__op__to.html#ga6dbc0ff8287741bb259420155ee22704">More...</a><br /></td></tr>
+<tr class="separator:ga6dbc0ff8287741bb259420155ee22704"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf3a70ea7230fdd85dee4936864c995cc"><td class="memTemplParams" colspan="2">template&lt;typename KeySelector &gt; </td></tr>
+<tr class="memitem:gaf3a70ea7230fdd85dee4936864c995cc"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__linq__op__to.html#gaf3a70ea7230fdd85dee4936864c995cc">coveo::linq::to_map</a> (const KeySelector &amp;key_sel) -&gt; detail::to_map_impl_1&lt; KeySelector &gt;</td></tr>
+<tr class="memdesc:gaf3a70ea7230fdd85dee4936864c995cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts sequence into <code>std::map</code> using key selector.  <a href="group__linq__op__to.html#gaf3a70ea7230fdd85dee4936864c995cc">More...</a><br /></td></tr>
+<tr class="separator:gaf3a70ea7230fdd85dee4936864c995cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7098c35ecccbc430779a47ab2af328b9"><td class="memTemplParams" colspan="2">template&lt;typename KeySelector , typename ElementSelector &gt; </td></tr>
+<tr class="memitem:ga7098c35ecccbc430779a47ab2af328b9"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__linq__op__to.html#ga7098c35ecccbc430779a47ab2af328b9">coveo::linq::to_map</a> (const KeySelector &amp;key_sel, const ElementSelector &amp;elem_sel) -&gt; detail::to_map_impl_2&lt; KeySelector, ElementSelector &gt;</td></tr>
+<tr class="memdesc:ga7098c35ecccbc430779a47ab2af328b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts sequence into <code>std::map</code> using key and element selector.  <a href="group__linq__op__to.html#ga7098c35ecccbc430779a47ab2af328b9">More...</a><br /></td></tr>
+<tr class="separator:ga7098c35ecccbc430779a47ab2af328b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga40b0e9d2f9c80dd12689ac402bb3e9ec"><td class="memTemplParams" colspan="2">template&lt;typename Seq2 &gt; </td></tr>
+<tr class="memitem:ga40b0e9d2f9c80dd12689ac402bb3e9ec"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__linq__op__union.html#ga40b0e9d2f9c80dd12689ac402bb3e9ec">coveo::linq::union_with</a> (Seq2 &amp;&amp;seq2) -&gt; detail::union_impl&lt; Seq2, detail::less&lt;&gt;&gt;</td></tr>
+<tr class="memdesc:ga40b0e9d2f9c80dd12689ac402bb3e9ec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs set union of two sequences.  <a href="group__linq__op__union.html#ga40b0e9d2f9c80dd12689ac402bb3e9ec">More...</a><br /></td></tr>
+<tr class="separator:ga40b0e9d2f9c80dd12689ac402bb3e9ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gadd15501ec6f9edbbfbce53e2697ec583"><td class="memTemplParams" colspan="2">template&lt;typename Seq2 , typename Pred &gt; </td></tr>
+<tr class="memitem:gadd15501ec6f9edbbfbce53e2697ec583"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__linq__op__union.html#gadd15501ec6f9edbbfbce53e2697ec583">coveo::linq::union_with</a> (Seq2 &amp;&amp;seq2, Pred &amp;&amp;pred) -&gt; detail::union_impl&lt; Seq2, Pred &gt;</td></tr>
+<tr class="memdesc:gadd15501ec6f9edbbfbce53e2697ec583"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs set union of two sequences using predicate.  <a href="group__linq__op__union.html#gadd15501ec6f9edbbfbce53e2697ec583">More...</a><br /></td></tr>
+<tr class="separator:gadd15501ec6f9edbbfbce53e2697ec583"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab08da42234e4ca437c558c6635cd2881"><td class="memTemplParams" colspan="2">template&lt;typename Pred &gt; </td></tr>
+<tr class="memitem:gab08da42234e4ca437c558c6635cd2881"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__linq__op__where.html#gab08da42234e4ca437c558c6635cd2881">coveo::linq::where</a> (Pred &amp;&amp;pred) -&gt; detail::where_impl&lt; detail::indexless_selector_proxy&lt; Pred &gt;&gt;</td></tr>
+<tr class="memdesc:gab08da42234e4ca437c558c6635cd2881"><td class="mdescLeft">&#160;</td><td class="mdescRight">Filters sequence elements using predicate.  <a href="group__linq__op__where.html#gab08da42234e4ca437c558c6635cd2881">More...</a><br /></td></tr>
+<tr class="separator:gab08da42234e4ca437c558c6635cd2881"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1ad7efedd271b25a7c85828d6ac401b6"><td class="memTemplParams" colspan="2">template&lt;typename Pred &gt; </td></tr>
+<tr class="memitem:ga1ad7efedd271b25a7c85828d6ac401b6"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__linq__op__where.html#ga1ad7efedd271b25a7c85828d6ac401b6">coveo::linq::where_with_index</a> (Pred &amp;&amp;pred) -&gt; detail::where_impl&lt; Pred &gt;</td></tr>
+<tr class="memdesc:ga1ad7efedd271b25a7c85828d6ac401b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Filters sequence elements using predicate and element index.  <a href="group__linq__op__where.html#ga1ad7efedd271b25a7c85828d6ac401b6">More...</a><br /></td></tr>
+<tr class="separator:ga1ad7efedd271b25a7c85828d6ac401b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6cc855b9472765bf307c6d2186c8ff72"><td class="memTemplParams" colspan="2">template&lt;typename Seq2 , typename ResultSelector &gt; </td></tr>
+<tr class="memitem:ga6cc855b9472765bf307c6d2186c8ff72"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__linq__op__zip.html#ga6cc855b9472765bf307c6d2186c8ff72">coveo::linq::zip</a> (Seq2 &amp;&amp;seq2, ResultSelector &amp;&amp;result_sel) -&gt; detail::zip_impl&lt; Seq2, ResultSelector &gt;</td></tr>
+<tr class="memdesc:ga6cc855b9472765bf307c6d2186c8ff72"><td class="mdescLeft">&#160;</td><td class="mdescRight">Zips two sequences.  <a href="group__linq__op__zip.html#ga6cc855b9472765bf307c6d2186c8ff72">More...</a><br /></td></tr>
+<tr class="separator:ga6cc855b9472765bf307c6d2186c8ff72"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>This file contains the definition of all LINQ operators, as well as the entry points (e.g., <code><a class="el" href="group__linq__entry__points.html#ga974e5ae2b7dec6aecc4be4b58546f6e2" title="Standard LINQ expression entry point.">coveo::linq::from()</a></code>, etc.) and the chaining operator (e.g. <code><a class="el" href="group__linq__chaining.html#gaf38ff23c8bdf9a47b55e516dd378194e" title="Applies LINQ operators and allows chaining.">coveo::linq::operator|()</a></code>). This is the only file that needs to be included to use the library.</p>
@@ -447,7 +447,7 @@ template&lt;typename Seq2 , typename ResultSelector &gt; </td></tr>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Mar 4 2019 23:26:19 for coveo::linq by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Mar 5 2019 22:29:22 for coveo::linq by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>

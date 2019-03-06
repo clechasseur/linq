@@ -10,5 +10,6 @@ var searchData=
   ['size',['size',['../classcoveo_1_1enumerable.html#a027835aabbfafd8b4362b9a7dd3690b5',1,'coveo::enumerable']]],
   ['skip',['skip',['../group__linq__op__skip.html#ga00d03899b169aab0c20154d9654d0c1b',1,'coveo::linq']]],
   ['skip_5fwhile',['skip_while',['../group__linq__op__skip.html#ga25f1d5d250ce858055cc78b982a4c5e1',1,'coveo::linq']]],
-  ['skip_5fwhile_5fwith_5findex',['skip_while_with_index',['../group__linq__op__skip.html#ga99cc996c06ba5a70e4495f879ab31c28',1,'coveo::linq']]]
+  ['skip_5fwhile_5fwith_5findex',['skip_while_with_index',['../group__linq__op__skip.html#ga99cc996c06ba5a70e4495f879ab31c28',1,'coveo::linq']]],
+  ['sum',['sum',['../group__linq__op__sum.html#ga909514f1cd93d7f1c465418f4fddd102',1,'coveo::linq']]]
 ];
