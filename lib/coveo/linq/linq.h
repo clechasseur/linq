@@ -193,7 +193,94 @@
  * @defgroup linq_custom_operators Implementing custom LINQ operators
  * @brief How to design and implement your own LINQ operators.
  *
- * TODO
+ * One of the features of the <tt>coveo::linq</tt> library is that LINQ operators are
+ * implemented as <em>function objects</em> to be applied to a sequence, instead of
+ * member functions (of <tt>coveo::enumerable</tt> for instance.) This makes it easy
+ * to extend the library by implementing new operators.
+ *
+ * To make it easy to apply LINQ operators, the library defines, for each operator, a
+ * corresponding function that simply returns the <em>function object</em>. Then,
+ * <tt>coveo::linq::operator|()</tt> is used to @e apply the LINQ operator to a sequence.
+ * What this means internally is that <tt>operator|()</tt> calls the operator's function
+ * object's <tt>operator()()</tt> member function, passing it the sequence to apply it to.
+ * The operator's function object must then perform its work and return either a new
+ * sequence or perhaps a single value (for a terminal operator).
+ *
+ * Here is a real-world example of this. Let's say we wanted to implement a new LINQ
+ * operator named @c step that steps through a sequence by specific increments. First,
+ * we declare the shell of our function object that implements the operator, along with
+ * an <tt>operator()()</tt> so that the operator can be applied to a sequence:
+ *
+ * @code
+ *   template<typename = void>
+ *   class step_impl
+ *   {
+ *   private:
+ *       std::size_t step_;
+ *
+ *   public:
+ *       explicit step_impl(std::size_t step) : step_(step) { }
+ *
+ *       template<typename Seq>
+ *       auto operator()(Seq&& seq) {
+ *           // TODO
+ *       }
+ *   };
+ * @endcode
+ *
+ * Note that the sequence's type is not specified in the class template itself - when the
+ * operator's function object will be created, we won't know the type of sequence yet.
+ * Instead, it is specified as a template argument to <tt>operator()()</tt> itself. Also
+ * note that the function object's constructor must receive all parameters it needs to
+ * work (except for the sequence of course). In our case, we receive the number of steps
+ * to use for each invocation.
+ *
+ * Because our operator must step through elements of the sequence it is applied to, it needs
+ * to return a new sequence. Furthermore, that sequence must wrap the source sequence to be
+ * able to iterate its elements. One way to do this without implementing complex sequence
+ * logic is by using <tt>coveo::enumerable</tt>. This sequence wrapper's only requirement is
+ * that we implement a <em>next delegate</em>: a function that, when called, returns a pointer
+ * to the next element in the sequence, or @c nullptr when done. <tt>coveo::enumerable</tt>
+ * is used extensively in the <tt>coveo::linq</tt> library to implement LINQ operators.
+ *
+ * Let's add a skeleton for a next delegate to our example:
+ *
+ * @code
+ *   template<typename = void>
+ *   class step_impl
+ *   {
+ *   private:
+ *       template<typename Seq>
+ *       class next_impl
+ *       {
+ *       public:
+ *           explicit next_impl(Seq&& seq) {
+ *               // TODO
+ *           }
+ *
+ *           auto operator()() {
+ *               // TODO
+ *           }
+ *       };
+ *
+ *   private:
+ *       std::size_t step_;
+ *
+ *   public:
+ *       explicit step_impl(std::size_t step) : step_(step) { }
+ *
+ *       template<typename Seq>
+ *       auto operator()(Seq&& seq)
+ *           -> coveo::enumerable<typename coveo::seq_traits<Seq>::value_type>
+ *       {
+ *           return next_impl<Seq>(std::forward<Seq>(seq));
+ *       }
+ *   };
+ * @endcode
+ *
+ * Note the use of <tt>coveo::seq_traits</tt> to produce a sequence of the same type
+ * of elements as the source sequence. Along with <tt>coveo::seq_element_traits</tt>,
+ * these can be used to simplify detection of sequence types in LINQ operator implementations.
  */
 
 #ifndef COVEO_LINQ_H
