@@ -216,10 +216,10 @@
  *   class step_impl
  *   {
  *   private:
- *       std::size_t step_;
+ *       std::size_t n_;
  *
  *   public:
- *       explicit step_impl(std::size_t step) : step_(step) { }
+ *       explicit step_impl(std::size_t n) : n_(n) { }
  *
  *       template<typename Seq>
  *       auto operator()(Seq&& seq) {
@@ -254,7 +254,7 @@
  *       class next_impl
  *       {
  *       public:
- *           explicit next_impl(Seq&& seq) {
+ *           explicit next_impl(Seq&& seq, std::site_t n) {
  *               // TODO
  *           }
  *
@@ -264,16 +264,16 @@
  *       };
  *
  *   private:
- *       std::size_t step_;
+ *       std::size_t n_;
  *
  *   public:
- *       explicit step_impl(std::size_t step) : step_(step) { }
+ *       explicit step_impl(std::size_t n) : n_(n) { }
  *
  *       template<typename Seq>
  *       auto operator()(Seq&& seq)
  *           -> coveo::enumerable<typename coveo::seq_traits<Seq>::value_type>
  *       {
- *           return next_impl<Seq>(std::forward<Seq>(seq));
+ *           return next_impl<Seq>(std::forward<Seq>(seq), n_);
  *       }
  *   };
  * @endcode
@@ -281,6 +281,156 @@
  * Note the use of <tt>coveo::seq_traits</tt> to produce a sequence of the same type
  * of elements as the source sequence. Along with <tt>coveo::seq_element_traits</tt>,
  * these can be used to simplify detection of sequence types in LINQ operator implementations.
+ *
+ * <tt>coveo::enumerable</tt>'s implementation will @e copy the next delegate every time it
+ * is needed - in its copy/move constructors / assignment operators, but also when an iterator
+ * is fetched. This is done so that the state of the enumeration can be kept in the next delegate
+ * and copied as well. Because of this however, objects to be shared among delegates must be
+ * kept in shared memory as well - using <tt>std::shared_ptr</tt> for instance.
+ *
+ * Let's add storage for our sequence in our example's next delegate:
+ *
+ * @code
+ *   template<typename = void>
+ *   class step_impl
+ *   {
+ *   private:
+ *       template<typename Seq>
+ *       class next_impl
+ *       {
+ *       private:
+ *           using iterator_type = typename coveo::seq_traits<Seq>::iterator_type;
+ *
+ *           struct internals {
+ *               Seq seq_;
+ *               iterator_type end_;
+ *               std::size_t n_;
+ *
+ *               internals(Seq&& seq, std::size_t n)
+ *                   : seq_(std::forward<Seq>(seq)),
+ *                     end_(std::end(seq_)),
+ *                     n_(n) { }
+ *               internals(const internals&) = delete;
+ *               internals& operator=(const internals&) = delete;
+ *           };
+ *           using internals_sp = std::shared_ptr<internals>;
+ *
+ *           internals_sp spint_;
+ *           iterator_type it_;
+ *       public:
+ *           explicit next_impl(Seq&& seq, std::size_t n)
+ *               : spint_(std::make_shared<internals>(std::forward<Seq>(seq), n)),
+ *                 it_(std::begin(spint_->seq_)) { }
+ *
+ *           auto operator()() {
+ *               // TODO
+ *           }
+ *       };
+ *
+ *   private:
+ *       std::size_t n_;
+ *
+ *   public:
+ *       explicit step_impl(std::size_t n) : n_(n) { }
+ *
+ *       template<typename Seq>
+ *       auto operator()(Seq&& seq)
+ *           -> coveo::enumerable<typename coveo::seq_traits<Seq>::value_type>
+ *       {
+ *           return next_impl<Seq>(std::forward<Seq>(seq), n_);
+ *       }
+ *   };
+ * @endcode
+ *
+ * The @c internals class is used to keep all data that is to be shared among next delegates, including
+ * the sequence we're wrapping. This allows us to avoid copying the sequence for every delegate copy.
+ * The @c internals are kept in a <tt>std::shared_ptr</tt>.
+ *
+ * Also note that we keep an @c end iterator in the @c internals object, but we keep another iterator
+ * in the next delegate directly. This is the @b state of the enumeration: the iterator points to the
+ * next element we'll be returning. This iterator is initialized at @c begin initially.
+ *
+ * Now, all that is left is to implement the operator logic itself: iterating over the sequence, stepping
+ * through elements by a specific increment.
+ *
+ * @code
+ *   template<typename = void>
+ *   class step_impl
+ *   {
+ *   private:
+ *       template<typename Seq>
+ *       class next_impl
+ *       {
+ *       private:
+ *           using iterator_type = typename coveo::seq_traits<Seq>::iterator_type;
+ *
+ *           struct internals {
+ *               Seq seq_;
+ *               iterator_type end_;
+ *               std::size_t n_;
+ *
+ *               internals(Seq&& seq, std::size_t n)
+ *                   : seq_(std::forward<Seq>(seq)),
+ *                     end_(std::end(seq_)),
+ *                     n_(n) { }
+ *               internals(const internals&) = delete;
+ *               internals& operator=(const internals&) = delete;
+ *           };
+ *           using internals_sp = std::shared_ptr<internals>;
+ *
+ *           internals_sp spint_;
+ *           iterator_type it_;
+ *       public:
+ *           explicit next_impl(Seq&& seq, std::size_t n)
+ *               : spint_(std::make_shared<internals>(std::forward<Seq>(seq), n)),
+ *                 it_(std::begin(spint_->seq_)) { }
+ *
+ *           auto operator()() -> typename coveo::seq_traits<Seq>::pointer {
+ *               typename coveo::seq_traits<Seq>::pointer pobj = nullptr;
+ *               if (it_ != spint_->end_) {
+ *                   // Return this element.
+ *                   typename coveo::seq_traits<Seq>::reference robj = *it_;
+ *                   pobj = std::addressof(robj);
+ *
+ *                   // Move to next element by stepping as appropriate.
+ *                   for (std::size_t i = 0; it_ != spint_->end_ && i < spint_->n_; ++i, ++it_) {
+ *                   }
+ *               }
+ *               return pobj;
+ *           }
+ *       };
+ *
+ *   private:
+ *       std::size_t n_;
+ *
+ *   public:
+ *       explicit step_impl(std::size_t n) : n_(n) { }
+ *
+ *       template<typename Seq>
+ *       auto operator()(Seq&& seq)
+ *           -> coveo::enumerable<typename coveo::seq_traits<Seq>::value_type>
+ *       {
+ *           return next_impl<Seq>(std::forward<Seq>(seq), n_);
+ *       }
+ *   };
+ *
+ *   template<typename = void>
+ *   auto step(std::size_t n) -> step_impl<> {
+ *       return step_impl<>(n);
+ *   }
+ * @endcode
+ *
+ * Note that we also added a "helper function" that returns our operator's function object's implementation.
+ * This function will be the one used to invoke our LINQ operator:
+ *
+ * @code
+ *   const int NUMS[] = { 42, 23, 66, 11, 7, 67 };
+ *
+ *   using namespace coveo::linq;
+ *   auto seq = from(NUMS)
+ *            | step(2);
+ *   // seq == { 42, 66, 7 };
+ * @endcode
  */
 
 #ifndef COVEO_LINQ_H
