@@ -431,6 +431,60 @@
  *            | step(2);
  *   // seq == { 42, 66, 7 };
  * @endcode
+ *
+ * Implementing a terminal operator is even easier, because there's no need to provide a sequence implementation.
+ * Let's say we want to implement a @c prod operator that calculates the product of all sequence elements.
+ * Like the <tt>coveo::linq::sum()</tt> operator, it could be done by using a <em>numerical function</em> to
+ * get a numerical value for each sequence element. It could be done like this:
+ *
+ * @code
+ *   template<typename F>
+ *   class prod_impl
+ *   {
+ *   private:
+ *       const F& num_f_;
+ *
+ *   public:
+ *       explicit prod_impl(const F& num_f) : num_f_(num_f) { }
+ *
+ *       template<typename Seq>
+ *       auto operator()(Seq&& seq) -> typename std::decay<decltype(num_f_(*std::begin(seq)))>::type {
+ *           auto it = std::begin(seq);
+ *           auto end = std::end(seq);
+ *           if (it == end) {
+ *               coveo::linq::throw_linq_empty_sequence();
+ *           }
+ *           auto product = num_f_(*it);
+ *           for (++it; it != end; ++it) {
+ *               product *= num_f_(*it);
+ *           }
+ *           return product;
+ *       }
+ *   };
+ *
+ *   template<typename F>
+ *   auto prod(const F& num_f) -> prod_impl<F> {
+ *       return prod_impl<F>(num_f);
+ *   }
+ * @endcode
+ *
+ * Now, using the operator is as easy as using <tt>coveo::linq::sum()</tt>:
+ *
+ * @code
+ *   const int NUMS[] = { 42, 23, 66 };
+ *
+ *   using namespace coveo::linq;
+ *   auto product = from(NUMS)
+ *                | prod([](int i) { return i; });
+ *   // product == 63756
+ * @endcode
+ *
+ * For more examples on how to implement LINQ operators, the easiest way is probably to have
+ * a look at the implementation of the operators included in the <tt>coveo::linq</tt> library
+ * itself. While the helper functions are documented @ref linq_operators_list "here", it is
+ * possible to look at the internal implementations in the file @ref coveo/linq/detail/linq_detail.h :
+ *
+ * @include coveo/linq/detail/linq_detail.h
  */
 
 #ifndef COVEO_LINQ_H
