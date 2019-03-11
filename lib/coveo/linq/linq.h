@@ -2972,7 +2972,7 @@ auto none(const Pred& pred)
  * provided <em>key selector</em>. Then, returns a sequence containing
  * the same elements, ordered according to the keys in ascending order.
  *
- * Keys are compared using <tt>operator&lt;</tt>.
+ * Keys are compared using <tt>operator&lt;()</tt>.
  *
  * Use like this:
  *
@@ -3065,7 +3065,7 @@ auto order_by(KeySelector&& key_sel, Pred&& pred)
  * provided <em>key selector</em>. Then, returns a sequence containing
  * the same elements, ordered according to the keys in descending order.
  *
- * Keys are compared using <tt>operator&lt;</tt>, but the result is reversed
+ * Keys are compared using <tt>operator&lt;()</tt>, but the result is reversed
  * to produce descending order.
  *
  * Use like this:
@@ -3161,7 +3161,7 @@ auto order_by_descending(KeySelector&& key_sel, Pred&& pred)
  * be further ordered by ascending order of keys as extracted by the provided
  * <em>key selector</em>.
  *
- * Keys are compared using <tt>operator&lt;</tt>.
+ * Keys are compared using <tt>operator&lt;()</tt>.
  *
  * Use like this:
  *
@@ -3257,7 +3257,7 @@ auto then_by(KeySelector&& key_sel, Pred&& pred)
  * be further ordered by descending order of keys as extracted by the provided
  * <em>key selector</em>.
  *
- * Keys are compared using <tt>operator&lt;</tt>, but the result is reversed
+ * Keys are compared using <tt>operator&lt;()</tt>, but the result is reversed
  * to produce descending order.
  *
  * Use like this:
