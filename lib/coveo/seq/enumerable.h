@@ -53,7 +53,7 @@ namespace coveo {
  *
  * @code
  *   coveo::enumerable<const int> e1; // Iterates over const integers
- *   coveo::enumerable<int> e2;       // Iterators over non-const integers
+ *   coveo::enumerable<int> e2;       // Iterates over non-const integers
  * @endcode
  *
  * @tparam T Type of elements stored in the sequence.

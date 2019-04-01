@@ -189,7 +189,7 @@ class coveo::enumerable&lt; T &gt;</h3>
 <p>In order to fetch the elements to return, this class uses a <em>next delegate</em> - a function that returns a pointer to the next element every time it is called, finally returning <code>nullptr</code> when the enumeration is over. The next delegate is provided at construction time and cannot change.</p>
 <p>Optionally, it is also possible to specify a <em>size delegeate</em> for the <code>enumerable</code> at construction time. If provided, it will be used to fetch the number of elements in the sequence when <code><a class="el" href="classcoveo_1_1enumerable.html#a027835aabbfafd8b4362b9a7dd3690b5" title="Size of sequence.">size()</a></code> is called; otherwise, a slower algorithm is used (iterating over the entire sequence using <code>std::distance()</code>). It is possible to determine if the <code>enumerable</code> has a fast size delegate by using <code><a class="el" href="classcoveo_1_1enumerable.html#af28795993b2e73129d2a87213a566b45" title="Determines if size() is fast.">has_fast_size()</a></code>.</p>
 <p>While this class is immutable, the elements it returns are not necessarily so. In order to wrap a sequence of <code>const</code> elements, <code>const</code> must also be specified in this class' template argument:</p>
-<div class="fragment"><div class="line"><a class="code" href="classcoveo_1_1enumerable.html">coveo::enumerable&lt;const int&gt;</a> e1; <span class="comment">// Iterates over const integers</span></div><div class="line"><a class="code" href="classcoveo_1_1enumerable.html">coveo::enumerable&lt;int&gt;</a> e2;       <span class="comment">// Iterators over non-const integers</span></div></div><!-- fragment --><dl class="tparams"><dt>Template Parameters</dt><dd>
+<div class="fragment"><div class="line"><a class="code" href="classcoveo_1_1enumerable.html">coveo::enumerable&lt;const int&gt;</a> e1; <span class="comment">// Iterates over const integers</span></div><div class="line"><a class="code" href="classcoveo_1_1enumerable.html">coveo::enumerable&lt;int&gt;</a> e2;       <span class="comment">// Iterates over non-const integers</span></div></div><!-- fragment --><dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">T</td><td>Type of elements stored in the sequence. </td></tr>
   </table>
@@ -1028,7 +1028,7 @@ template&lt;typename T&gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Mar 10 2019 20:33:10 for coveo::linq by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Mar 31 2019 23:07:08 for coveo::linq by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>
